@@ -6,6 +6,7 @@ import "./main.css";
 import Modal from "./modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { English, AMHARIC } from "./words";
 import {
   SPHttpClient,
   SPHttpClientResponse,
@@ -29,6 +30,7 @@ export interface TableItems {
   inputFile: any;
   fileName: any;
   caller: any;
+  words: any;
 }
 
 export default class RecordDashboard extends React.Component<
@@ -39,6 +41,7 @@ export default class RecordDashboard extends React.Component<
   public constructor(props: IRecordDashboardProps) {
     super(props);
     this.state = {
+      words: English,
       incommingRecords: null,
       outgoingRecords: null,
       show: false,
@@ -312,6 +315,17 @@ export default class RecordDashboard extends React.Component<
       .catch((err) => console.log(err));
   }
 
+  setLangEnglish = () => {
+    this.setState({
+      words: English,
+    });
+  };
+
+  setLangAmharic = () => {
+    this.setState({
+      words: AMHARIC,
+    });
+  };
   public render(): React.ReactElement<IRecordDashboardProps> {
     let cssURL =
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
@@ -322,10 +336,18 @@ export default class RecordDashboard extends React.Component<
 
     return (
       <>
+        <div className="container">
+          <button className="btn btn-primary" onClick={this.setLangEnglish}>
+            EN
+          </button>
+          <button className="btn btn-warning" onClick={this.setLangAmharic}>
+            AM
+          </button>
+        </div>
         <Tabs>
           <TabList>
-            <Tab>Incoming</Tab>
-            <Tab>OutGoing</Tab>
+            <Tab>{this.state.words.incomming}</Tab>
+            <Tab>{this.state.words.outgoing}</Tab>
           </TabList>
 
           <TabPanel>
@@ -336,7 +358,7 @@ export default class RecordDashboard extends React.Component<
                     className="btn btn-primary float-right btnStyle"
                     onClick={(event) => this.showModal(event, "Incomming")}
                   >
-                    Add Record
+                    {this.state.words.addRecord}
                   </button>
                   <br />
                 </div>
@@ -348,14 +370,16 @@ export default class RecordDashboard extends React.Component<
                   <table className="table table-bordered">
                     <thead className="bg-info text-light">
                       <tr>
-                        <td scope="col">ID</td>
-                        <td>Record Name</td>
-                        <td scope="col">Recipient Organization</td>
-                        <td scope="col">Reference Number</td>
-                        <td scope="col">Date of Dispatch</td>
-                        <td scope="col">Delivery Personnel</td>
-                        <td scope="col">Subject</td>
-                        <td scope="col">Actions</td>
+                        <td scope="col">{this.state.words.id}</td>
+                        <td>{this.state.words.recordName}</td>
+                        <td scope="col">{this.state.words.recipientOrg}</td>
+                        <td scope="col">{this.state.words.referenceNumber}</td>
+                        <td scope="col">{this.state.words.dateOfDispatch}</td>
+                        <td scope="col">
+                          {this.state.words.deliveryPersonnel}
+                        </td>
+                        <td scope="col">{this.state.words.subject}</td>
+                        <td scope="col">{this.state.words.actions}</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -398,7 +422,7 @@ export default class RecordDashboard extends React.Component<
                     className="btn btn-primary float-right btnStyle"
                     onClick={(event) => this.showModal(event, "Outgoing")}
                   >
-                    Add Record
+                    {this.state.words.addRecord}
                   </button>
                   <br />
                 </div>
@@ -410,14 +434,16 @@ export default class RecordDashboard extends React.Component<
                   <table className="table table-bordered">
                     <thead className="bg-info text-light">
                       <tr>
-                        <td scope="col">ID</td>
-                        <td>Record Name</td>
-                        <td scope="col">Recipient Organization</td>
-                        <td scope="col">Reference Number</td>
-                        <td scope="col">Date of Dispatch</td>
-                        <td scope="col">Delivery Personnel</td>
-                        <td scope="col">Subject</td>
-                        <td scope="col">Actions</td>
+                        <td scope="col">{this.state.words.id}</td>
+                        <td>{this.state.words.recordName}</td>
+                        <td scope="col">{this.state.words.recipientOrg}</td>
+                        <td scope="col">{this.state.words.referenceNumber}</td>
+                        <td scope="col">{this.state.words.dateOfDispatch}</td>
+                        <td scope="col">
+                          {this.state.words.deliveryPersonnel}
+                        </td>
+                        <td scope="col">{this.state.words.subject}</td>
+                        <td scope="col">{this.state.words.actions}</td>
                       </tr>
                     </thead>
                     <tbody>
@@ -471,7 +497,7 @@ export default class RecordDashboard extends React.Component<
           <div className="container-fluid ">
             <div className="row justify-content-center text-center ">
               <h4>
-                <b>Upload Record</b>
+                <b>{this.state.words.uploadRecord}</b>
               </h4>
             </div>
             <hr />
@@ -501,13 +527,13 @@ export default class RecordDashboard extends React.Component<
                           className="btn btn-secondary btn-sm float-left"
                           onClick={this.hideModal}
                         >
-                          Cancel
+                          {this.state.words.cancel}
                         </button>
                         <button
                           type="submit"
                           className=" btn btn-primary btn-sm float-right"
                         >
-                          Submit
+                          {this.state.words.submit}
                         </button>
                       </div>
                     </div>
@@ -526,7 +552,7 @@ export default class RecordDashboard extends React.Component<
           <div className="container-fluid ">
             <div className="row justify-content-center text-center ">
               <h4>
-                <b>Edit Record</b>
+                <b>{this.state.words.editRecord}</b>
               </h4>
             </div>
             <hr />
@@ -534,7 +560,9 @@ export default class RecordDashboard extends React.Component<
               <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                 <form onSubmit={(event) => this.onSubmit(event)}>
                   <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">File Name</label>
+                    <label className="col-sm-4 col-form-label">
+                      {this.state.words.fileName}
+                    </label>
                     <div className="col-sm-7">
                       <input
                         type="text"
@@ -548,7 +576,7 @@ export default class RecordDashboard extends React.Component<
                   <br />
                   <div className="form-group row">
                     <label className="col-sm-4 col-form-label">
-                      Recipient Organization
+                      {this.state.words.recipientOrg}
                     </label>
                     <div className="col-sm-7">
                       <input
@@ -564,7 +592,7 @@ export default class RecordDashboard extends React.Component<
                   <br />
                   <div className="form-group row">
                     <label className="col-sm-4 col-form-label">
-                      Reference Number
+                      {this.state.words.referenceNumber}
                     </label>
                     <div className="col-sm-7">
                       <input
@@ -581,7 +609,7 @@ export default class RecordDashboard extends React.Component<
                   <br />
                   <div className="form-group row">
                     <label className="col-sm-4 col-form-label">
-                      Date of Disp
+                      {this.state.words.dateOfDispatch}
                     </label>
                     <div className="col-sm-7">
                       <input
@@ -598,7 +626,7 @@ export default class RecordDashboard extends React.Component<
                   <br />
                   <div className="form-group row">
                     <label className="col-sm-4 col-form-label">
-                      Delivery Personnel
+                      {this.state.words.deliveryPersonnel}
                     </label>
                     <div className="col-sm-7">
                       <input
@@ -614,7 +642,9 @@ export default class RecordDashboard extends React.Component<
                   </div>
                   <br />
                   <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">Subject</label>
+                    <label className="col-sm-4 col-form-label">
+                      {this.state.words.subject}
+                    </label>
                     <div className="col-sm-7">
                       <input
                         type="text"
@@ -637,13 +667,13 @@ export default class RecordDashboard extends React.Component<
                           className="btn btn-secondary btn-sm float-left"
                           onClick={this.hideRecordModal}
                         >
-                          Cancel
+                          {this.state.words.cancel}
                         </button>
                         <button
                           className=" btn btn-primary btn-sm float-right"
                           type="submit"
                         >
-                          Submit
+                          {this.state.words.submit}
                         </button>
                       </div>
                     </div>
