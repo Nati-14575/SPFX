@@ -14,7 +14,13 @@ export const English = {
   cancel: "Cancel",
   submit: "Submit",
   editRecord: "Edit Record",
+  viewRecord: "View Record",
   fileName: "File Name",
+  remark: "Remark",
+  detail: "Detail",
+  addRemark: "Add Remark",
+  title: "Title",
+  listRemarks:"Remarks List"
 };
 
 export const AMHARIC = {
@@ -33,5 +39,11 @@ export const AMHARIC = {
   cancel: "",
   submit: "አስገባ",
   editRecord: "",
+  viewRecord:"",
   fileName: "የመዝገብ ስም",
+  remark: "AM_Remark",
+  detail: "AM_Detail",
+  title:"AM_Title",
+  addRemark: "AM_add Remark",
+  listRemarks:"AM_Remarks List"
 };

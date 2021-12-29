@@ -36,9 +36,30 @@
   float: left !important;
 }
 
-hr.style-one {
+hr {
   border: 0;
   height: 1px;
   background: #333;
   background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+.card{
+  background-color: floralwhite;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
+  transition: 0.3s;
+  padding: 2px 16px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.content-height{
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.btn-margin{
+  margin:10px;
 }
