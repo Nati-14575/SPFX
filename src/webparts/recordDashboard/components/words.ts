@@ -26,7 +26,7 @@ export const English = {
 export const AMHARIC = {
   incomming: "ገቢ",
   outgoing: "ወጪ",
-  addRecord: "መዝገብ",
+  addRecord: "አዲስ መዝግብ",
   id: "ID",
   recordName: "የመዝገብ ስም",
   recipientOrg: "ተቀባይ ተቋም",

@@ -35,6 +35,9 @@ export interface TableItems {
   caller: any;
   words: any;
   htmlData: any;
+  remarks: any;
+  remarkTitle: any;
+  remarkDetail: any;
 }
 
 export default class RecordDashboard extends React.Component<
@@ -61,9 +64,13 @@ export default class RecordDashboard extends React.Component<
       inputFile: null,
       fileName: null,
       caller: null,
-      htmlData: null
+      htmlData: null,
+      remarks: null,
+      remarkDetail: null,
+      remarkTitle: null
     };
     this.getIncommingRecords().then((response) => {
+      console.log(response)
       this.setState({
         incommingRecords: response,
       });
@@ -107,7 +114,8 @@ export default class RecordDashboard extends React.Component<
       })) as Promise<any>;
   }
 
-// for showing and hiding upload file modal
+
+  // for showing and hiding upload file modal
   showModal = (event: any, text: any) => {
     this.setState({
       show: true,
@@ -168,11 +176,38 @@ export default class RecordDashboard extends React.Component<
 
   // for showing and hiding remark modal
   showViewRemarkModal = () => {
+
     this.setState({
       showViewRemark: true,
       showViewRecord: false
     });
   };
+
+  onRemarkSubmit = (e) => {
+    e.preventDefault();
+    const urlRemark: string = this.props.context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items";
+
+    const data = {
+      Title: this.state.remarkTitle,
+      Comments: this.state.remarkDetail,
+      RecordId: this.state.id
+    };
+
+    const remarkOption: ISPHttpClientOptions = {
+      body: JSON.stringify(data),
+    };
+
+
+    this.props.context.spHttpClient.post(urlRemark, SPHttpClient.configurations.v1, remarkOption).then(() => {
+      toast("Remark Uploaded Successfully");
+    })
+    this.setState({
+      id: "",
+      remarkDetail: "",
+      remarkTitle: "",
+    });
+
+  }
 
   hideViewRemarkModal = (e) => {
     e.preventDefault();
@@ -186,6 +221,9 @@ export default class RecordDashboard extends React.Component<
       delivery_personnel: "",
       subject: "",
       fileName: "",
+      remarkDetail: "",
+      remarkTitle: "",
+      remarks: null
     });
   };
 
@@ -229,7 +267,9 @@ export default class RecordDashboard extends React.Component<
       delivery_personnel: record.DeliveryPersonnelName,
       subject: record.Subject,
       fileName: record.Title,
+      remarks: record.Remarks
     });
+
   }
 
 
@@ -241,7 +281,7 @@ export default class RecordDashboard extends React.Component<
     });
   };
 
- // foe fetching reocrd using name
+  // foe fetching reocrd using name
   async getRecordUsingName(): Promise<any> {
     let updateUrl =
       this.props.context.pageContext.web.absoluteUrl +
@@ -434,10 +474,21 @@ export default class RecordDashboard extends React.Component<
     SPComponentLoader.loadCss(
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
     );
+    if (this.state.id) {
+      const url: string = this.props.context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items?$select=Comments&$filter=RecordId eq " + this.state.id;
 
+      this.props.context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
+        return response.json();
+      })
+        .then((json) => {
+          this.setState({
+            remarks: json.value
+          })
+        })
+    }
     return (
       <>
-     
+
         <div className="container text-center">
           <button className="btn btn-primary btn-margin" onClick={this.setLangEnglish}>
             EN
@@ -594,7 +645,7 @@ export default class RecordDashboard extends React.Component<
             </div>
           </TabPanel>
         </Tabs>
-        
+
         {/* Upload file modal */}
         <Modal show={this.state.show} handleClose={this.hideModal}>
           <div className="container-fluid ">
@@ -648,7 +699,7 @@ export default class RecordDashboard extends React.Component<
           </div>
         </Modal>
 
-         {/* Edit Record modal */}
+        {/* Edit Record modal */}
         <ModalEditRecord
           show={this.state.showRecord}
           handleClose={this.hideRecordModal}
@@ -800,7 +851,7 @@ export default class RecordDashboard extends React.Component<
                 <b>{this.state.words.viewRecord}</b>
               </h4>
             </div>
-            <br/>
+            <br />
             <hr />
             <div className="row justify-content-center text-center h-100">
               <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -908,8 +959,8 @@ export default class RecordDashboard extends React.Component<
                     </div>
                   </div>
                   <br />
-                  <br/>
-                  <br/>
+                  <br />
+                  <br />
                   <div className="form-group">
                     {/* <div className="container"> */}
                     <div className="row">
@@ -956,7 +1007,7 @@ export default class RecordDashboard extends React.Component<
             <hr />
             <div className="row justify-content-center text-center h-100">
               <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                <form onSubmit={(event) => this.onSubmit(event)}>
+                <form onSubmit={(event) => this.onRemarkSubmit(event)}>
                   <div className="form-group row">
                     <label className="col-sm-4 col-form-label">
                       {this.state.words.title}
@@ -965,10 +1016,10 @@ export default class RecordDashboard extends React.Component<
                       <input
                         type="text"
                         className="form-control"
-                        id="exampleInputEmail1"
-                        aria-describedby="emailHelp"
-                        value={this.state.fileName}
-
+                        value={this.state.remarkTitle}
+                        onChange={(e) => this.setState({
+                          remarkTitle: e.target.value
+                        })}
                       />
                     </div>
                   </div>
@@ -978,7 +1029,11 @@ export default class RecordDashboard extends React.Component<
                       {this.state.words.detail}
                     </label>
                     <div className="col-sm-7">
-                      <textarea className="form-control" id="exampleFormControlTextarea1" rows={3}></textarea>
+                      <textarea className="form-control" id="exampleFormControlTextarea1" rows={3} value={this.state.remarkDetail} onChange={(e) => {
+                        this.setState({
+                          remarkDetail: e.target.value
+                        })
+                      }}></textarea>
                     </div>
                   </div>
                   <br />
@@ -1010,52 +1065,57 @@ export default class RecordDashboard extends React.Component<
               {/* <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12" style={{ backgroundColor: "grey", color: "white" }}>
                 <h4><b>{this.state.words.listRemarks}</b></h4>
               </div> */}
-              
-              <br/>
-          
+
+              <br />
+
               <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 content-height">
-                 <hr style={{borderStyle:"solid", borderColor: "grey"}}/>
-                <div className="col-md-2">
-                <img className="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Image Description"/>
-                </div>
+                <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
+                {/* <div className="col-md-2">
+                  <img className="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Image Description" />
+                </div> */}
                 <div className="col-md-9">
-   
+
                   <div className="card">
-                    <div className="card-body">
-                      <h5 className="card-title">Card title</h5>
-                      <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      
-                    </div>
+                    {this.state.remarks && this.state.remarks.map(remark => (
+                      <div className="card-body">
+                        <>
+                          <h5 className="card-title">Card title</h5>
+                          <p className="card-text">{remark.Comments}</p>
+                        </>
+
+                      </div>
+                    ))}
+
                   </div>
                 </div>
 
               </div>
-         
-           
+
+
 
 
             </div>
 
             <div className="form-group">
-                    {/* <div className="container"> */}
-                    <div className="row">
-                      <div className="col-md-12">
-                        <button
-                          className="btn btn-secondary btn-sm float-left"
-                          onClick={this.hideViewRemarkModal}
-                        >
-                          {this.state.words.cancel}
-                        </button>
-                        {/* <button
+              {/* <div className="container"> */}
+              <div className="row">
+                <div className="col-md-12">
+                  <button
+                    className="btn btn-secondary btn-sm float-left"
+                    onClick={this.hideViewRemarkModal}
+                  >
+                    {this.state.words.cancel}
+                  </button>
+                  {/* <button
                           className=" btn btn-primary btn-sm float-right"
                           type="submit"
                         >
                           {this.state.words.submit}
                         </button> */}
-                      </div>
-                    </div>
-                    {/* </div> */}
-                  </div>
+                </div>
+              </div>
+              {/* </div> */}
+            </div>
           </div>
         </ModalEditRecord>
 
