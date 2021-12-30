@@ -20,14 +20,17 @@ export const English = {
   detail: "Detail",
   addRemark: "Add Remark",
   title: "Title",
-  listRemarks:"Remarks List"
+  listRemarks:"Remarks List",
+  page: "Page",
+  prev: "Prev",
+  next: "Next"
 };
 
 export const AMHARIC = {
   incomming: "ገቢ",
   outgoing: "ወጪ",
   addRecord: "አዲስ መዝግብ",
-  id: "ID",
+  id: "መለያ",
   recordName: "የመዝገብ ስም",
   recipientOrg: "ተቀባይ ተቋም",
   referenceNumber: "የማጣቀሻ ቁጥር",
@@ -35,15 +38,18 @@ export const AMHARIC = {
   deliveryPersonnel: "ያደረሰው ስራተኛ",
   subject: "ርዕሰ ጉዳይ",
   actions: "ድርጊቶች",
-  uploadRecord: "",
-  cancel: "",
+  uploadRecord: "መዝገብ አስገባ",
+  cancel: "አቋርጥ",
   submit: "አስገባ",
-  editRecord: "",
-  viewRecord:"",
+  editRecord: "አስተካክል",
+  viewRecord:"መዝገብ ተመልከት",
   fileName: "የመዝገብ ስም",
-  remark: "AM_Remark",
+  remark: "ይዘት",
   detail: "AM_Detail",
-  title:"AM_Title",
-  addRemark: "AM_add Remark",
-  listRemarks:"AM_Remarks List"
+  title:"ርእስ",
+  addRemark: "ይዘት ጨምር",
+  listRemarks:"የይዘት ዝርዝር",
+  page: "ገጽ",
+  prev: "በፊት",
+  next: "ቀጣይ"
 };
