@@ -24,7 +24,9 @@ export const English = {
   page: "Page",
   prev: "Prev",
   next: "Next",
-  search: "Search"
+  search: "Search",
+  IncomingRecordDate:"Incoming Record Date",
+  senderOrg:"Sender Organization Name"
 };
 
 export const AMHARIC = {
@@ -53,5 +55,7 @@ export const AMHARIC = {
   page: "ገጽ",
   prev: "በፊት",
   next: "ቀጣይ",
-  search: "ፈልግ"
+  search: "ፈልግ",
+  IncomingRecordDate:"የገቢ መዝገብ ቀን",
+  senderOrg:"የላኪ ድርጅት ስም"
 };
