@@ -57,14 +57,14 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                         <div className="form-group">
                             <div className="row">
                                 <div className="col-md-12">
-                                    <button
+                                    {/* <button
                                         className="btn btn-secondary btn-sm float-left"
                                         onClick={hideViewRemarkModal}
                                     >
                                         {words.cancel}
-                                    </button>
+                                    </button> */}
                                     <button
-                                        className=" btn btn-primary btn-sm float-right"
+                                        className=" btn btn-primary btn-sm float-left"
                                         type="submit"
                                     >
                                         {words.submit}
@@ -77,24 +77,26 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                 </div>
                 <br />
                 <hr />
-                <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12" style={{ backgroundColor: "grey", color: "white" }}>
+                {/* <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12" style={{ backgroundColor: "grey", color: "white" }}>
                     <h4><b>{words.listRemarks}</b></h4>
-                </div>
+                </div> */}
                 <br />
                 <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 content-height">
                     <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
-                    <div className="col-md-9">
+                    <div className="mb-2 text-center col-offset-2">
 
-                        <div className="card">
-                            {remarks && remarks.map(remark => (
+
+                        {remarks && remarks.map(remark => (
+                            <div className="card mb-3">
                                 <div className="card-body">
                                     <>
-                                        <h5 className="card-title">{remark.Title}</h5>
-                                        <p className="card-text">{remark.Comments}</p>
+                                        <h5 className="card-title text-center">{remark.Title}</h5>
+                                        <p className="card-text text-center">{remark.Comments}</p>
                                     </>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
+
                     </div>
                 </div>
 
@@ -104,10 +106,10 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
             </div>
 
             <div className="form-group">
-                <div className="row">
+                <div className="row mt-2">
                     <div className="col-md-12">
                         <button
-                            className="btn btn-secondary btn-sm float-left"
+                            className="btn btn-default btn-sm float-left"
                             onClick={hideViewRemarkModal}
                         >
                             {words.cancel}

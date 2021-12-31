@@ -103,7 +103,7 @@ export default class RecordDashboard extends React.Component<
 
   public render(): React.ReactElement<IRecordDashboardProps> {
     let cssURL =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
     SPComponentLoader.loadCss(cssURL);
     SPComponentLoader.loadCss(
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
