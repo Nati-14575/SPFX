@@ -71,6 +71,7 @@ export default class RecordDashboard extends React.Component<
         outgoingRecords: data,
       });
     });
+    // this.ed = this.delta.bind(this);
   }
 
   // for showing and hiding upload file modal

@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useTable, usePagination, useSortBy } from "react-table";
+import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table";
+import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words }) => {
 
@@ -15,11 +16,14 @@ const Table = ({ data, columns, context, words }) => {
         canNextPage,
         pageOptions,
         canPreviousPage,
-        state
-    } = useTable({ columns, data }, useSortBy, usePagination)
-    const { pageIndex } = state;
+        state,
+        setGlobalFilter
+    } = useTable({ columns, data }, useGlobalFilter, useSortBy, usePagination)
+    
+    const { pageIndex, globalFilter } = state;
     return (
         <>
+           <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
             <table {...getTableProps()} className="table table-bordered table-overflow">
                 <thead className="bg-info text-light">
                     {headerGroups.map(headerGroup => (
