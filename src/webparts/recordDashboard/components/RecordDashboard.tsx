@@ -43,10 +43,9 @@ export default class RecordDashboard extends React.Component<
         data.push({
           Id: item.Id,
           Title: item.Title,
-          RecipientOrganizationName: item.RecipientOrganizationName,
+          SendingOrganizationName: item.SendingOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          DateofDispatch: item.DateofDispatch,
-          DeliveryPersonnelName: item.DeliveryPersonnelName,
+          IncomingRecordDate: item.IncomingRecordDate,
           Subject: item.Subject
         })
       })

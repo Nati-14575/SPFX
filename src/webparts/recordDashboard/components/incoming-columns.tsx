@@ -1,6 +1,4 @@
 import * as React from "react";
-import ViewRecord from "./viewRecord";
-import EditRecord from "./editRecord";
 import Remark from "./remark";
 import Modal from "./modal";
 import ModalEditRecord from "./modal-edit-record";
@@ -23,10 +21,10 @@ export const incomingColumns = [
   },
   {
     Header: (({ words }) => {
-      return words.recipientOrg
+      return words.senderOrg
     }),
     columnId: 3,
-    accessor: 'RecipientOrganizationName',
+    accessor: 'SendingOrganizationName',
   },
   {
     Header: (({ words }) => {
@@ -38,23 +36,16 @@ export const incomingColumns = [
 
   {
     Header: (({ words }) => {
-      return words.dateOfDispatch
+      return words.IncomingRecordDate
     }),
     columnId: 5,
-    accessor: 'DateofDispatch',
-  },
-  {
-    Header: (({ words }) => {
-      return words.deliveryPersonnel
-    }),
-    columnId: 6,
-    accessor: 'DeliveryPersonnelName',
+    accessor: 'IncomingRecordDate',
   },
   {
     Header: (({ words }) => {
       return words.subject
     }),
-    columnId: 7,
+    columnId: 6,
     accessor: 'Subject',
   },
   {
@@ -62,7 +53,7 @@ export const incomingColumns = [
       return null;
     },
     accessor: "modal",
-    columnId: 8,
+    columnId: 7,
     Cell: (props) => {
       const [editModal, setEditModal] = React.useState(false)
       const [viewRecord, setViewRecord] = React.useState(false)

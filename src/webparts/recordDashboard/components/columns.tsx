@@ -7,12 +7,12 @@ import ModalEditRecord from "./modal-edit-record";
 export const columns = [
   {
     Header: (({ words, className, hideColumns }) => {
-      return <div onClick={() => hideColumns('Id')}>{words.id}</div>
+      return <div >{words.id}</div>
     }),
     columnId: 1,
     accessor: 'Id',
     Cell: ((props) => {
-      return <div className={props.className}>{props.row.original.Id}</div>
+      return <div >{props.row.original.Id}</div>
     })
   },
   {

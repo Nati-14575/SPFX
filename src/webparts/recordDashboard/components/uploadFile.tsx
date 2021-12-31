@@ -1,10 +1,21 @@
 import * as React from "react";
+import { toast } from "react-toastify";
 import { handleSubmit } from "./actions"
 const UploadFile = ({ words, caller, context, hideModal }) => {
     const [file, setFile] = React.useState(null)
     const handleFileSubmit = (event) => {
         event.preventDefault();
-        { caller === "Incomming" ? handleSubmit(file, context, "Incomming") : handleSubmit(file, context, "Outgoing") }
+        {
+            caller === "Incomming" ? (
+                handleSubmit(file, context, "Incomming").then((response) => {
+                    toast("Uploaded successfully")
+                    hideModal()
+                })
+            ) : handleSubmit(file, context, "Outgoing").then((response) => {
+                toast("Uploaded successfully")
+                hideModal()
+            })
+        }
     }
     return (
         <div className="container-fluid ">

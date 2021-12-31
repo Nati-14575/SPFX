@@ -51,7 +51,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) 
                             </div>
                         </div>
                         <br />
-                       
+
                         <br />
                         <div className="form-group row">
                             <label className="col-sm-4 col-form-label">
@@ -86,7 +86,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) 
                                 />
                             </div>
                         </div>
-                      
+
                         <br />
                         <div className="form-group row">
                             <label className="col-sm-4 col-form-label">

@@ -2,7 +2,7 @@ export const English = {
   incomming: "Incomming",
   outgoing: "Outgoing",
   addRecord: "Add Record",
-  id: "Identification",
+  id: "Id",
   recordName: "Record Name",
   recipientOrg: "Recipient Organization",
   referenceNumber: "Reference Number",
