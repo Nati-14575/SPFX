@@ -6,38 +6,52 @@ import Modal from "./modal";
 import ModalEditRecord from "./modal-edit-record";
 export const columns = [
   {
-    Header: 'ID',
+    Header: (({ words }) => {
+      return words.id
+    }),
     columnId: 1,
     accessor: 'Id',
   },
   {
-    Header: 'Record Name',
+    Header: (({ words }) => {
+      return words.recordName
+    }),
     columnId: 2,
     accessor: 'Title',
   },
   {
-    Header: 'Recipient Organization',
+    Header: (({ words }) => {
+      return words.recipientOrg
+    }),
     columnId: 3,
     accessor: 'RecipientOrganizationName',
   },
   {
-    Header: 'Reference Number',
+    Header: (({ words }) => {
+      return words.referenceNumber
+    }),
     columnId: 4,
     accessor: 'ReferenceNumber',
   },
 
   {
-    Header: 'Date Of Dispatch',
+    Header: (({ words }) => {
+      return words.dateOfDispatch
+    }),
     columnId: 5,
     accessor: 'DateofDispatch',
   },
   {
-    Header: 'Delivery Personnel',
+    Header: (({ words }) => {
+      return words.deliveryPersonnel
+    }),
     columnId: 6,
     accessor: 'DeliveryPersonnelName',
   },
   {
-    Header: 'Subject',
+    Header: (({ words }) => {
+      return words.subject
+    }),
     columnId: 7,
     accessor: 'Subject',
   },
@@ -75,7 +89,7 @@ export const columns = [
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
-            <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} />
+            <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />
           </ModalEditRecord>
           <ModalEditRecord
             show={remarkModal}

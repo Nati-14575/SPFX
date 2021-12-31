@@ -23,7 +23,8 @@ export const English = {
   listRemarks:"Remarks List",
   page: "Page",
   prev: "Prev",
-  next: "Next"
+  next: "Next",
+  search: "Search"
 };
 
 export const AMHARIC = {
@@ -51,5 +52,6 @@ export const AMHARIC = {
   listRemarks:"የይዘት ዝርዝር",
   page: "ገጽ",
   prev: "በፊት",
-  next: "ቀጣይ"
+  next: "ቀጣይ",
+  search: "ፈልግ"
 };

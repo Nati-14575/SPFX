@@ -71,7 +71,6 @@ export default class RecordDashboard extends React.Component<
         outgoingRecords: data,
       });
     });
-    // this.ed = this.delta.bind(this);
   }
 
   // for showing and hiding upload file modal
@@ -132,11 +131,11 @@ export default class RecordDashboard extends React.Component<
           </TabPanel>
           <TabPanel>
             {/* Outgoing tab content */}
-            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} columns={columns} />
-            <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
-              <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} />
-            </Modal>
+            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} columns={columns} />
           </TabPanel>
+          <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
+            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} />
+          </Modal>
         </Tabs>
         <ToastContainer />
       </>

@@ -1,5 +1,5 @@
 import * as React from "react";
-const ViewRecord = ({ words, hideViewRecordModal, recordDetails }) => {
+const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
@@ -11,7 +11,7 @@ const ViewRecord = ({ words, hideViewRecordModal, recordDetails }) => {
         <div className="container-fluid ">
             <div className="row justify-content-center text-center ">
                 <h4>
-                    <b>{words.editRecord}</b>
+                    <b>{words.viewRecord}</b>
                 </h4>
             </div>
             <hr />
@@ -118,7 +118,10 @@ const ViewRecord = ({ words, hideViewRecordModal, recordDetails }) => {
                                 </button>
                                 <button
                                     className=" btn btn-primary btn-sm float-right"
-                                    type="submit"
+                                    onClick={() => {
+                                        hideViewRecordModal(),
+                                            showRemarkModal()
+                                    }}
                                 >
                                     {words.remark}
                                 </button>

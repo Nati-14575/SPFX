@@ -3,8 +3,6 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table
 import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words }) => {
-
-    console.log(data, columns, words)
     const {
         getTableProps,
         getTableBodyProps,
@@ -19,11 +17,11 @@ const Table = ({ data, columns, context, words }) => {
         state,
         setGlobalFilter
     } = useTable({ columns, data }, useGlobalFilter, useSortBy, usePagination)
-    
+
     const { pageIndex, globalFilter } = state;
     return (
         <>
-           <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+            <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
             <table {...getTableProps()} className="table table-bordered table-overflow">
                 <thead className="bg-info text-light">
                     {headerGroups.map(headerGroup => (
@@ -32,7 +30,7 @@ const Table = ({ data, columns, context, words }) => {
                                 <th
                                     {...column.getHeaderProps(column.getSortByToggleProps())}
                                 >
-                                    {column.render('Header')}
+                                    {column.render('Header', { words: words })}
                                     <span>
                                         {column.isSorted
                                             ? column.isSortedDesc
