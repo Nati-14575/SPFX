@@ -15,22 +15,29 @@ const Table = ({ data, columns, context, words }) => {
         pageOptions,
         canPreviousPage,
         state,
-        setGlobalFilter
-    } = useTable({ columns, data }, useGlobalFilter, useSortBy, usePagination)
+        setGlobalFilter,
+        setHiddenColumns
+    } = useTable({
+        columns, data, initialState: {
+            hiddenColumns: []
+        }
+    }, useGlobalFilter, useSortBy, usePagination)
 
     const { pageIndex, globalFilter } = state;
+
+
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
             <table {...getTableProps()} className="table table-bordered table-overflow">
-                <thead className="bg-info text-light">
+                <thead className="bg-info text-light" style={{ width: "max-content", height: "auto" }}>
                     {headerGroups.map(headerGroup => (
-                        <tr scope="col" {...headerGroup.getHeaderGroupProps()}>
+                        <tr className="d-sm-none" scope="col" {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
                                 <th
                                     {...column.getHeaderProps(column.getSortByToggleProps())}
                                 >
-                                    {column.render('Header', { words: words })}
+                                    {column.render('Header', { words: words, className: "d-sm-none", hideColumns: setHiddenColumns })}
                                     <span>
                                         {column.isSorted
                                             ? column.isSortedDesc
@@ -54,7 +61,7 @@ const Table = ({ data, columns, context, words }) => {
                                             {...cell.getCellProps()}
 
                                         >
-                                            {cell.render('Cell', { context: context, words: words })}
+                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {} })}
                                         </td>
                                     )
                                 })}

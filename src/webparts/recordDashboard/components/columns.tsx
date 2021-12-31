@@ -6,14 +6,17 @@ import Modal from "./modal";
 import ModalEditRecord from "./modal-edit-record";
 export const columns = [
   {
-    Header: (({ words }) => {
-      return words.id
+    Header: (({ words, className, hideColumns }) => {
+      return <div onClick={() => hideColumns('Id')}>{words.id}</div>
     }),
     columnId: 1,
     accessor: 'Id',
+    Cell: ((props) => {
+      return <div className={props.className}>{props.row.original.Id}</div>
+    })
   },
   {
-    Header: (({ words }) => {
+    Header: (({ words, hideColumns }) => {
       return words.recordName
     }),
     columnId: 2,
@@ -89,7 +92,7 @@ export const columns = [
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
-            <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />
+            <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal} />
           </ModalEditRecord>
           <ModalEditRecord
             show={remarkModal}
