@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { English, AMHARIC } from "./words"
 import "react-tabs/style/react-tabs.css";
 import { columns } from "./columns";
+import { incomingColumns } from "./incoming-columns";
 import Incomming from "./incomming";
 import Outgoing from "./outgoing";
 import { GetRecords } from "./actions";
@@ -127,7 +128,7 @@ export default class RecordDashboard extends React.Component<
 
           <TabPanel>
             {/* Incoming tab content */}
-            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} columns={columns} />}
+            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} columns={incomingColumns} />}
           </TabPanel>
           <TabPanel>
             {/* Outgoing tab content */}
