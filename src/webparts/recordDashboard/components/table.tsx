@@ -2,8 +2,7 @@ import * as React from "react";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table";
 import { GlobalFilter } from "./GlobalFilter";
 
-const Table = ({ data, columns, context, words }) => {
-    console.log(columns, data)
+const Table = ({ data, columns, context, words, setRecords }) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -23,6 +22,7 @@ const Table = ({ data, columns, context, words }) => {
             hiddenColumns: []
         }
     }, useGlobalFilter, useSortBy, usePagination)
+
 
     const { pageIndex, globalFilter } = state;
 
@@ -56,12 +56,12 @@ const Table = ({ data, columns, context, words }) => {
                         prepareRow(row)
                         return (
                             <tr {...row.getRowProps()} >
-                                {row.cells.map(cell => {
+                                {row.cells.map((cell, index) => {
                                     return (
                                         <td
                                             {...cell.getCellProps()}
                                         >
-                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {} })}
+                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords } })}
                                         </td>
                                     )
                                 })}
@@ -71,17 +71,17 @@ const Table = ({ data, columns, context, words }) => {
                     })}
                 </tbody>
             </table>
-            <div>
+            <div className="container">
                 <span>
                     {words.page}
                     <strong>
                         {pageIndex + 1} of {pageOptions.length}
                     </strong>
                 </span>
-                {canPreviousPage && (<button onClick={() => previousPage()} >
+                {canPreviousPage && (<button className="btn btn-primary" onClick={() => previousPage()} >
                     {words.prev}
                 </button>)}
-                {canNextPage && (<button onClick={() => nextPage()} >
+                {canNextPage && (<button className="btn btn-success" onClick={() => nextPage()} >
                     {words.next}
                 </button>)}
             </div>

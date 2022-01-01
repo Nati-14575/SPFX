@@ -1,7 +1,7 @@
 import * as React from "react";
 import { toast } from "react-toastify";
 import { handleSubmit } from "./actions"
-const UploadFile = ({ words, caller, context, hideModal }) => {
+const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords }) => {
     const [file, setFile] = React.useState(null)
     const handleFileSubmit = (event) => {
         event.preventDefault();
@@ -9,10 +9,12 @@ const UploadFile = ({ words, caller, context, hideModal }) => {
             caller === "Incomming" ? (
                 handleSubmit(file, context, "Incomming").then((response) => {
                     toast("Uploaded successfully")
+                    setIncommingRecords()
                     hideModal()
                 })
             ) : handleSubmit(file, context, "Outgoing").then((response) => {
                 toast("Uploaded successfully")
+                setOutgoingRecords()
                 hideModal()
             })
         }

@@ -10,6 +10,9 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         event.preventDefault()
         submitRemark(context, remarkTitle, remarkDetail, id).then((response) => {
             toast("Updated Successfully");
+            getRemark(context, id).then((json) => {
+                setRemarks(json.value)
+            })
             setRemarkTitle(null)
             setRemarkDetail(null)
             hideViewRemarkModal()
@@ -57,12 +60,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                         <div className="form-group">
                             <div className="row">
                                 <div className="col-md-12">
-                                    {/* <button
-                                        className="btn btn-secondary btn-sm float-left"
-                                        onClick={hideViewRemarkModal}
-                                    >
-                                        {words.cancel}
-                                    </button> */}
                                     <button
                                         className=" btn btn-primary btn-sm float-left"
                                         type="submit"
@@ -84,7 +81,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                 <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 content-height">
                     <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
                     <div className="mb-2 text-center col-offset-2">
-
+                        <h4><b>{words.listRemarks}</b></h4>
 
                         {remarks && remarks.map(remark => (
                             <div className="card mb-3">

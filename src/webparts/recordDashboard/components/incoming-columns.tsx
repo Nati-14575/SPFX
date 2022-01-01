@@ -7,21 +7,21 @@ import ViewIncomingRecord from "./viewIncomingRecord";
 export const incomingColumns = [
   {
     Header: (({ words }) => {
-      return words.id
+      return <div>{words.id}</div>
     }),
     columnId: 1,
     accessor: 'Id',
   },
   {
-    Header: (({ words }) => {
-      return words.recordName
+    Header: (({ words, hideColumns }) => {
+      return <div onClick={() => hideColumns("Title")}>{words.recordName}</div>
     }),
     columnId: 2,
     accessor: 'Title',
   },
   {
-    Header: (({ words }) => {
-      return words.senderOrg
+    Header: (({ words, hideColumns }) => {
+      return <div onClick={() => hideColumns("SendingOrganizationName")}>{words.senderOrg}</div>
     }),
     columnId: 3,
     accessor: 'SendingOrganizationName',
@@ -76,7 +76,7 @@ export const incomingColumns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} />
+            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setIncommingRecords} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

@@ -145,6 +145,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails }) => {
                                     <button
                                         className="btn btn-secondary btn-sm float-left"
                                         onClick={hideRecordModal}
+                                        type="reset"
                                     >
                                         {words.cancel}
                                     </button>

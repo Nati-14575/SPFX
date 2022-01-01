@@ -1,5 +1,5 @@
 export const English = {
-  incomming: "Incomming",
+  incomming: "Incoming",
   outgoing: "Outgoing",
   addRecord: "Add Record",
   id: "Id",
@@ -16,7 +16,7 @@ export const English = {
   editRecord: "Edit Record",
   viewRecord: "View Record",
   fileName: "File Name",
-  remark: "Remark",
+  remark: "Remarks",
   detail: "Detail",
   addRemark: "Add Remark",
   title: "Title",

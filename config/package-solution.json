@@ -4,7 +4,6 @@
     "name": "record-dashboard-client-side-solution",
     "id": "5e582567-b67c-480d-8b77-32c60f1a4d18",
     "version": "1.0.0.0",
-    "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {
       "name": "",

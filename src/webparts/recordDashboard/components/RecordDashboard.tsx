@@ -36,7 +36,11 @@ export default class RecordDashboard extends React.Component<
       show: false,
       caller: null
     };
+    this.setIncommingRecords()
+    this.setOutgoingRecords()
+  }
 
+  setIncommingRecords = () => {
     GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       response.map((item) => {
@@ -53,7 +57,9 @@ export default class RecordDashboard extends React.Component<
         incommingRecords: data,
       });
     });
+  }
 
+  setOutgoingRecords = () => {
     GetRecords(this.props.context, "Outgoing").then((response) => {
       const data: any = [];
       response.map((item) => {
@@ -127,14 +133,14 @@ export default class RecordDashboard extends React.Component<
 
           <TabPanel>
             {/* Incoming tab content */}
-            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} columns={incomingColumns} />}
+            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} setRecords={this.setIncommingRecords} columns={incomingColumns} />}
           </TabPanel>
           <TabPanel>
             {/* Outgoing tab content */}
-            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} columns={columns} />
+            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} setRecords={this.setOutgoingRecords} columns={columns} />
           </TabPanel>
           <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
-            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} />
+            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.setIncommingRecords} setOutgoingRecords={this.setOutgoingRecords} />
           </Modal>
         </Tabs>
         <ToastContainer />

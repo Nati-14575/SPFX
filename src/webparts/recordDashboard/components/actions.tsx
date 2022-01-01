@@ -5,7 +5,6 @@ import {
 } from "@microsoft/sp-http";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 
-
 export function GetRecords(context: WebPartContext, recordType: string): Promise<any> {
     const url: string =
         context.pageContext.web.absoluteUrl +
@@ -19,7 +18,6 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
             return json.value;
         }) as Promise<any>;
 }
-
 export function handleSubmit(file: any, context: WebPartContext, RecordType: string): Promise<any> {
     const url: string =
         context.pageContext.web.absoluteUrl +
