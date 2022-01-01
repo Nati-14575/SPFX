@@ -76,7 +76,7 @@ export const incomingColumns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setIncommingRecords} />
+            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

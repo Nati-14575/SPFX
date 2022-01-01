@@ -86,7 +86,7 @@ export const columns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} />
+            <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setOutgoingRecords={props.setRecords} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

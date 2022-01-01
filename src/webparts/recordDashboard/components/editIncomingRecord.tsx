@@ -17,7 +17,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
         };
         editRecord(context, recordDetails.Id, data).then(() => {
             toast("Updated Successfully");
-
+            setIncommingRecords()
             setFileName(null)
             setReferenceNumber(null)
             setSendingOrg(null)

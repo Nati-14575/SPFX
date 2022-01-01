@@ -1,7 +1,7 @@
 import * as React from "react";
 import { editRecord } from "./actions"
 import { toast } from "react-toastify";
-const EditRecord = ({ words, context, hideRecordModal, recordDetails }) => {
+const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
@@ -19,6 +19,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails }) => {
         };
         editRecord(context, recordDetails.Id, data).then(() => {
             toast("Updated Successfully");
+            setOutgoingRecords()
             setFileName(null)
             setReferenceNumber(null)
             setRecipientOrg(null)

@@ -41,6 +41,7 @@ export default class RecordDashboard extends React.Component<
   }
 
   setIncommingRecords = () => {
+    console.log("set incomming records pressed")
     GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       response.map((item) => {
