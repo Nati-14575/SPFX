@@ -1,7 +1,7 @@
 import * as React from "react";
 import { editRecord } from "./actions"
 import { toast } from "react-toastify";
-const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) => {
+const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
@@ -17,6 +17,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) 
         };
         editRecord(context, recordDetails.Id, data).then(() => {
             toast("Updated Successfully");
+
             setFileName(null)
             setReferenceNumber(null)
             setSendingOrg(null)
@@ -47,6 +48,23 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) 
                                     id="exampleInputEmail1"
                                     aria-describedby="emailHelp"
                                     value={fileName}
+                                />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div className="form-group row">
+                            <label className="col-sm-4 col-form-label">
+                                {words.senderOrg}
+                            </label>
+                            <div className="col-sm-7">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="exampleInputEmail1"
+                                    aria-describedby="emailHelp"
+                                    value={sendingOrg}
+                                    onChange={(e) => setSendingOrg(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -112,6 +130,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails }) 
                                     <button
                                         className="btn btn-secondary btn-sm float-left"
                                         onClick={hideRecordModal}
+                                        type="reset"
                                     >
                                         {words.cancel}
                                     </button>
