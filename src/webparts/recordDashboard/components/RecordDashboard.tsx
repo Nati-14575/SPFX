@@ -38,22 +38,23 @@ export default class RecordDashboard extends React.Component<
       caller: null,
       tabIndex: 0
     };
+
     this.setIncommingRecords()
     this.setOutgoingRecords()
-    this.getLocalStorage()
+  }
+
+  componentDidMount(): void {
+    // this.setState({tabIndex: 1});
+      this.getLocalStorage();
   }
 
   getLocalStorage()
   {
-    console.log("under get local storage");
 
     if(localStorage.getItem('selectedTab') != null)
     {
       var selectedTab= localStorage.getItem('selectedTab');
-      this.setState({ tabIndex: parseInt(selectedTab)}, () => {
-        console.log("under callback");
-        console.log(this.state.tabIndex );
-      }); 
+      this.setState({tabIndex: parseInt(selectedTab)});
    
     }
     else{
@@ -210,8 +211,8 @@ export default class RecordDashboard extends React.Component<
     SPComponentLoader.loadCss(
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
     );
-    console.log("under render for consoling tab index");
-    console.log(this.state.tabIndex);
+
+    
     return (
       <>
         <div className="container text-center">
