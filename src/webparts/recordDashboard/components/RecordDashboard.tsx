@@ -20,6 +20,7 @@ export interface TableItems {
   show: boolean;
   words: any
   caller: any,
+  tabIndex: number
 }
 
 export default class RecordDashboard extends React.Component<
@@ -34,14 +35,40 @@ export default class RecordDashboard extends React.Component<
       incommingRecords: null,
       outgoingRecords: null,
       show: false,
-      caller: null
+      caller: null,
+      tabIndex: 0
     };
     this.setIncommingRecords()
     this.setOutgoingRecords()
+    this.getLocalStorage()
+  }
+
+  getLocalStorage()
+  {
+    console.log("under get local storage");
+
+    if(localStorage.getItem('selectedTab') != null)
+    {
+      var selectedTab= localStorage.getItem('selectedTab');
+      this.setState({ tabIndex: parseInt(selectedTab)}, () => {
+        console.log("under callback");
+        console.log(this.state.tabIndex );
+      }); 
+   
+    }
+    else{
+      this.setLocalStorage(this.state.tabIndex);
+    }
+  }
+
+  setLocalStorage(index)
+  {
+
+    localStorage.setItem('selectedTab', (index).toString());
+    this.setState({tabIndex: index});
   }
 
   setIncommingRecords = () => {
-    console.log("set incomming records pressed")
     GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       response.map((item) => {
@@ -183,6 +210,8 @@ export default class RecordDashboard extends React.Component<
     SPComponentLoader.loadCss(
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
     );
+    console.log("under render for consoling tab index");
+    console.log(this.state.tabIndex);
     return (
       <>
         <div className="container text-center">
@@ -194,19 +223,19 @@ export default class RecordDashboard extends React.Component<
           </button>
         </div>
         {/* for rendering incoming and outgoing tabs */}
-        <Tabs>
+        <Tabs selectedIndex={this.state.tabIndex} onSelect={index => {  this.setLocalStorage(index)}}>
           <TabList>
             <Tab>{this.state.words.incomming}</Tab>
             <Tab>{this.state.words.outgoing}</Tab>
           </TabList>
 
-          <TabPanel>
+          <TabPanel >
             {/* Incoming tab content */}
             {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} columns={incomingColumns} />}
           </TabPanel>
-          <TabPanel>
+          <TabPanel >
             {/* Outgoing tab content */}
-            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />
+            {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
           </TabPanel>
           <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
             <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />

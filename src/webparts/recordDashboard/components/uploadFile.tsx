@@ -34,8 +34,8 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         }
     }
     return (
-        <div className="container-fluid ">
-            <div className="row justify-content-center text-center ">
+        <div className="container-fluid p-3">
+            <div className="row justify-content-center text-center pt-4">
                 <h4>
                     <b>{words.uploadRecord}</b>
                 </h4>
