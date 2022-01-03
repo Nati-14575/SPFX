@@ -25,13 +25,11 @@ export function handleSubmit(file: any, context: WebPartContext, RecordType: str
             return updateItem(context, id, file.name, RecordType)
                 .then((id) => {
                     return getOneRecord(context, id).then((json) => {
-                        console.log(json)
                         return json;
                     }) as Promise<any>;
                 })
-                .catch((err) => console.log(err));
-        })
-    }) as Promise<any>
+        }) as Promise<any>
+    })
 };
 
 export function postFile(context, file): Promise<any> {
@@ -53,7 +51,7 @@ export function postFile(context, file): Promise<any> {
 }
 
 export function updateItem(context, id: number, fileName, RecordType): Promise<any> {
-    console.log(fileName)
+
     let updateUrl =
         context.pageContext.web.absoluteUrl +
         "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
@@ -85,9 +83,24 @@ export function getOneRecord(context, id): Promise<any> {
     return context.spHttpClient.get(siteUrl, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
         return response.json();
     }).then((json) => {
-        console.log(json)
+
         return json;
     })
+}
+
+export function getLoggedUser(context): Promise<any> {
+    let url =
+        context.pageContext.web.absoluteUrl +
+        "/_api/SP.UserProfiles.PeopleManager/GetMyProperties";
+    return context.spHttpClient
+        .get(url, SPHttpClient.configurations.v1)
+        .then((response: SPHttpClientResponse) => {
+            return response.json();
+        })
+        .then((json) => {
+
+            return json.DisplayName;
+        });
 }
 
 export function getRecordUsingName(fileName: string, context: WebPartContext): Promise<any> {
@@ -109,7 +122,7 @@ export function getRecordUsingName(fileName: string, context: WebPartContext): P
 export function editAndGetRecord(context: WebPartContext, id: number, inputs): Promise<any> {
     return editRecord(context, id, inputs).then((response) => {
         return getOneRecord(context, id).then((json) => {
-            console.log(json)
+
             return json
         }) as Promise<any>
     })
@@ -117,7 +130,7 @@ export function editAndGetRecord(context: WebPartContext, id: number, inputs): P
 }
 
 export function editRecord(context: WebPartContext, id: number, inputs: any) {
-    console.log(id, inputs)
+
     const url: string =
         context.pageContext.web.absoluteUrl +
         "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
@@ -137,14 +150,14 @@ export function editRecord(context: WebPartContext, id: number, inputs: any) {
         .then((response: SPHttpClientResponse) => {
             return response
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
 }
 
-export function submitRemark(context: WebPartContext, Title: string, Comments: string, RecordId: number): Promise<any> {
+export function submitRemark(context: WebPartContext, loggedUser: string, Comments: string, RecordId: number): Promise<any> {
     const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items";
 
     const data = {
-        Title,
+        userName: loggedUser,
         Comments,
         RecordId
     };
@@ -159,7 +172,15 @@ export function submitRemark(context: WebPartContext, Title: string, Comments: s
 }
 
 export function getRemark(context: WebPartContext, id: number): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items?$select=Comments&$filter=RecordId eq " + id;
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items?$select=Comments,userName&$filter=RecordId eq " + id;
+
+    return context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
+        return response.json();
+    })
+}
+
+export function getFileLocations(context: WebPartContext): Promise<any> {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('Files')/items?$select=FileName";
 
     return context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
         return response.json();

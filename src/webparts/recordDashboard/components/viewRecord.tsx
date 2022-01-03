@@ -23,13 +23,9 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                             {words.fileName}
                         </label>
                         <div className="col-sm-7">
-                            <input
-                                type="text"
+                            <div
                                 className="form-control"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
-                                value={fileName}
-                            />
+                            >{fileName}</div>
                         </div>
                     </div>
                     <br />

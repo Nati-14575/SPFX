@@ -194,19 +194,20 @@ export default class RecordDashboard extends React.Component<
           </button>
         </div>
         {/* for rendering incoming and outgoing tabs */}
-        <Tabs>
+        <Tabs defaultIndex={1}>
           <TabList>
-            <Tab>{this.state.words.incomming}</Tab>
             <Tab>{this.state.words.outgoing}</Tab>
+            <Tab>{this.state.words.incomming}</Tab>
           </TabList>
 
-          <TabPanel>
+
+          <TabPanel >
+            {/* Outgoing tab content */}
+            {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
+          </TabPanel>
+          <TabPanel >
             {/* Incoming tab content */}
             {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} columns={incomingColumns} />}
-          </TabPanel>
-          <TabPanel>
-            {/* Outgoing tab content */}
-            <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />
           </TabPanel>
           <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
             <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />
