@@ -2,7 +2,8 @@ import * as React from "react";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table";
 import { GlobalFilter } from "./GlobalFilter";
 
-const Table = ({ data, columns, context, words, setRecords }) => {
+const Table = ({ data, columns, context, words, setRecords, updateRecordInfo }) => {
+    console.log(data)
     const {
         getTableProps,
         getTableBodyProps,
@@ -25,8 +26,6 @@ const Table = ({ data, columns, context, words, setRecords }) => {
 
 
     const { pageIndex, globalFilter } = state;
-
-
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
@@ -61,7 +60,7 @@ const Table = ({ data, columns, context, words, setRecords }) => {
                                         <td
                                             {...cell.getCellProps()}
                                         >
-                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords } })}
+                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords }, index: index, updateRecordInfo: updateRecordInfo })}
                                         </td>
                                     )
                                 })}

@@ -3,20 +3,34 @@ import { toast } from "react-toastify";
 import { handleSubmit } from "./actions"
 const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords }) => {
     const [file, setFile] = React.useState(null)
-    const handleFileSubmit = (event) => {
+    let record: any;
+    function handleFileSubmit(event) {
         event.preventDefault();
-        {
-            caller === "Incomming" ? (
-                handleSubmit(file, context, "Incomming").then((response) => {
-                    toast("Uploaded successfully")
-                    setIncommingRecords()
-                    hideModal()
-                })
-            ) : handleSubmit(file, context, "Outgoing").then((response) => {
-                toast("Uploaded successfully")
-                setOutgoingRecords()
-                hideModal()
-            })
+        try {
+            {
+                caller === "Incomming" ? (
+                    handleSubmit(file, context, "Incomming")
+                        .then((response) => {
+                            toast("Uploaded successfully")
+                            setFile(null)
+                            hideModal()
+                            setIncommingRecords(response)
+                        }
+                        )
+                ) : (
+                    handleSubmit(file, context, "Outgoing")
+                        .then((response) => {
+                            toast("Uploaded successfully")
+                            setFile(null)
+                            hideModal()
+                            setOutgoingRecords(response)
+                        })
+                )
+
+            }
+        }
+        catch (err) {
+            console.log(err)
         }
     }
     return (
@@ -48,6 +62,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                     <button
                                         className="btn btn-secondary btn-sm float-left"
                                         onClick={hideModal}
+                                        type="reset"
                                     >
                                         {words.cancel}
                                     </button>

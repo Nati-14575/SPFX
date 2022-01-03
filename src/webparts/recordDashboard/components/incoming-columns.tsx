@@ -58,7 +58,7 @@ export const incomingColumns = [
       const [editModal, setEditModal] = React.useState(false)
       const [viewRecord, setViewRecord] = React.useState(false)
       const [remarkModal, setRemarkModal] = React.useState(false)
-      const data = props.row.original;
+      const data = props.row.original
       return (
         <>
           <div>
@@ -76,7 +76,7 @@ export const incomingColumns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} />
+            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} index={props.index} updateRecordInfo={props.updateRecordInfo} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { editRecord } from "./actions"
+import { editAndGetRecord } from "./actions"
 import { toast } from "react-toastify";
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
@@ -17,7 +17,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
             DeliveryPersonnelName: DeliveryPerson,
             Subject: Subject,
         };
-        editRecord(context, recordDetails.Id, data).then(() => {
+        editAndGetRecord(context, recordDetails.Id, data).then(() => {
             toast("Updated Successfully");
             setOutgoingRecords()
             setFileName(null)
@@ -94,7 +94,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                             </label>
                             <div className="col-sm-7">
                                 <input
-                                    type="text"
+                                    type="date"
                                     className="form-control"
                                     id="exampleInputPassword1"
                                     value={DateofDispatch}

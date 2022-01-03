@@ -1,7 +1,7 @@
 import * as React from "react";
 import Table from "./table";
 
-const Incomming = ({ words, context, showModal, columns, data, setRecords }) => {
+const Incomming = ({ words, context, showModal, columns, data, setRecords, updateRecordInfo }) => {
     return (
         <div className="">
             <div className="row">
@@ -19,7 +19,7 @@ const Incomming = ({ words, context, showModal, columns, data, setRecords }) => 
             <br />
             <div className="row table-overflow">
                 <div className="col-12">
-                    <Table data={data} context={context} columns={columns} setRecords={setRecords} words={words} />
+                    <Table data={data} context={context} columns={columns} setRecords={setRecords} words={words} updateRecordInfo={updateRecordInfo} />
                 </div>
             </div>
         </div>

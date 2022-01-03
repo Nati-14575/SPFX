@@ -1,7 +1,7 @@
 import * as React from "react";
-import { editRecord } from "./actions"
+import { editAndGetRecord } from "./actions"
 import { toast } from "react-toastify";
-const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords }) => {
+const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
@@ -15,9 +15,11 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             IncomingRecordDate: IncomingRecordDate,
             Subject: Subject,
         };
-        editRecord(context, recordDetails.Id, data).then(() => {
+        editAndGetRecord(context, recordDetails.Id, data).then((record) => {
+            console.log(record)
+            console.log(index)
             toast("Updated Successfully");
-            setIncommingRecords()
+            updateRecordInfo(record, index)
             setFileName(null)
             setReferenceNumber(null)
             setSendingOrg(null)
@@ -94,7 +96,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                             </label>
                             <div className="col-sm-7">
                                 <input
-                                    type="text"
+                                    type="date"
                                     className="form-control"
                                     id="exampleInputPassword1"
                                     value={IncomingRecordDate}
