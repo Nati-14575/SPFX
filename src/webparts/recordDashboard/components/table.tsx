@@ -2,8 +2,11 @@ import * as React from "react";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table";
 import { GlobalFilter } from "./GlobalFilter";
 
-const Table = ({ data, columns, context, words, setRecords, updateRecordInfo }) => {
+const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
+    console.log("under table for logging data");
     console.log(data)
+    console.log(files);
+    
     const {
         getTableProps,
         getTableBodyProps,
@@ -22,14 +25,18 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo }) 
         columns, data, initialState: {
             hiddenColumns: []
         }
-    }, useGlobalFilter, useSortBy, usePagination)
+    }, useGlobalFilter, useSortBy, usePagination);
+
+    const [value, setValue] = React.useState(data);
+    // This will launch only if propName value has chaged.
+    React.useEffect(() => { setValue(data) }, [data]);
 
 
     const { pageIndex, globalFilter } = state;
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
-            <table {...getTableProps()} className="table table-bordered table-overflow">
+            <table {...getTableProps()} className="table table-bordered table-overflow" key={value}>
                 <thead className="bg-info text-light" >
                     {headerGroups.map(headerGroup => (
                         <tr scope="col" {...headerGroup.getHeaderGroupProps()}>
@@ -60,7 +67,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo }) 
                                         <td
                                             {...cell.getCellProps()}
                                         >
-                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords }, index: index, updateRecordInfo: updateRecordInfo })}
+                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords }, index: index, updateRecordInfo: updateRecordInfo, files: files })}
                                         </td>
                                     )
                                 })}

@@ -17,9 +17,10 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
             DeliveryPersonnelName: DeliveryPerson,
             Subject: Subject,
         };
-        editAndGetRecord(context, recordDetails.Id, data).then(() => {
+        editAndGetRecord(context, recordDetails.Id, data).then((response) => {
             toast("Updated Successfully");
-            setOutgoingRecords()
+            console.log("under edit and get record");
+            console.log(response);
             setFileName(null)
             setReferenceNumber(null)
             setRecipientOrg(null)
@@ -27,6 +28,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
             setDeliveryPerson(null)
             setSubject(null)
             hideRecordModal()
+            setOutgoingRecords(response);
         })
     }
     return (

@@ -59,6 +59,8 @@ export const incomingColumns = [
       const [viewRecord, setViewRecord] = React.useState(false)
       const [remarkModal, setRemarkModal] = React.useState(false)
       const data = props.row.original
+      // console.log("under columns cells");
+      // console.log(props);
       return (
         <>
           <div>
@@ -76,7 +78,7 @@ export const incomingColumns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} index={props.index} updateRecordInfo={props.updateRecordInfo} />
+            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.index} updateRecordInfo={props.updateRecordInfo} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

@@ -8,7 +8,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 export function GetRecords(context: WebPartContext, recordType: string): Promise<any> {
     const url: string =
         context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getbytitle('OutgoingLibrary')/items?$select=*,EncodedAbsUrl&$filter=RecordType eq '" + recordType + "'&$orderby=Title desc";
+        "/_api/web/lists/getbytitle('OutgoingLibrary')/items?$select=*,EncodedAbsUrl&$filter=RecordType eq '" + recordType + "'&$orderby=Created desc";
     return context.spHttpClient
         .get(url, SPHttpClient.configurations.v1)
         .then((response: SPHttpClientResponse) => {
@@ -18,6 +18,22 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
             return json.value;
         }) as Promise<any>;
 }
+
+export function GetFiles(context: WebPartContext): Promise<any> {
+    const url: string =
+        context.pageContext.web.absoluteUrl +
+        "/_api/web/lists/getbytitle('Files')/items";
+    return context.spHttpClient
+        .get(url, SPHttpClient.configurations.v1)
+        .then((response: SPHttpClientResponse) => {
+            return response.json();
+        })
+        .then((json) => {
+            return json.value;
+        }) as Promise<any>;
+}
+
+
 export function handleSubmit(file: any, context: WebPartContext, RecordType: string): Promise<any> {
     return postFile(context, file).then((response: SPHttpClientResponse) => {
         return getRecordUsingName(file.name, context).then((result) => {

@@ -23,6 +23,8 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                             toast("Uploaded successfully")
                             setFile(null)
                             hideModal()
+                            console.log("under handle submit submit");
+                            console.log(response);
                             setOutgoingRecords(response)
                         })
                 )

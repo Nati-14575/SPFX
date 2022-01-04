@@ -1,24 +1,57 @@
 import * as React from "react";
 import { editAndGetRecord } from "./actions"
 import { toast } from "react-toastify";
-const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo }) => {
+const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo, files }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
     const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
+    const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId)
+    const [selectedFile, setSelectedFile] = React.useState(null)
+
+    // console.log("under edit incoming record");
+
+    React.useEffect(() => {
+
+        files.map((file)=>{
+            if(FileIDId == file.Id)
+            {
+                setSelectedFile(file)
+            }
+        })
+        
+    }, null)
+
+    let handleFileChange = (e) => {
+        console.log("update handle file change")
+        console.log(e);
+        console.log(e.target.value);
+        
+        setSelectedFile(e.target.value)
+        let file= e.target.value;
+
+        console.log(file.Id);
+
+        setFileId(file.Id);
+
+      }
+
     const onSubmit = (event) => {
+        console.log("under incoming submit");
         event.preventDefault()
         const data = {
             SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,
             IncomingRecordDate: IncomingRecordDate,
             Subject: Subject,
+            FileIDId: FileIDId
         };
+        console.log(data);
         editAndGetRecord(context, recordDetails.Id, data).then((record) => {
             console.log(record)
             console.log(index)
-            toast("Updated Successfully");
+            toast("Updated Successful");
             updateRecordInfo(record, index)
             setFileName(null)
             setReferenceNumber(null)
@@ -120,6 +153,23 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                     value={Subject}
                                     onChange={(event) => setSubject(event.target.value)}
                                 />
+                            </div>
+                        </div>
+                        <br />
+
+                        <div className="form-group row">
+                            <label className="col-sm-4 col-form-label">
+                                {words.location}
+                            </label>
+                            <div className="col-sm-7">
+                            <select className="form-control" onChange={handleFileChange} > 
+                                {/* <option value="⬇️ Select record location ⬇️"> -- Select record location -- </option> */}
+                                        {/* Mapping through each fruit object in our fruits array
+                                    and returning an option element with the appropriate attributes / values.
+                                    */}
+                                {files && files.map((file) => <option value={file.FileName}>{file.FileName}</option>)}
+                            </select>
+
                             </div>
                         </div>
                         <br />
