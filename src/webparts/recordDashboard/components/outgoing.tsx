@@ -2,7 +2,6 @@ import * as React from "react";
 import Table from "./table";
 
 const Outgoing = ({ words, context, showModal, columns, data, setRecords, updateRecordInfo, files }) => {
-    console.log("under outgoing")
     return (
         <div className="">
             <div className="row">
@@ -20,7 +19,7 @@ const Outgoing = ({ words, context, showModal, columns, data, setRecords, update
             <br />
             <div className="row table-overflow">
                 <div className="col-12">
-                    <Table data={data} context={context} columns={columns} setRecords={setRecords} key={data} words={words} updateRecordInfo={updateRecordInfo} files={files}/>
+                    <Table data={data} context={context} columns={columns} setRecords={setRecords} key={data} words={words} updateRecordInfo={updateRecordInfo} files={files} />
                 </div>
             </div>
         </div>

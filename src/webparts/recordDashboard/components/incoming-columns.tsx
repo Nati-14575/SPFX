@@ -59,14 +59,12 @@ export const incomingColumns = [
       const [viewRecord, setViewRecord] = React.useState(false)
       const [remarkModal, setRemarkModal] = React.useState(false)
       const data = props.row.original
-      // console.log("under columns cells");
-      // console.log(props);
       return (
         <>
           <div>
             <td>
-              <button type="button" className="btn btn-primary btn-margin" ><i className="fa fa-eye"
-                onClick={() => setViewRecord(true)}></i></button>
+              <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
+              ></i></button>
               <button
                 type="button"
                 className="btn btn-success btn-margin"
@@ -78,7 +76,7 @@ export const incomingColumns = [
             </td>
           </div>
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.index} updateRecordInfo={props.updateRecordInfo} />
+            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.row.index} updateRecordInfo={props.updateRecordInfo} setNum={props.setNum} num={props.num} />
           </Modal>
           <ModalEditRecord
             show={viewRecord}

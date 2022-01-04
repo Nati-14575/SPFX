@@ -13,6 +13,8 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         .then((response) => {
                             toast("Uploaded successfully")
                             setFile(null)
+                            console.log("under handle submit submit");
+                            console.log(response);
                             hideModal()
                             setIncommingRecords(response)
                         }

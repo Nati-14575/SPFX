@@ -19,7 +19,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     }
     React.useEffect(() => {
         getRemark(context, id).then((json) => {
-            console.log(json)
             setRemarks(json.value)
         })
         getLoggedUser(context).then((json) => {

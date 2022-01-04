@@ -3,10 +3,8 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table
 import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
-    console.log("under table for logging data");
     console.log(data)
-    console.log(files);
-    
+    const [num, setNum] = React.useState(false)
     const {
         getTableProps,
         getTableBodyProps,
@@ -29,10 +27,15 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
 
     const [value, setValue] = React.useState(data);
     // This will launch only if propName value has chaged.
-    React.useEffect(() => { setValue(data) }, [data]);
+    React.useEffect(() => {
+        console.log("use effect")
+        setValue(data)
+    }, [num]);
 
 
     const { pageIndex, globalFilter } = state;
+    console.log(value)
+    console.log(data)
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
@@ -62,12 +65,12 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                         prepareRow(row)
                         return (
                             <tr {...row.getRowProps()} >
-                                {row.cells.map((cell, index) => {
+                                {row.cells.map((cell) => {
                                     return (
                                         <td
                                             {...cell.getCellProps()}
                                         >
-                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords }, index: index, updateRecordInfo: updateRecordInfo, files: files })}
+                                            {cell.render('Cell', { context: context, words: words, className: "d-sm-none", hideColumns: {}, setRecords: { setRecords }, updateRecordInfo: updateRecordInfo, files: files, setNum: setNum, num: num })}
                                         </td>
                                     )
                                 })}

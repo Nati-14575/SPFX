@@ -118,7 +118,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                     id="exampleInputPassword1"
                                     value={DeliveryPerson}
                                     onChange={(event) =>
-                                        setDateofDispatch(event.target.value)
+                                        setDeliveryPerson(event.target.value)
                                     }
                                 />
                             </div>

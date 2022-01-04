@@ -1,7 +1,7 @@
 import * as React from "react";
 const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails }) => {
     const [fileName, setFileName] = React.useState(recordDetails.Title)
-    const [senderOrg, setSenderOrg] = React.useState(recordDetails.SenderOrganizationName)
+    const [senderOrg, setSenderOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
     const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
     const [DeliveryPerson, setDeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)

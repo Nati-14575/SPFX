@@ -48,44 +48,43 @@ export default class RecordDashboard extends React.Component<
 
   componentDidMount(): void {
     // this.setState({tabIndex: 1});
-      this.getLocalStorage();
+    this.getLocalStorage();
   }
 
-  getLocalStorage()
-  {
+  getLocalStorage() {
 
-    if(localStorage.getItem('selectedTab') != null)
-    {
-      var selectedTab= localStorage.getItem('selectedTab');
-      this.setState({tabIndex: parseInt(selectedTab)});
-   
+    if (localStorage.getItem('selectedTab') != null) {
+      var selectedTab = localStorage.getItem('selectedTab');
+      this.setState({ tabIndex: parseInt(selectedTab) });
+
     }
-    else{
+    else {
       this.setLocalStorage(this.state.tabIndex);
     }
   }
 
-  setLocalStorage(index)
-  {
+  setLocalStorage(index) {
 
     localStorage.setItem('selectedTab', (index).toString());
-    this.setState({tabIndex: index});
+    this.setState({ tabIndex: index });
   }
 
   setFiles = () => {
-    console.log("under fetch files for records");
     GetFiles(this.props.context).then((response) => {
       const data: any = [];
+      data.push({
+        Id: null,
+        Title: null,
+        FileName: "--- select the location ---"
+      })
       response.map((item) => {
         data.push({
           Id: item.Id,
           Title: item.Title,
           FileName: item.FileName
         });
-      
+
       })
-      console.log("under get files");
-      console.log(data);
       this.setState({
         files: data,
       });
@@ -107,7 +106,7 @@ export default class RecordDashboard extends React.Component<
           ,
           Subject: item.Subject,
           FileIDId: item.FileIDId,
-          
+
         })
       })
       this.setState({
@@ -117,7 +116,6 @@ export default class RecordDashboard extends React.Component<
   }
 
   setOutgoingRecords = () => {
-    console.log("out going records");
     GetRecords(this.props.context, "Outgoing").then((response) => {
       const data: any = [];
       response.map((item) => {
@@ -126,12 +124,14 @@ export default class RecordDashboard extends React.Component<
           Title: item.Title,
           RecipientOrganizationName: item.RecipientOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          DateofDispatch: item.DateofDispatch,
+          DateofDispatch: item.DateofDispatch ? new Date(item.DateofDispatch).toLocaleDateString(
+            "en-us"
+          ) : null,
           DeliveryPersonnelName: item.DeliveryPersonnelName,
           Subject: item.Subject
         })
       })
-      var newData= data;
+      var newData = data;
       this.setState({
         outgoingRecords: newData,
       });
@@ -156,7 +156,7 @@ export default class RecordDashboard extends React.Component<
 
   addChangeToOutgoingRecord = (record) => {
     let data = this.state.outgoingRecords
-    var outgoingRecord={
+    var outgoingRecord = {
       Id: record.Id,
       Title: record.Title,
       SendingOrganizationName: record.SendingOrganizationName,
@@ -166,7 +166,7 @@ export default class RecordDashboard extends React.Component<
 
     };
 
-    data.splice(0,0,outgoingRecord);
+    data.splice(0, 0, outgoingRecord);
 
     this.setState({
       outgoingRecords: data
@@ -175,7 +175,6 @@ export default class RecordDashboard extends React.Component<
 
   updateIncomingRecordInfo = (record, index) => {
     let data = this.state.incommingRecords
-    console.log(data[index])
     data[index] = {
       Id: record.Id,
       Title: record.Title,
@@ -184,7 +183,7 @@ export default class RecordDashboard extends React.Component<
       IncomingRecordDate: record.IncomingRecordDate,
       Subject: record.Subject
     }
-    console.log(data[index])
+    console.log(data)
     this.setState({
       incommingRecords: data
     })
@@ -194,9 +193,8 @@ export default class RecordDashboard extends React.Component<
     console.log("under outgping record info");
     let data = this.state.outgoingRecords
     console.log(data)
-    index= data.findIndex(obj => obj.Id == record.Id);
-    if(index != -1)
-    {
+    index = data.findIndex(obj => obj.Id == record.Id);
+    if (index != -1) {
       var newRecord = {
         Id: record.Id,
         Title: record.Title,
@@ -215,8 +213,8 @@ export default class RecordDashboard extends React.Component<
       console.log(this.state.outgoingRecords);
       console.log(data[index]);
     }
-     
-  
+
+
   }
 
   // for showing and hiding upload file modal
@@ -267,11 +265,11 @@ export default class RecordDashboard extends React.Component<
           </button>
         </div>
         {/* for rendering incoming and outgoing tabs */}
-        <Tabs selectedIndex={this.state.tabIndex} onSelect={index => {  this.setLocalStorage(index)}}>
+        <Tabs selectedIndex={this.state.tabIndex} onSelect={index => { this.setLocalStorage(index) }}>
           <TabList>
-          <Tab>{this.state.words.incomming}</Tab>
+            <Tab>{this.state.words.incomming}</Tab>
             <Tab>{this.state.words.outgoing}</Tab>
-            
+
           </TabList>
 
           <TabPanel >
