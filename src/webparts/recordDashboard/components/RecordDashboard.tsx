@@ -14,6 +14,7 @@ import Outgoing from "./outgoing";
 import { GetFiles, GetRecords } from "./actions";
 import Modal from "./modal";
 import UploadFile from "./uploadFile";
+import UploadIncomingDetail from "./UploadIncomingDetail";
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -21,7 +22,9 @@ export interface TableItems {
   words: any
   caller: any,
   tabIndex: number,
-  files: any
+  files: any,
+  showUploadModal: boolean,
+  recordDetail: any
 }
 
 export default class RecordDashboard extends React.Component<
@@ -38,7 +41,9 @@ export default class RecordDashboard extends React.Component<
       show: false,
       caller: null,
       tabIndex: 0,
-      files: null
+      files: null,
+      showUploadModal: false,
+      recordDetail : null
     };
 
     this.setIncommingRecords()
@@ -91,6 +96,16 @@ export default class RecordDashboard extends React.Component<
     });
   }
 
+  setRecordDetail = (recordDetail) =>
+  {
+    console.log("under record detail");
+    console.log(recordDetail);
+    this.setState({
+      recordDetail: recordDetail
+
+    });
+  }
+
   setIncommingRecords = () => {
     GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
@@ -109,8 +124,9 @@ export default class RecordDashboard extends React.Component<
 
         })
       })
+      var newData = data;
       this.setState({
-        incommingRecords: data,
+        incommingRecords: newData,
       });
     });
   }
@@ -139,8 +155,9 @@ export default class RecordDashboard extends React.Component<
   }
 
   addChangeToIncommingRecords = (record) => {
-    let data = this.state.incommingRecords
-    data.push({
+    let data = this.state.incommingRecords;
+
+    var incommingRecord = {
       Id: record.Id,
       Title: record.Title,
       SendingOrganizationName: record.SendingOrganizationName,
@@ -148,10 +165,13 @@ export default class RecordDashboard extends React.Component<
       IncomingRecordDate: record.IncomingRecordDate,
       Subject: record.Subject,
       FileIDId: record.FileIDId,
-    })
+
+    };
+
     this.setState({
       incommingRecords: data
-    })
+    });
+
   }
 
   addChangeToOutgoingRecord = (record) => {
@@ -170,7 +190,7 @@ export default class RecordDashboard extends React.Component<
 
     this.setState({
       outgoingRecords: data
-    })
+    });
   }
 
   updateIncomingRecordInfo = (record, index) => {
@@ -204,14 +224,11 @@ export default class RecordDashboard extends React.Component<
         DeliveryPersonnelName: record.DeliveryPersonnelName,
         Subject: record.Subject
       }
-      data.push(newRecord);
-      // data.splice(index, 1, newRecord);
-      console.log(data);
+      data.push(newRecord);;
       this.setState({
         outgoingRecords: data
       })
-      console.log(this.state.outgoingRecords);
-      console.log(data[index]);
+     
     }
 
 
@@ -231,6 +248,22 @@ export default class RecordDashboard extends React.Component<
       show: false,
     });
   };
+
+  // for showing and hiding upload file modal
+  showUploadModal = (e) => {
+    // this.setState({
+    //   showUploadModal: true
+    // });
+  };
+
+  hideUploadModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      showUploadModal: false
+    });
+  };
+
+
   // for changing lang to english
   setLangEnglish = () => {
     this.setState({
@@ -274,14 +307,19 @@ export default class RecordDashboard extends React.Component<
 
           <TabPanel >
             {/* Incoming tab content */}
-            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
+            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
           </TabPanel>
           <TabPanel >
             {/* Outgoing tab content */}
             {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
           </TabPanel>
           <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
-            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />
+            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail}/>
+          </Modal>
+
+          <Modal show={this.state.showUploadModal} handleClose={() => this.setState({ showUploadModal: false })} additionalStyles={{}}  >
+            {/* <h1>Hello</h1> */}
+            <UploadIncomingDetail  words={this.state.words} hideRecordModal={() => this.setState({ showUploadModal: false })}   context={this.props.context}  recordDetails={this.state.recordDetail} key={this.state.recordDetail} files={this.state.files} />
           </Modal>
         </Tabs>
         <ToastContainer />

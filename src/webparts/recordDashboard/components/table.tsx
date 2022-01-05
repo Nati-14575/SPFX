@@ -3,7 +3,7 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table
 import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
-    console.log(data)
+    // console.log(data)
     const [num, setNum] = React.useState(false)
     const {
         getTableProps,
@@ -34,8 +34,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
 
 
     const { pageIndex, globalFilter } = state;
-    console.log(value)
-    console.log(data)
+    
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
@@ -87,10 +86,10 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                         {pageIndex + 1} of {pageOptions.length}
                     </strong>
                 </span>
-                {canPreviousPage && (<button className="btn btn-primary" onClick={() => previousPage()} >
+                {canPreviousPage && (<button className="btn btn-primary ml-3" onClick={() => previousPage()} >
                     {words.prev}
                 </button>)}
-                {canNextPage && (<button className="btn btn-success" onClick={() => nextPage()} >
+                {canNextPage && (<button className="btn btn-success ml-3" onClick={() => nextPage()} >
                     {words.next}
                 </button>)}
             </div>

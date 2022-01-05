@@ -1,3 +1,6 @@
+
+@import "~spinners-react/lib/SpinnerCircular.css";
+
 .modal {
   position: fixed;
   top: 0;

@@ -3,42 +3,51 @@ import { editAndGetRecord } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
-const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
-
-    const [fileName, setFileName] = React.useState(recordDetails.Title)
-    const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
-    const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch)
-    const [DeliveryPerson, setDeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)
-    const [Subject, setSubject] = React.useState(recordDetails.Subject)
+const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, files}) => {
+    console.log("under upload incoming detail");
+    console.log(recordDetails);
+    const [fileName, setFileName] = React.useState( recordDetails?.Title)
+    console.log(fileName);
+    console.log(recordDetails?.Title);
+    const [sendingOrg, setSendingOrg] = React.useState(recordDetails? recordDetails.SendingOrganizationName : null)
+    const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails ? recordDetails.ReferenceNumber : null)
+    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails ? recordDetails.IncomingRecordDate : null)
+    const [Subject, setSubject] = React.useState(recordDetails ? recordDetails.Subject : null)
+    const [FileIDId, setFileId] = React.useState(recordDetails ? recordDetails.FileIDId : null)
     const [showLoader, setLoader] = React.useState(false);
+
+    let handleFileChange = (e) => {
+        setFileId(e.target.value);
+    }
 
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
         const data = {
-            RecipientOrganizationName: recipientOrg,
+            SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,
-            DateofDispatch: DateofDispatch,
-            DeliveryPersonnelName: DeliveryPerson,
+            IncomingRecordDate: IncomingRecordDate,
             Subject: Subject,
+            FileIDId: FileIDId
         };
-        editAndGetRecord(context, recordDetails.Id, data).then((response) => {
+        editAndGetRecord(context, recordDetails.Id, data).then((record) => {
+
             setLoader(false);
-            toast("Updated Successfully");
+            toast("Updated Successful");
+            // updateRecordInfo(record, index)
             setFileName(null)
             setReferenceNumber(null)
-            setRecipientOrg(null)
-            setDateofDispatch(null)
-            setDeliveryPerson(null)
+            setSendingOrg(null)
+            setIncomingRecordDate(null)
             setSubject(null)
+            // setNum(!num)
             hideRecordModal()
-            setOutgoingRecords(response);
-        }, (err) => {
-            setLoader(false);
-            toast.error("Something went wrong");
+        },
+            (err) => {
+                setLoader(false);
+                toast.error("Something went wrong");
 
-        })
+            })
     }
     return (
         <>
@@ -46,7 +55,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                 showLoader == false ? <div className="container-fluid ">
                     <div className="row justify-content-center text-center ">
                         <h4>
-                            <b>{words.editRecord}</b>
+                            <b>{words.fillRecordInfo}</b>
                         </h4>
                     </div>
                     <hr />
@@ -68,9 +77,10 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                     </div>
                                 </div>
                                 <br />
+                                <br />
                                 <div className="form-group row">
                                     <label className="col-sm-4 col-form-label">
-                                        {words.recipientOrg}
+                                        {words.senderOrg}
                                     </label>
                                     <div className="col-sm-7">
                                         <input
@@ -78,11 +88,13 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                             className="form-control"
                                             id="exampleInputEmail1"
                                             aria-describedby="emailHelp"
-                                            value={recipientOrg}
-                                            onChange={(event) => setRecipientOrg(event.target.value)}
+                                            value={sendingOrg}
+                                            onChange={(e) => setSendingOrg(e.target.value)}
                                         />
                                     </div>
                                 </div>
+                                <br />
+
                                 <br />
                                 <div className="form-group row">
                                     <label className="col-sm-4 col-form-label">
@@ -103,37 +115,21 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                 <br />
                                 <div className="form-group row">
                                     <label className="col-sm-4 col-form-label">
-                                        {words.dateOfDispatch}
+                                        {words.IncomingRecordDate}
                                     </label>
                                     <div className="col-sm-7">
                                         <input
                                             type="date"
                                             className="form-control"
                                             id="exampleInputPassword1"
-                                            value={DateofDispatch}
+                                            value={IncomingRecordDate}
                                             onChange={(event) =>
-                                                setDateofDispatch(event.target.value)
+                                                setIncomingRecordDate(event.target.value)
                                             }
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
-                                        {words.deliveryPersonnel}
-                                    </label>
-                                    <div className="col-sm-7">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputPassword1"
-                                            value={DeliveryPerson}
-                                            onChange={(event) =>
-                                                setDeliveryPerson(event.target.value)
-                                            }
-                                        />
-                                    </div>
-                                </div>
+
                                 <br />
                                 <div className="form-group row">
                                     <label className="col-sm-4 col-form-label">
@@ -147,6 +143,18 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                             value={Subject}
                                             onChange={(event) => setSubject(event.target.value)}
                                         />
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div className="form-group row">
+                                    <label className="col-sm-4 col-form-label">
+                                        {words.location}
+                                    </label>
+                                    <div className="col-sm-7">
+                                        <select className="form-control" onChange={handleFileChange} >
+                                            {files && files.map((file) => <option value={file.Id}>{file.FileName}</option>)}
+                                        </select>
                                     </div>
                                 </div>
                                 <br />
@@ -181,4 +189,4 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
     )
 }
 
-export default EditRecord;
+export default UploadIncomingDetail;
