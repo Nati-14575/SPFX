@@ -18,89 +18,99 @@ const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recor
             <div className="row justify-content-center text-center h-100">
                 <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.fileName}
+                            <b> {words.fileName} :</b>
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5 float-left">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputEmail1"
                                 aria-describedby="emailHelp"
                                 value={fileName}
-                            />
+                            /> */}
+
+                            <p>{fileName}</p>
                         </div>
+
+                        
                     </div>
                     <br />
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.senderOrg}
+                           <b>{words.senderOrg} :</b> 
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputEmail1"
                                 aria-describedby="emailHelp"
                                 value={senderOrg}
-                            />
+                            /> */}
+                              <p>{senderOrg}</p>
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.referenceNumber}
+                           <b> {words.referenceNumber} :</b>
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputPassword1"
                                 value={ReferenceNumber}
-                            />
+                            /> */}
+                             <p>{ReferenceNumber}</p>
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.IncomingRecordDate}
+                            <b>{words.IncomingRecordDate} :</b>
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputPassword1"
                                 value={IncomingRecordDate}
-                            />
+                            /> */}
+                             <p>{IncomingRecordDate}</p>
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.deliveryPersonnel}
+                            <b> {words.deliveryPersonnel} :</b>
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputPassword1"
                                 value={DeliveryPerson}
-                            />
+                            /> */}
+                            <p>{DeliveryPerson}</p>
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row">
+                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px grey"}}>
                         <label className="col-sm-4 col-form-label">
-                            {words.subject}
+                            <b>{words.subject} :</b>
                         </label>
-                        <div className="col-sm-7">
-                            <input
+                        <div className="col-sm-5">
+                            {/* <input
                                 type="text"
                                 className="form-control"
                                 id="exampleInputPassword1"
                                 value={Subject}
-                            />
+                            /> */}
+
+                           <p>{Subject}</p>
                         </div>
                     </div>
                     <br />
