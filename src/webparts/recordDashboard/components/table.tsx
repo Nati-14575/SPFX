@@ -34,7 +34,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
 
 
     const { pageIndex, globalFilter } = state;
-    
+
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
@@ -79,7 +79,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                     })}
                 </tbody>
             </table>
-            <div className="container">
+            {pageOptions > 0 && <div className="container">
                 <span>
                     {words.page}
                     <strong>
@@ -93,6 +93,9 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                     {words.next}
                 </button>)}
             </div>
+
+            }
+
         </>
     )
 }

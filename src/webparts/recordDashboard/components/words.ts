@@ -26,10 +26,10 @@ export const English = {
   next: "Next",
   search: "Search",
   IncomingRecordDate: "Incoming Record Date",
-  senderOrg: "Sender Organization Name",
+  senderOrg: "Sender Organization",
   location: "Location",
   fillRecordInfo: "Fill Record Information",
-  selectLocation: "--- select the location ---",
+  selectLocation: "select location",
 };
 
 export const AMHARIC = {
@@ -63,5 +63,5 @@ export const AMHARIC = {
   senderOrg: "የላኪ ድርጅት ስም",
   location: "ቦታ",
   fillRecordInfo: "የመዝገብ መረጃን ሙላ",
-  selectLocation: "--- ቦታ ይምረጡ ---",
+  selectLocation: "ቦታ ይምረጡ",
 };

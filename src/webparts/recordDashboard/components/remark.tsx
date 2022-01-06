@@ -13,12 +13,12 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         setLoader(true);
         event.preventDefault()
         submitRemark(context, loggedUser, remarkDetail, id).then((response) => {
+            setRemarkDetail(null)
             setLoader(false);
             toast("Remark Added Successfully");
             getRemark(context, id).then((json) => {
                 setRemarks(json.value)
             })
-            setRemarkDetail(null)
             hideViewRemarkModal()
         },
             (err) => {
@@ -30,7 +30,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     }
     React.useEffect(() => {
         getRemark(context, id).then((json) => {
-            console.log(json.value)
             setRemarks(json.value)
         })
         getLoggedUser(context).then((json) => {

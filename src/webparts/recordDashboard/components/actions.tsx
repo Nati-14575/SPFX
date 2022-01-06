@@ -36,11 +36,15 @@ export function GetFiles(context: WebPartContext): Promise<any> {
 
 
 export function handleSubmit(file: any, context: WebPartContext, RecordType: string, inputs): Promise<any> {
+    console.log(file, RecordType, inputs)
     return postFile(context, file).then((response: SPHttpClientResponse) => {
+        console.log("finished postfile")
         return getRecordUsingName(file.name, context).then((result) => {
+            console.log("finished getRecordUsingName")
             const id = result[0].Id
             return updateItem(context, id, file.name, RecordType, inputs)
                 .then((id) => {
+                    console.log("finished updating")
                     return getOneRecord(context, id).then((json) => {
                         return json;
                     }) as Promise<any>;

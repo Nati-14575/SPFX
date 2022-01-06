@@ -160,7 +160,9 @@ export default class RecordDashboard extends React.Component<
       Title: record.Title,
       SendingOrganizationName: record.SendingOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
-      IncomingRecordDate: record.IncomingRecordDate,
+      IncomingRecordDate: record.IncomingRecordDate ? new Date(record.IncomingRecordDate).toLocaleDateString(
+        "en-us"
+      ) : null,
       Subject: record.Subject,
       FileIDId: record.FileIDId,
     };

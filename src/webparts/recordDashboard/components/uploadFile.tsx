@@ -219,10 +219,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     }, [words])
 
     function handleFileSubmit(event) {
-        setLoader(true);
         event.preventDefault();
         let inputs: any;
+        setLoader(true);
         if (caller === "Incomming") {
+            console.log("reached here")
             inputs = {
                 SendingOrganizationName: sendingOrg,
                 ReferenceNumber: ReferenceNumber,
@@ -230,20 +231,19 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                 Subject: Subject,
                 FileIDId: FileIDId
             }
-            console.log(inputs)
             handleSubmit(file, context, "Incomming", inputs)
                 .then((response) => {
-                    toast("Uploaded successfully")
-                    setFile("")
-                    setSendingOrg("")
-                    setIncomingRecordDate("")
-                    setDeliveryPerson("")
-                    setReferenceNumber("")
+                    setFile(null)
+                    setSendingOrg(null)
+                    setIncomingRecordDate(null)
+                    setDeliveryPerson(null)
+                    setReferenceNumber(null)
                     setFileId(0)
-                    setSubject("")
+                    setSubject(null)
                     hideModal()
                     setIncommingRecords(response)
                     setLoader(false);
+                    toast("Uploaded successfully")
                 }
                 )
         }
@@ -257,18 +257,19 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             }
             handleSubmit(file, context, "Outgoing", inputs)
                 .then((response) => {
-                    toast("Uploaded successfully")
                     setFile(null)
                     hideModal()
-                    setRecipientOrg("")
-                    setDateofDispatch("")
-                    setSubject("")
-                    setReferenceNumber("")
-                    setDeliveryPerson("")
+                    setRecipientOrg(null)
+                    setDateofDispatch(null)
+                    setSubject(null)
+                    setReferenceNumber(null)
+                    setDeliveryPerson(null)
                     setOutgoingRecords(response)
-                    setLoader(false);
+                    setLoader(false)
+                    toast("Uploaded successfully")
                 })
         }
+
     }
     return (
         <>
