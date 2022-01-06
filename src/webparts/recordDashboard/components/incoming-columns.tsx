@@ -14,14 +14,14 @@ export const incomingColumns = [
   },
   {
     Header: (({ words, hideColumns }) => {
-      return <div onClick={() => hideColumns("Title")}>{words.recordName}</div>
+      return <div >{words.recordName}</div>
     }),
     columnId: 2,
     accessor: 'Title',
   },
   {
     Header: (({ words, hideColumns }) => {
-      return <div onClick={() => hideColumns("SendingOrganizationName")}>{words.senderOrg}</div>
+      return <div >{words.senderOrg}</div>
     }),
     columnId: 3,
     accessor: 'SendingOrganizationName',

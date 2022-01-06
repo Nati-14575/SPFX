@@ -30,6 +30,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     }
     React.useEffect(() => {
         getRemark(context, id).then((json) => {
+            console.log(json.value)
             setRemarks(json.value)
         })
         getLoggedUser(context).then((json) => {
@@ -85,20 +86,33 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                             <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
                             <div className="mb-2 text-center col-offset-2">
                                 <h4><b>{words.listRemarks}</b></h4>
-
-                                {remarks && remarks.map(remark => (
-                                    <div className="card mb-3">
-                                        <div className="card-body">
-                                            <>
-                                                <h5 className="card-title text-center">{remark?.userName}</h5>
-                                                <p className="card-text text-center">{remark.Comments}</p>
-                                            </>
-                                        </div>
-                                    </div>
-                                ))}
-
                             </div>
                         </div>
+
+
+                        {remarks && remarks.map(remark => (
+                            // <div className="container justify-content-center mt-5 border-left border-right">
+                            //     <div className="d-flex justify-content-center py-2">
+                            //         <div className="second py-2 px-2"> <span className="text1">{remark?.Comments}</span>
+                            //             <div className="d-flex justify-content-between py-1 pt-2">
+                            //                 <div><img src="https://i.imgur.com/AgAC1Is.jpg" width="18" /><span className="text2">{remark?.userName}</span></div>
+                            //                 <div>About 30 minutes ago</div>
+                            //             </div>
+                            //         </div>
+                            //     </div>
+
+                            //     {/* <div className="card-body "> */}
+                            // </div>
+                            <div className="commented-section mt-2">
+                                <div className="d-flex flex-row align-items-center commented-user">
+                                    <h5 className="mr-2">{remark?.userName}</h5><span className="dot mb-1"></span><span className="mb-1 ml-2">About thirty minutes ago</span>
+                                </div>
+                                <div className="comment-text-sm"><span>{remark?.Comments}</span></div>
+                            </div>
+                        ))}
+
+                        {/* </div>
+                        </div> */}
                     </div>
 
                     <div className="form-group">

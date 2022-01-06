@@ -3,13 +3,9 @@ import { editAndGetRecord } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
-const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, files}) => {
-    console.log("under upload incoming detail");
-    console.log(recordDetails);
-    const [fileName, setFileName] = React.useState( recordDetails?.Title)
-    console.log(fileName);
-    console.log(recordDetails?.Title);
-    const [sendingOrg, setSendingOrg] = React.useState(recordDetails? recordDetails.SendingOrganizationName : null)
+const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, files }) => {
+    const [fileName, setFileName] = React.useState(recordDetails?.Title)
+    const [sendingOrg, setSendingOrg] = React.useState(recordDetails ? recordDetails.SendingOrganizationName : null)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails ? recordDetails.ReferenceNumber : null)
     const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails ? recordDetails.IncomingRecordDate : null)
     const [Subject, setSubject] = React.useState(recordDetails ? recordDetails.Subject : null)
