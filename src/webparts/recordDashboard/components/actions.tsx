@@ -33,12 +33,11 @@ export function GetFiles(context: WebPartContext): Promise<any> {
         }) as Promise<any>;
 }
 
-
-export function handleSubmit(file: any, context: WebPartContext, RecordType: string): Promise<any> {
+export function handleSubmit(file: any, context: WebPartContext, RecordType: string, inputs): Promise<any> {
     return postFile(context, file).then((response: SPHttpClientResponse) => {
         return getRecordUsingName(file.name, context).then((result) => {
             const id = result[0].Id
-            return updateItem(context, id, file.name, RecordType)
+            return updateItem(context, id, file.name, RecordType, inputs)
                 .then((id) => {
                     return getOneRecord(context, id).then((json) => {
                         return json;
@@ -66,18 +65,41 @@ export function postFile(context, file): Promise<any> {
         })
 }
 
-export function updateItem(context, id: number, fileName, RecordType): Promise<any> {
+export function updateItem(context, id: number, fileName, RecordType, inputs): Promise<any> {
 
     let updateUrl =
         context.pageContext.web.absoluteUrl +
         "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
         id +
         ")";
-    const recordInfo: any = {
-        Title: fileName,
-        RecordType,
-    };
+    var recordInfo: any
 
+    if (RecordType === "Incomming") {
+
+        recordInfo = {
+            Title: fileName,
+            RecordType,
+            SendingOrganizationName: inputs.SendingOrganizationName,
+            ReferenceNumber: inputs.ReferenceNumber,
+            IncomingRecordDate: inputs.IncomingRecordDate,
+            Subject: inputs.Subject,
+            FileIDId: inputs.FileIDId
+        };
+    }
+
+    else {
+        recordInfo = {
+            Title: fileName,
+            RecordType,
+            RecipientOrganizationName: inputs.RecipientOrganizationName,
+            ReferenceNumber: inputs.ReferenceNumber,
+            DateofDispatch: inputs.DateofDispatch,
+            DeliveryPersonnelName: inputs.DeliveryPersonnelName,
+            Subject: inputs.Subject,
+        };
+    }
+
+    console.log(recordInfo)
     const headers: any = {
         "X-HTTP-Method": "MERGE",
         "IF-MATCH": "*",

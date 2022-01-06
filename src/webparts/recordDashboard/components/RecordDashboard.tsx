@@ -145,7 +145,9 @@ export default class RecordDashboard extends React.Component<
       Title: record.Title,
       SendingOrganizationName: record.SendingOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
-      IncomingRecordDate: record.IncomingRecordDate,
+      IncomingRecordDate: record.IncomingRecordDate ? new Date(record.IncomingRecordDate).toLocaleDateString(
+        "en-us"
+      ) : null,
       Subject: record.Subject,
       FileIDId: record.FileIDId,
     })
@@ -156,17 +158,17 @@ export default class RecordDashboard extends React.Component<
 
   addChangeToOutgoingRecord = (record) => {
     let data = this.state.outgoingRecords
-    var outgoingRecord = {
+    data.push({
       Id: record.Id,
       Title: record.Title,
-      SendingOrganizationName: record.SendingOrganizationName,
+      RecipientOrganizationName: record.RecipientOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
-      IncomingRecordDate: record.IncomingRecordDate,
+      DateofDispatch: record.DateofDispatch ? new Date(record.DateofDispatch).toLocaleDateString(
+        "en-us"
+      ) : null,
+      DeliveryPersonnelName: record.DeliveryPersonnelName,
       Subject: record.Subject
-
-    };
-
-    data.splice(0, 0, outgoingRecord);
+    })
 
     this.setState({
       outgoingRecords: data
