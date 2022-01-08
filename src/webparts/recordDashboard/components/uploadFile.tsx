@@ -21,7 +21,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         setFileId(e.target.value);
     }
     let element1 = (<div className="container-fluid ">
-        <div className="row justify-content-center text-center h-100">
+        <div className="row justify-content-center text-center h-100 modalStyle">
             <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                 <br />
                 <div className="form-group row">
@@ -275,9 +275,9 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         <>
             {showLoader == false ?
 
-                <div className="container-fluid p-3">
-                    <div className="row justify-content-center text-center pt-4">
-                        <h4>
+                <div className="container-fluid p-5">
+                    <div className="row justify-content-center text-center pt-4 bg-info" style={{ "color": "white" }}>
+                        <h4 style={{"marginBottom":"15px"}}>
                             <b>{words.uploadRecord}</b>
                         </h4>
                     </div>
@@ -287,22 +287,30 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                             <form
                                 onSubmit={(event) => handleFileSubmit(event)}
                             >
-                                <div className="form-group">
-                                    <input
-                                        type="file"
-                                        className="form-control"
-                                        id="fileInput"
-                                        onChange={(event) => setFile(event.target.files[0])}
-                                    />
+                                <div className="form-group row">
+
+                                    <label className="col-sm-4 col-form-label">
+                                        {words.file}
+                                    </label>
+                                    <div className="col-sm-7">
+
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="fileInput"
+                                            onChange={(event) => setFile(event.target.files[0])}
+                                        />
+                                    </div>
+
                                 </div>
                                 {caller === "Incomming" ? (<div>{element1}</div>) : (<div>{element2}</div>)}
                                 <hr />
                                 <div className="form-group">
                                     {/* <div className="container"> */}
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-12 text-center">
                                             <button
-                                                className="btn btn-secondary btn-sm float-left"
+                                                className="btn btn-secondary btn-sm text-center"
                                                 onClick={hideModal}
                                                 type="reset"
                                             >
@@ -310,7 +318,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                             </button>
                                             <button
                                                 type="submit"
-                                                className=" btn btn-primary btn-sm float-right"
+                                                className=" btn bg-info btn-sm text-center ml-4" style={{"color":"white"}}
                                             >
                                                 {words.submit}
                                             </button>

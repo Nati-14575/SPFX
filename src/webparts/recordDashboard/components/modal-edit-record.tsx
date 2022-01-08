@@ -8,7 +8,7 @@ const ModalEditRecord = ({ handleClose, show, children }) => {
 
   return (
     <div className={showHideClassName}>
-      <section className="modal-record-main">
+      <section className="modal-record-main"  style={{"borderRadius":"40px"}}>
         {children}
         {/* <button type="button" onClick={handleClose}>
           Close

@@ -30,6 +30,7 @@ export const English = {
   location: "Location",
   fillRecordInfo: "Fill Record Information",
   selectLocation: "select location",
+  file: "File"
 };
 
 export const AMHARIC = {
@@ -64,4 +65,5 @@ export const AMHARIC = {
   location: "ቦታ",
   fillRecordInfo: "የመዝገብ መረጃን ሙላ",
   selectLocation: "ቦታ ይምረጡ",
+  file :"ፋይል"
 };

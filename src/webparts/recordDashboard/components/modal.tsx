@@ -6,7 +6,7 @@ const Modal = ({ handleClose, additionalStyles, show, children }) => {
 
   return (
     <div className={showHideClassName} style={additionalStyles}>
-      <section className="modal-main">
+      <section className="modal-main" style={{"borderRadius":"40px"}}>
         {children}
         {/* <button type="button" onClick={handleClose}>
           Close
