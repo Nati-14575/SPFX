@@ -36,7 +36,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             setSendingOrg(null)
             setIncomingRecordDate(null)
             setSubject(null)
-            setNum(!num)
+            setNum(num + 1)
             hideRecordModal()
         },
             (err) => {

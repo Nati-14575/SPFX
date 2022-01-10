@@ -4,7 +4,7 @@ import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
     // console.log(data)
-    const [num, setNum] = React.useState(false)
+    const [num, setNum] = React.useState(0)
     const {
         getTableProps,
         getTableBodyProps,
@@ -38,7 +38,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
-            <table {...getTableProps()} className="table table-bordered table-overflow" key={value}>
+            <table {...getTableProps()} className="table table-bordered table-overflow" key={num}>
                 <thead className="bg-info text-light" >
                     {headerGroups.map(headerGroup => (
                         <tr scope="col" {...headerGroup.getHeaderGroupProps()}>
