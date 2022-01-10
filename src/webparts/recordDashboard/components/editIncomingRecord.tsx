@@ -22,6 +22,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
+        console.log(new Date(IncomingRecordDate).toISOString())
         const data = {
             SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,
@@ -32,7 +33,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
         editAndGetRecord(context, recordDetails.Id, data).then((record) => {
 
             setLoader(false);
-            toast("Updated Successful");
+            toast("Updated Successful")
             updateRecordInfo(record, index)
             setFileName(null)
             setReferenceNumber(null)
@@ -41,7 +42,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             setSubject(null)
             setNum(num + 1)
             hideRecordModal()
-            window.location.reload()
+            // window.location.reload()
         },
             (err) => {
                 setLoader(false);
@@ -78,7 +79,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 </div>
                                 <br />
                                 <br />
-                                <div className="form-group row">
+                                <div className="form-group row d-md-flex">
                                     <label className="col-sm-4 col-form-label">
                                         {words.senderOrg}
                                     </label>
@@ -167,7 +168,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                             <button
                                                 className="btn btn-secondary btn-sm "
                                                 onClick={hideRecordModal}
-                                                type="reset"
+                                                type="button"
                                             >
                                                 {words.cancel}
                                             </button>

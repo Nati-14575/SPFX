@@ -219,11 +219,10 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     }, [words])
 
     function handleFileSubmit(event) {
+        setLoader(true);
         event.preventDefault();
         let inputs: any;
-        setLoader(true);
         if (caller === "Incomming") {
-            console.log("reached here")
             inputs = {
                 SendingOrganizationName: sendingOrg,
                 ReferenceNumber: ReferenceNumber,
@@ -233,6 +232,8 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             }
             handleSubmit(file, context, "Incomming", inputs)
                 .then((response) => {
+                    console.log(response)
+                    setLoader(false)
                     setFile(null)
                     setSendingOrg(null)
                     setIncomingRecordDate(null)
@@ -240,9 +241,8 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                     setReferenceNumber(null)
                     setFileId(0)
                     setSubject(null)
-                    hideModal()
+                    hideModal(event)
                     setIncommingRecords(response)
-                    setLoader(false);
                     toast("Uploaded successfully")
                 }
                 )
@@ -277,7 +277,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
 
                 <div className="container-fluid p-5">
                     <div className="row justify-content-center text-center pt-4 bg-info" style={{ "color": "white" }}>
-                        <h4 style={{"marginBottom":"15px"}}>
+                        <h4 style={{ "marginBottom": "15px" }}>
                             <b>{words.uploadRecord}</b>
                         </h4>
                     </div>
@@ -311,14 +311,14 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                         <div className="col-md-12 text-center">
                                             <button
                                                 className="btn btn-secondary btn-sm text-center"
-                                                onClick={hideModal}
+                                                onClick={(event) => hideModal(event)}
                                                 type="reset"
                                             >
                                                 {words.cancel}
                                             </button>
                                             <button
                                                 type="submit"
-                                                className=" btn bg-info btn-sm text-center ml-4" style={{"color":"white"}}
+                                                className=" btn bg-info btn-sm text-center ml-4" style={{ "color": "white" }}
                                             >
                                                 {words.submit}
                                             </button>

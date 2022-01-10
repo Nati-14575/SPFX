@@ -15,6 +15,7 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
             return response.json();
         })
         .then((json) => {
+            console.log(json.value)
             return json.value;
         }) as Promise<any>;
 }
@@ -35,16 +36,17 @@ export function GetFiles(context: WebPartContext): Promise<any> {
 
 
 export function handleSubmit(file: any, context: WebPartContext, RecordType: string, inputs): Promise<any> {
-    console.log(file, RecordType, inputs)
+
     return postFile(context, file).then((response: SPHttpClientResponse) => {
-        console.log("finished postfile")
+
         return getRecordUsingName(file.name, context).then((result) => {
-            console.log("finished getRecordUsingName")
+
             const id = result[0].Id
             return updateItem(context, id, file.name, RecordType, inputs)
                 .then((id) => {
-                    console.log("finished updating")
+
                     return getOneRecord(context, id).then((json) => {
+
                         return json;
                     }) as Promise<any>;
                 })
@@ -71,7 +73,7 @@ export function postFile(context, file): Promise<any> {
 }
 
 export function updateItem(context, id: number, fileName, RecordType, inputs): Promise<any> {
-
+    console.log(inputs)
     let updateUrl =
         context.pageContext.web.absoluteUrl +
         "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
@@ -91,7 +93,6 @@ export function updateItem(context, id: number, fileName, RecordType, inputs): P
             FileIDId: inputs.FileIDId
         };
     }
-
     else {
         recordInfo = {
             Title: fileName,
@@ -141,7 +142,7 @@ export function getLoggedUser(context): Promise<any> {
             return response.json();
         })
         .then((json) => {
-
+            console.log(json)
             return json.DisplayName;
         });
 }
@@ -164,8 +165,9 @@ export function getRecordUsingName(fileName: string, context: WebPartContext): P
 
 export function editAndGetRecord(context: WebPartContext, id: number, inputs): Promise<any> {
     return editRecord(context, id, inputs).then((response) => {
+        console.log("edit here")
         return getOneRecord(context, id).then((json) => {
-
+            console.log("get one record here")
             return json
         }) as Promise<any>
     })
@@ -183,6 +185,7 @@ export function editRecord(context: WebPartContext, id: number, inputs: any) {
         "X-HTTP-Method": "MERGE",
         "IF-MATCH": "*",
     };
+
     const recordOption: ISPHttpClientOptions = {
         headers: headers,
         body: JSON.stringify(inputs),

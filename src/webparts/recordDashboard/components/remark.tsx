@@ -8,6 +8,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [remarkDetail, setRemarkDetail] = React.useState(null)
     const [remarks, setRemarks] = React.useState(null)
     const [showLoader, setLoader] = React.useState(false);
+    console.log("Remarks")
 
     const onRemarkSubmit = (event) => {
         setLoader(true);
@@ -90,23 +91,23 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                         </div>
 
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
-                           
+
                             {remarks && remarks.map(remark => (
                                 <>
                                     <div className=" card  offset-md-1 col-md-8 col-sm-12 col-lg-8 offset-lg-2">
                                         <div className="card-body text-center">
-                                                <div className="row">
-                                                        <div className="col-md-3 col-sm-12">
-                                                            <img src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg" alt="user" width="50" className="rounded-circle" />
-                                                            <br />
-                                                            <p>{remark?.userName}</p>
-                                                        </div>
-                                                        <div className="col-md-8 col-sm-12" style={{"backgroundColor":"lightgrey"}}>
-                                                           
-                                                            <p className="float-left">{remark?.Comments}</p>
-                                                        </div>
-                                                    </div>
-                                           
+                                            <div className="row">
+                                                <div className="col-md-3 col-sm-12">
+                                                    <img src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg" alt="user" width="50" className="rounded-circle" />
+                                                    <br />
+                                                    <p>{remark?.userName}</p>
+                                                </div>
+                                                <div className="col-md-8 col-sm-12" style={{ "backgroundColor": "lightgrey" }}>
+
+                                                    <p className="float-left">{remark?.Comments}</p>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
 
@@ -116,12 +117,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
 
                         </div>
 
-
-
-
-
-                        {/* </div>
-                        </div> */}
                     </div>
 
                     <div className="form-group">
@@ -130,6 +125,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                                 <button
                                     className="btn btn-default btn-sm float-left"
                                     onClick={hideViewRemarkModal}
+                                    type="button"
                                 >
                                     {words.cancel}
                                 </button>

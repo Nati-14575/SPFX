@@ -160,12 +160,12 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                             <button
                                                 className="btn btn-secondary btn-sm "
                                                 onClick={hideRecordModal}
-                                                type="reset"
+                                                type="button"
                                             >
                                                 {words.cancel}
                                             </button>
                                             <button
-                                                className=" btn bg-info btn-sm text-center ml-4" style={{"color":"white"}}
+                                                className=" btn bg-info btn-sm text-center ml-4" style={{ "color": "white" }}
                                                 type="submit"
                                             >
                                                 {words.submit}

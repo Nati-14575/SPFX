@@ -17,8 +17,8 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
     }
 
     const onSubmit = (event) => {
-        setLoader(true);
         event.preventDefault()
+        setLoader(true);
         const data = {
             SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,

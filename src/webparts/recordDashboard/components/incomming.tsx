@@ -8,7 +8,7 @@ const Incomming = ({ words, context, showModal, columns, data, setRecords, updat
                 <div className="col-12">
                     <button
                         className="btn btn-primary float-right btnStyle"
-                        onClick={() => showModal("Incomming")}
+                        onClick={(event) => showModal(event, "Incomming")}
                     >
                         {words.addRecord}
                     </button>

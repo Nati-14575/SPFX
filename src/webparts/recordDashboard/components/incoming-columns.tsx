@@ -59,8 +59,6 @@ export const incomingColumns = [
       const [viewRecord, setViewRecord] = React.useState(false)
       const [remarkModal, setRemarkModal] = React.useState(false)
       const data = props.row.original
-      console.log("reached here")
-      console.log(viewRecord)
       return (
         <>
           <div>
@@ -84,13 +82,19 @@ export const incomingColumns = [
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
-            <ViewIncomingRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />
+            <ViewIncomingRecord words={props.words} hideViewRecordModal={(event) => {
+              event.preventDefault()
+              setViewRecord(false)
+            }} recordDetails={data} showRemarkModal={(event) => {
+              event.preventDefault()
+              setRemarkModal(true)
+            }} />
           </ModalEditRecord>
           <ModalEditRecord
             show={remarkModal}
             handleClose={() => setRemarkModal(false)}
           >
-            <Remark words={props.words} id={data.Id} context={props.context} hideViewRemarkModal={() => setRemarkModal(false)} />
+            {remarkModal && <Remark words={props.words} id={data.Id} context={props.context} hideViewRemarkModal={() => setRemarkModal(false)} />}
           </ModalEditRecord>
         </>
       )

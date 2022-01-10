@@ -48,7 +48,12 @@ export default class RecordDashboard extends React.Component<
       recordDetail: null,
       showLoader: false
     };
-
+    let cssURL =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
+    SPComponentLoader.loadCss(cssURL);
+    SPComponentLoader.loadCss(
+      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+    );
     this.setIncommingRecords()
     this.setOutgoingRecords()
     this.setFiles()
@@ -72,7 +77,6 @@ export default class RecordDashboard extends React.Component<
   }
 
   setLocalStorage(index) {
-
     localStorage.setItem('selectedTab', (index).toString());
     this.setState({ tabIndex: index });
   }
@@ -100,8 +104,6 @@ export default class RecordDashboard extends React.Component<
   }
 
   setRecordDetail = (recordDetail) => {
-    console.log("under record detail");
-    console.log(recordDetail);
     this.setState({
       recordDetail: recordDetail
     });
@@ -209,16 +211,13 @@ export default class RecordDashboard extends React.Component<
       IncomingRecordDate: record.IncomingRecordDate,
       Subject: record.Subject
     }
-    console.log(data)
     this.setState({
       incommingRecords: data
     })
   }
 
   updateOutgoingRecordInfo = (record, index) => {
-    console.log("under outgping record info");
     let data = this.state.outgoingRecords
-    console.log(data)
     index = data.findIndex(obj => obj.Id == record.Id);
     if (index != -1) {
       var newRecord = {
@@ -239,7 +238,8 @@ export default class RecordDashboard extends React.Component<
   }
 
   // for showing and hiding upload file modal
-  showModal = (text: any) => {
+  showModal = (event, text: any) => {
+    event.preventDefault()
     this.setState({
       show: true,
       caller: text,
@@ -283,25 +283,16 @@ export default class RecordDashboard extends React.Component<
   };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
-    let cssURL =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
-    SPComponentLoader.loadCss(cssURL);
-    SPComponentLoader.loadCss(
-      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-    );
-
-    this.setFiles()
-
     return (
       <>
         {
           this.state.showLoader == false ?
             <>
               <div className="container text-center">
-                <button className="btn btn-primary btn-margin" onClick={this.setLangEnglish}>
+                <button className="btn btn-primary btn-margin" type="button" onClick={this.setLangEnglish}>
                   EN
                 </button>
-                <button className="btn btn-success btn-margin" onClick={this.setLangAmharic}>
+                <button className="btn btn-success btn-margin" type="button" onClick={this.setLangAmharic}>
                   AM
                 </button>
               </div>
@@ -322,12 +313,10 @@ export default class RecordDashboard extends React.Component<
                   {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
                 </TabPanel>
                 <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
-                  <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
-                </Modal>
-
-                <Modal show={this.state.showUploadModal} handleClose={() => this.setState({ showUploadModal: false })} additionalStyles={{}}  >
-                  {/* <h1>Hello</h1> */}
-                  <UploadIncomingDetail words={this.state.words} hideRecordModal={() => this.setState({ showUploadModal: false })} context={this.props.context} recordDetails={this.state.recordDetail} key={this.state.recordDetail} files={this.state.files} />
+                  <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
+                    event.preventDefault()
+                    this.setState({ show: false })
+                  }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
                 </Modal>
               </Tabs>
               <ToastContainer />

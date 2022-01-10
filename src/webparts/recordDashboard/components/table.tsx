@@ -3,7 +3,6 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table
 import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
-    // console.log(data)
     const [num, setNum] = React.useState(0)
     const {
         getTableProps,
@@ -25,20 +24,12 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
         }
     }, useGlobalFilter, useSortBy, usePagination);
 
-    const [value, setValue] = React.useState(data);
-    // This will launch only if propName value has chaged.
-    React.useEffect(() => {
-        console.log("use effect")
-        setValue(data)
-    }, [num]);
-
-
     const { pageIndex, globalFilter } = state;
 
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
-            <table {...getTableProps()} className="table table-bordered table-overflow" key={num}>
+            <table {...getTableProps()} className="table table-bordered table-overflow" key={data}>
                 <thead className="bg-info text-light" >
                     {headerGroups.map(headerGroup => (
                         <tr scope="col" {...headerGroup.getHeaderGroupProps()}>
@@ -79,7 +70,8 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                     })}
                 </tbody>
             </table>
-            {pageOptions > 0 && <div className="container">
+            {/* {pageOptions > 0 &&  */}
+            <div className="container">
                 <span>
                     {words.page}
                     <strong>
@@ -94,7 +86,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
                 </button>)}
             </div>
 
-            }
+            {/* } */}
 
         </>
     )
