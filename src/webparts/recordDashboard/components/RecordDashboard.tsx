@@ -123,7 +123,6 @@ export default class RecordDashboard extends React.Component<
           ,
           Subject: item.Subject,
           FileIDId: item.FileIDId,
-
         });
         this.setState({ showLoader: false });
       })

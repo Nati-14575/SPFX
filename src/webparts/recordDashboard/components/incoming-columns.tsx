@@ -59,6 +59,8 @@ export const incomingColumns = [
       const [viewRecord, setViewRecord] = React.useState(false)
       const [remarkModal, setRemarkModal] = React.useState(false)
       const data = props.row.original
+      console.log("reached here")
+      console.log(viewRecord)
       return (
         <>
           <div>

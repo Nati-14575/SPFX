@@ -16,6 +16,9 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
         setFileId(e.target.value);
     }
 
+    if (recordDetails.FileIDId === null) {
+        setFileId(0)
+    }
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
@@ -38,6 +41,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             setSubject(null)
             setNum(num + 1)
             hideRecordModal()
+            window.location.reload()
         },
             (err) => {
                 setLoader(false);
@@ -148,7 +152,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         {words.location}
                                     </label>
                                     <div className="col-sm-7">
-                                        <select className="form-control" onChange={handleFileChange} >
+                                        <select className="form-control" onChange={handleFileChange} value={FileIDId} >
                                             {files && files.map((file) => <option value={file.Id}>{file.FileName}</option>)}
                                         </select>
                                     </div>

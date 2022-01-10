@@ -73,8 +73,8 @@ export const columns = [
         <>
           <div>
             <td>
-              <button type="button" className="btn btn-primary btn-margin" ><i className="fa fa-eye"
-                onClick={() => setViewRecord(true)}></i></button>
+              <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)} ><i className="fa fa-eye"
+              ></i></button>
               <button
                 type="button"
                 className="btn btn-success btn-margin"

@@ -15,7 +15,6 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
             return response.json();
         })
         .then((json) => {
-            console.log(json.value)
             return json.value;
         }) as Promise<any>;
 }
