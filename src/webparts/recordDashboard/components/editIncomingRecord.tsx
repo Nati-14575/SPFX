@@ -48,8 +48,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     return (
         <>
             {
-                showLoader == false ? <div className="container-fluid ">
-                    <div className="row justify-content-center text-center ">
+                showLoader == false ? <div className="container-fluid p-5">
+                    <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
                         <h4>
                             <b>{words.editRecord}</b>
                         </h4>
@@ -159,16 +159,16 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 <hr />
                                 <div className="form-group">
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-12 text-center">
                                             <button
-                                                className="btn btn-secondary btn-sm float-left"
+                                                className="btn btn-secondary btn-sm "
                                                 onClick={hideRecordModal}
                                                 type="reset"
                                             >
                                                 {words.cancel}
                                             </button>
                                             <button
-                                                className=" btn btn-primary btn-sm float-right"
+                                                className=" btn bg-info btn-sm text-center ml-4" style={{ "color": "white" }}
                                                 type="submit"
                                             >
                                                 {words.submit}

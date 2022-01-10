@@ -8,17 +8,18 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
 
     return (
-        <div className="container-fluid ">
-            <div className="row justify-content-center text-center ">
+        <div className="container-fluid p-5">
+            <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
                 <h4>
                     <b>{words.viewRecord}</b>
                 </h4>
             </div>
-            <hr />
-            <div className="row justify-content-center text-center h-100">
+            {/* <hr /> */}
+            <br/>
+            <div className="row justify-content-center text-center h-100" >
                 <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.fileName} :</b>
                         </label>
@@ -35,7 +36,7 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.recipientOrg} :</b>
                         </label>
@@ -52,7 +53,7 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.referenceNumber} :</b>
                         </label>
@@ -67,7 +68,7 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.dateOfDispatch} :</b>
                         </label>
@@ -83,7 +84,7 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.deliveryPersonnel} :</b>
                         </label>
@@ -99,7 +100,7 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                         </div>
                     </div>
                     <br />
-                    <div className="form-group row" style={{"boxShadow": "4px 4px 4px  grey"}}>
+                    <div className="form-group row p-2" style={{"boxShadow": "0 4px 2px -2px grey"}}>
                         <label className="col-sm-4 col-form-label">
                             <b> {words.subject} :</b>
                         </label>
@@ -116,12 +117,12 @@ const ViewRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails
                     <br />
 
                     <br />
-                    <hr />
-                    <div className="form-group">
+                    {/* <hr /> */}
+                    <div className="form-group ">
                         <div className="row">
-                            <div className="col-md-12">
+                            <div className="col-md-12 text-center">
                                 <button
-                                    className="btn btn-secondary btn-sm float-left"
+                                    className="btn btn-secondary btn-sm text-center"
                                     onClick={hideViewRecordModal}
                                 >
                                     {words.cancel}

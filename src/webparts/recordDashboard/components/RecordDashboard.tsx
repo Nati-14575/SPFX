@@ -15,6 +15,7 @@ import { GetFiles, GetRecords } from "./actions";
 import Modal from "./modal";
 import UploadFile from "./uploadFile";
 import UploadIncomingDetail from "./UploadIncomingDetail";
+import Loader from "./Loader";
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -24,7 +25,8 @@ export interface TableItems {
   tabIndex: number,
   files: any,
   showUploadModal: boolean,
-  recordDetail: any
+  recordDetail: any,
+  showLoader: boolean
 }
 
 export default class RecordDashboard extends React.Component<
@@ -43,7 +45,8 @@ export default class RecordDashboard extends React.Component<
       tabIndex: 0,
       files: null,
       showUploadModal: false,
-      recordDetail: null
+      recordDetail: null,
+      showLoader: false
     };
 
     this.setIncommingRecords()
@@ -105,6 +108,7 @@ export default class RecordDashboard extends React.Component<
   }
 
   setIncommingRecords = () => {
+    this.setState({ showLoader: true });
     GetRecords(this.props.context, "Incomming").then((response) => {
       const data: any = [];
       response.map((item) => {
@@ -120,7 +124,8 @@ export default class RecordDashboard extends React.Component<
           Subject: item.Subject,
           FileIDId: item.FileIDId,
 
-        })
+        });
+        this.setState({ showLoader: false });
       })
       var newData = data;
       this.setState({
@@ -290,40 +295,45 @@ export default class RecordDashboard extends React.Component<
 
     return (
       <>
-        <div className="container text-center">
-          <button className="btn btn-primary btn-margin" onClick={this.setLangEnglish}>
-            EN
-          </button>
-          <button className="btn btn-success btn-margin" onClick={this.setLangAmharic}>
-            AM
-          </button>
-        </div>
-        {/* for rendering incoming and outgoing tabs */}
-        <Tabs selectedIndex={this.state.tabIndex} onSelect={index => { this.setLocalStorage(index) }}>
-          <TabList>
-            <Tab>{this.state.words.incomming}</Tab>
-            <Tab>{this.state.words.outgoing}</Tab>
+        {
+          this.state.showLoader == false ?
+            <>
+              <div className="container text-center">
+                <button className="btn btn-primary btn-margin" onClick={this.setLangEnglish}>
+                  EN
+                </button>
+                <button className="btn btn-success btn-margin" onClick={this.setLangAmharic}>
+                  AM
+                </button>
+              </div>
+              {/* for rendering incoming and outgoing tabs */}
+              <Tabs selectedIndex={this.state.tabIndex} onSelect={index => { this.setLocalStorage(index) }}>
+                <TabList>
+                  <Tab>{this.state.words.incomming}</Tab>
+                  <Tab>{this.state.words.outgoing}</Tab>
 
-          </TabList>
+                </TabList>
 
-          <TabPanel >
-            {/* Incoming tab content */}
-            {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
-          </TabPanel>
-          <TabPanel >
-            {/* Outgoing tab content */}
-            {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
-          </TabPanel>
-          <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
-            <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
-          </Modal>
+                <TabPanel >
+                  {/* Incoming tab content */}
+                  {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
+                </TabPanel>
+                <TabPanel >
+                  {/* Outgoing tab content */}
+                  {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
+                </TabPanel>
+                <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
+                  <UploadFile caller={this.state.caller} words={this.state.words} hideModal={() => this.setState({ show: false })} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
+                </Modal>
 
-          <Modal show={this.state.showUploadModal} handleClose={() => this.setState({ showUploadModal: false })} additionalStyles={{}}  >
-            {/* <h1>Hello</h1> */}
-            <UploadIncomingDetail words={this.state.words} hideRecordModal={() => this.setState({ showUploadModal: false })} context={this.props.context} recordDetails={this.state.recordDetail} key={this.state.recordDetail} files={this.state.files} />
-          </Modal>
-        </Tabs>
-        <ToastContainer />
+                <Modal show={this.state.showUploadModal} handleClose={() => this.setState({ showUploadModal: false })} additionalStyles={{}}  >
+                  {/* <h1>Hello</h1> */}
+                  <UploadIncomingDetail words={this.state.words} hideRecordModal={() => this.setState({ showUploadModal: false })} context={this.props.context} recordDetails={this.state.recordDetail} key={this.state.recordDetail} files={this.state.files} />
+                </Modal>
+              </Tabs>
+              <ToastContainer />
+            </> : <Loader />
+        }
       </>
     );
   }

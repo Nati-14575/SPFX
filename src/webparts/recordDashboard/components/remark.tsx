@@ -40,8 +40,8 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         <>
 
             {
-                showLoader == false ? <div className="container-fluid ">
-                    <div className="row justify-content-center text-center" >
+                showLoader == false ? <div className="container-fluid p-5">
+                    <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
                         <h4>
                             <b>{words.addRemark}</b>
                         </h4>
@@ -61,10 +61,10 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                                 </div>
                                 <br />
                                 <div className="form-group">
-                                    <div className="row">
+                                    <div className="row text-center">
                                         <div className="col-md-12">
                                             <button
-                                                className=" btn btn-primary btn-sm float-left"
+                                                className=" btn bg-info btn-sm " style={{ "color": "white" }}
                                                 type="submit"
                                             >
                                                 {words.submit}
@@ -86,29 +86,39 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                             <div className="mb-2 text-center col-offset-2">
                                 <h4><b>{words.listRemarks}</b></h4>
                             </div>
+
+                        </div>
+
+                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                           
+                            {remarks && remarks.map(remark => (
+                                <>
+                                    <div className=" card  offset-md-1 col-md-8 col-sm-12 col-lg-8 offset-lg-2">
+                                        <div className="card-body text-center">
+                                                <div className="row">
+                                                        <div className="col-md-3 col-sm-12">
+                                                            <img src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg" alt="user" width="50" className="rounded-circle" />
+                                                            <br />
+                                                            <p>{remark?.userName}</p>
+                                                        </div>
+                                                        <div className="col-md-8 col-sm-12" style={{"backgroundColor":"lightgrey"}}>
+                                                           
+                                                            <p className="float-left">{remark?.Comments}</p>
+                                                        </div>
+                                                    </div>
+                                           
+                                        </div>
+                                    </div>
+
+                                </>
+
+                            ))}
+
                         </div>
 
 
-                        {remarks && remarks.map(remark => (
-                            // <div className="container justify-content-center mt-5 border-left border-right">
-                            //     <div className="d-flex justify-content-center py-2">
-                            //         <div className="second py-2 px-2"> <span className="text1">{remark?.Comments}</span>
-                            //             <div className="d-flex justify-content-between py-1 pt-2">
-                            //                 <div><img src="https://i.imgur.com/AgAC1Is.jpg" width="18" /><span className="text2">{remark?.userName}</span></div>
-                            //                 <div>About 30 minutes ago</div>
-                            //             </div>
-                            //         </div>
-                            //     </div>
 
-                            //     {/* <div className="card-body "> */}
-                            // </div>
-                            <div className="commented-section mt-2">
-                                <div className="d-flex flex-row align-items-center commented-user">
-                                    <h5 className="mr-2">{remark?.userName}</h5><span className="dot mb-1"></span><span className="mb-1 ml-2">About thirty minutes ago</span>
-                                </div>
-                                <div className="comment-text-sm"><span>{remark?.Comments}</span></div>
-                            </div>
-                        ))}
+
 
                         {/* </div>
                         </div> */}
