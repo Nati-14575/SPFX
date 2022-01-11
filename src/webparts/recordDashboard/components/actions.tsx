@@ -22,14 +22,14 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
 
 export function GetFiles(context: WebPartContext): Promise<any> {
     const url: string =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getbytitle('Files')/items";
+        "https://tgari2018.sharepoint.com/sites/demo/physicalLocation/_api/web/lists/getbytitle('File')/items";
     return context.spHttpClient
         .get(url, SPHttpClient.configurations.v1)
         .then((response: SPHttpClientResponse) => {
             return response.json();
         })
         .then((json) => {
+            console.log(json.value)
             return json.value;
         }) as Promise<any>;
 }
