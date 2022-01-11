@@ -85,7 +85,8 @@ export const columns = [
               <button type="button" className="btn btn-primary mr-2 btn-margin" onClick={() => setRemarkModal(true)}><i className="fa fa-plus"></i></button>
             </td>
           </div>
-          <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
+
+          <Modal handleClose={() => setEditModal(false)} show={editModal} additionalStyles={{}}>
             <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} key={props.data} setOutgoingRecords={props.updateRecordInfo} />
           </Modal>
           <ModalEditRecord

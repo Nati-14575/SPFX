@@ -85,7 +85,7 @@ export default class RecordDashboard extends React.Component<
     GetFiles(this.props.context).then((response) => {
       const data: any = [];
       data.push({
-        Id: null,
+        Id: 0,
         Title: null,
         FileName: this.state.words.selectLocation
       })
@@ -312,9 +312,10 @@ export default class RecordDashboard extends React.Component<
                   {/* Outgoing tab content */}
                   {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
                 </TabPanel>
-                <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
+
+                <Modal handleClose={() => this.setState({ show: false })} show={this.state.show} additionalStyles={{}}  >
                   <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
-                    
+
                     this.setState({ show: false })
                   }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
                 </Modal>

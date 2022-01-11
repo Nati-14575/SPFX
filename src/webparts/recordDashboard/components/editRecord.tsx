@@ -19,7 +19,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
         const data = {
             RecipientOrganizationName: recipientOrg,
             ReferenceNumber: ReferenceNumber,
-            DateofDispatch: DateofDispatch,
+            DateofDispatch: new Date(DateofDispatch),
             DeliveryPersonnelName: DeliveryPerson,
             Subject: Subject,
         };

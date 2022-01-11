@@ -3,6 +3,7 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from "react-table
 import { GlobalFilter } from "./GlobalFilter";
 
 const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, files }) => {
+    console.log(data)
     const [num, setNum] = React.useState(0)
     const {
         getTableProps,

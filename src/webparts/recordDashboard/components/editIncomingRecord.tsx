@@ -4,34 +4,32 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo, files, setNum, num }) => {
+    console.log(recordDetails.FileIDId)
+    console.log(files)
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
     const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
-    const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId)
+    const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId ? recordDetails.FileIDId : null)
     const [showLoader, setLoader] = React.useState(false);
 
     let handleFileChange = (e) => {
         setFileId(e.target.value);
     }
 
-    if (recordDetails.FileIDId === null) {
-        setFileId(0)
-    }
     const onSubmit = (event) => {
+        console.log("reached here")
         setLoader(true);
         event.preventDefault()
-        console.log(new Date(IncomingRecordDate).toISOString())
         const data = {
             SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,
-            IncomingRecordDate: IncomingRecordDate,
+            IncomingRecordDate: new Date(IncomingRecordDate),
             Subject: Subject,
-            FileIDId: FileIDId
+            FileIDId: parseInt(FileIDId)
         };
         editAndGetRecord(context, recordDetails.Id, data).then((record) => {
-
             setLoader(false);
             toast("Updated Successful")
             updateRecordInfo(record, index)
@@ -43,6 +41,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             setNum(num + 1)
             hideRecordModal()
             window.location.reload()
+
         },
             (err) => {
                 setLoader(false);

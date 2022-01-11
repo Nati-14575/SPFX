@@ -75,20 +75,21 @@ export const incomingColumns = [
               <button type="button" className="btn btn-primary mr-2 btn-margin" onClick={() => setRemarkModal(true)}><i className="fa fa-plus"></i></button>
             </td>
           </div>
+
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
-            <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.row.index} updateRecordInfo={props.updateRecordInfo} setNum={props.setNum} num={props.num} />
+            {editModal && <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.row.index} updateRecordInfo={props.updateRecordInfo} setNum={props.setNum} num={props.num} />}
           </Modal>
           <ModalEditRecord
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
-            <ViewIncomingRecord words={props.words} hideViewRecordModal={(event) => {
+            {viewRecord && <ViewIncomingRecord words={props.words} hideViewRecordModal={(event) => {
               event.preventDefault()
               setViewRecord(false)
             }} recordDetails={data} showRemarkModal={(event) => {
               event.preventDefault()
               setRemarkModal(true)
-            }} />
+            }} />}
           </ModalEditRecord>
           <ModalEditRecord
             show={remarkModal}

@@ -165,7 +165,7 @@ export function getRecordUsingName(fileName: string, context: WebPartContext): P
 
 export function editAndGetRecord(context: WebPartContext, id: number, inputs): Promise<any> {
     return editRecord(context, id, inputs).then((response) => {
-        console.log("edit here")
+        console.log(inputs)
         return getOneRecord(context, id).then((json) => {
             console.log("get one record here")
             return json

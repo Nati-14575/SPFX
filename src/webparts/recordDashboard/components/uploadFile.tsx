@@ -226,7 +226,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             inputs = {
                 SendingOrganizationName: sendingOrg,
                 ReferenceNumber: ReferenceNumber,
-                IncomingRecordDate: IncomingRecordDate,
+                IncomingRecordDate: new Date(IncomingRecordDate),
                 Subject: Subject,
                 FileIDId: FileIDId
             }
@@ -251,7 +251,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             inputs = {
                 RecipientOrganizationName: recipientOrg,
                 ReferenceNumber: ReferenceNumber,
-                DateofDispatch: DateofDispatch,
+                DateofDispatch: new Date(DateofDispatch),
                 DeliveryPersonnelName: DeliveryPerson,
                 Subject: Subject,
             }
