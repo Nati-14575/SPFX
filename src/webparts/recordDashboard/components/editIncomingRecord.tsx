@@ -42,7 +42,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
             setSubject(null)
             setNum(num + 1)
             hideRecordModal()
-            // window.location.reload()
+            window.location.reload()
         },
             (err) => {
                 setLoader(false);
