@@ -314,7 +314,7 @@ export default class RecordDashboard extends React.Component<
                 </TabPanel>
                 <Modal show={this.state.show} handleClose={() => this.setState({ show: false })} additionalStyles={{}}  >
                   <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
-                    event.preventDefault()
+                    
                     this.setState({ show: false })
                   }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
                 </Modal>
