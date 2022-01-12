@@ -20,180 +20,172 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     let handleFileChange = (e) => {
         setFileId(e.target.value);
     }
-    let element1 = (<div className="container-fluid ">
-        <div className="row justify-content-center text-center h-100 modalStyle">
-            <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.senderOrg}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            value={sendingOrg}
-                            onChange={(e) => setSendingOrg(e.target.value)}
-                        />
-                    </div>
+    let element1 = (
+        <>
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.senderOrg}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        value={sendingOrg}
+                        onChange={(e) => setSendingOrg(e.target.value)}
+                    />
                 </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.referenceNumber}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={ReferenceNumber}
-                            onChange={(event) =>
-                                setReferenceNumber(event.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.IncomingRecordDate}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="date"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={IncomingRecordDate}
-                            onChange={(event) =>
-                                setIncomingRecordDate(event.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.subject}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={Subject}
-                            onChange={(event) => setSubject(event.target.value)}
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.location}
-                    </label>
-                    <div className="col-sm-7">
-                        <select className="form-control" onChange={handleFileChange} >
-                            {files && files.map((file) => <option value={file.Id}>{file.FileName}</option>)}
-                        </select>
-                    </div>
-                </div>
-                <br />
-                <br />
             </div>
-        </div></div>
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.referenceNumber}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={ReferenceNumber}
+                        onChange={(event) =>
+                            setReferenceNumber(event.target.value)
+                        }
+                    />
+                </div>
+            </div>
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.IncomingRecordDate}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={IncomingRecordDate}
+                        onChange={(event) =>
+                            setIncomingRecordDate(event.target.value)
+                        }
+                    />
+                </div>
+            </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.subject}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={Subject}
+                        onChange={(event) => setSubject(event.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.location}
+                </label>
+                <div className="col-sm-7">
+                    <select className="form-control" onChange={handleFileChange} >
+                        {files && files.map((file) => <option value={file.Id}>{file.FileName}</option>)}
+                    </select>
+                </div>
+            </div>
+
+
+        </>
     )
-    let element2 = (<div className="container-fluid ">
-        <div className="row justify-content-center text-center h-100">
-            <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.recipientOrg}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            value={recipientOrg}
-                            onChange={(event) => setRecipientOrg(event.target.value)}
-                        />
-                    </div>
+    let element2 = (
+        <>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.recipientOrg}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        value={recipientOrg}
+                        onChange={(event) => setRecipientOrg(event.target.value)}
+                    />
                 </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.referenceNumber}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={ReferenceNumber}
-                            onChange={(event) =>
-                                setReferenceNumber(event.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.dateOfDispatch}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="date"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={DateofDispatch}
-                            onChange={(event) =>
-                                setDateofDispatch(event.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.deliveryPersonnel}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={DeliveryPerson}
-                            onChange={(event) =>
-                                setDeliveryPerson(event.target.value)
-                            }
-                        />
-                    </div>
-                </div>
-                <br />
-                <div className="form-group row">
-                    <label className="col-sm-4 col-form-label">
-                        {words.subject}
-                    </label>
-                    <div className="col-sm-7">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="exampleInputPassword1"
-                            value={Subject}
-                            onChange={(event) => setSubject(event.target.value)}
-                        />
-                    </div>
-                </div>
-                <br />
-                <br />
             </div>
-        </div>
-    </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.referenceNumber}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={ReferenceNumber}
+                        onChange={(event) =>
+                            setReferenceNumber(event.target.value)
+                        }
+                    />
+                </div>
+            </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.dateOfDispatch}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={DateofDispatch}
+                        onChange={(event) =>
+                            setDateofDispatch(event.target.value)
+                        }
+                    />
+                </div>
+            </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.deliveryPersonnel}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={DeliveryPerson}
+                        onChange={(event) =>
+                            setDeliveryPerson(event.target.value)
+                        }
+                    />
+                </div>
+            </div>
+
+            <div className="form-group row pb-3">
+                <label className="col-sm-4 col-form-label text-left">
+                    {words.subject}
+                </label>
+                <div className="col-sm-7">
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        value={Subject}
+                        onChange={(event) => setSubject(event.target.value)}
+                    />
+                </div>
+            </div>
+
+
+        </>
     )
     function Files() {
         GetFiles(context).then((response) => {
@@ -286,18 +278,18 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                             <form
                                 onSubmit={(event) => handleFileSubmit(event)}
                             >
-                                <div className="form-group row">
+                                <div className="form-group row pb-3">
 
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.file}
                                     </label>
                                     <div className="col-sm-7">
-
                                         <input
                                             type="file"
                                             className="form-control"
                                             id="fileInput"
                                             onChange={(event) => setFile(event.target.files[0])}
+                                            required
                                         />
                                     </div>
 

@@ -4,10 +4,29 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
+    function pad(numItem) {
+        return (numItem < 10) ? '0' + numItem.toString() : numItem.toString();
+    }
+    let recordDate
+    let arrRecordDate
+    let finalDate
+    let output
+
+    if (recordDetails.DateofDispatch) {
+        console.log(recordDetails.DateofDispatch)
+        recordDate = recordDetails.DateofDispatch ? recordDetails.DateofDispatch : ""
+        arrRecordDate = recordDate.split("/");
+        arrRecordDate.map((element, index) => {
+            arrRecordDate[index] = pad(element)
+        })
+        output = arrRecordDate.join("/");
+        finalDate = output.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
+        console.log(finalDate)
+    }
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch)
+    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? finalDate : "")
     const [DeliveryPerson, setDeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [showLoader, setLoader] = React.useState(false);
@@ -44,8 +63,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
         <>
             {
                 showLoader == false ? <div className="container-fluid p-5">
-                    <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
-                        <h4>
+                    <div className="row justify-content-center text-center p-3 bg-info">
+                        <h4 style={{ "color": "white" }}>
                             <b>{words.editRecord}</b>
                         </h4>
                     </div>
@@ -53,8 +72,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                     <div className="row justify-content-center text-center h-100">
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <form onSubmit={(event) => onSubmit(event)}>
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.fileName}
                                     </label>
                                     <div className="col-sm-7">
@@ -67,9 +86,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.recipientOrg}
                                     </label>
                                     <div className="col-sm-7">
@@ -83,9 +101,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.referenceNumber}
                                     </label>
                                     <div className="col-sm-7">
@@ -100,9 +117,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.dateOfDispatch}
                                     </label>
                                     <div className="col-sm-7">
@@ -117,9 +133,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.deliveryPersonnel}
                                     </label>
                                     <div className="col-sm-7">
@@ -134,9 +149,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.subject}
                                     </label>
                                     <div className="col-sm-7">
@@ -149,9 +163,6 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <br />
-
-                                <br />
                                 <hr />
                                 <div className="form-group">
                                     <div className="row">

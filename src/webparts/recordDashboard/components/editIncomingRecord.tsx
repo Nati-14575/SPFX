@@ -69,8 +69,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
         <>
             {
                 showLoader == false ? <div className="container-fluid p-5">
-                    <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
-                        <h4>
+                    <div className="row justify-content-center text-center p-1 bg-info">
+                        <h4 style={{ "color": "white" }}>
                             <b>{words.editRecord}</b>
                         </h4>
                     </div>
@@ -78,8 +78,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                     <div className="row justify-content-center text-center h-100">
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <form onSubmit={(event) => onSubmit(event)}>
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.fileName}
                                     </label>
                                     <div className="col-sm-7">
@@ -92,10 +92,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <br />
-                                <div className="form-group row d-md-flex">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.senderOrg}
                                     </label>
                                     <div className="col-sm-7">
@@ -109,11 +107,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         />
                                     </div>
                                 </div>
-                                <br />
-
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.referenceNumber}
                                     </label>
                                     <div className="col-sm-7">
@@ -128,9 +123,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         />
                                     </div>
                                 </div>
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.IncomingRecordDate}
                                     </label>
                                     <div className="col-sm-7">
@@ -138,17 +132,14 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                             type="date"
                                             className="form-control"
                                             value={IncomingRecordDate}
-                                            // value={"2022-01-21"}
                                             onChange={(event) =>
                                                 setIncomingRecordDate(event.target.value)
                                             }
                                         />
                                     </div>
                                 </div>
-
-                                <br />
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.subject}
                                     </label>
                                     <div className="col-sm-7">
@@ -161,10 +152,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         />
                                     </div>
                                 </div>
-                                <br />
-
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                <div className="form-group row pb-3">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.location}
                                     </label>
                                     <div className="col-sm-7">
@@ -173,9 +162,6 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         </select>
                                     </div>
                                 </div>
-                                <br />
-
-                                <br />
                                 <hr />
                                 <div className="form-group">
                                     <div className="row">

@@ -59,7 +59,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <form onSubmit={(event) => onSubmit(event)}>
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.fileName}
                                     </label>
                                     <div className="col-sm-7">
@@ -75,7 +75,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
                                 <br />
                                 <br />
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.senderOrg}
                                     </label>
                                     <div className="col-sm-7">
@@ -93,7 +93,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
 
                                 <br />
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.referenceNumber}
                                     </label>
                                     <div className="col-sm-7">
@@ -110,7 +110,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
                                 </div>
                                 <br />
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.IncomingRecordDate}
                                     </label>
                                     <div className="col-sm-7">
@@ -128,7 +128,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
 
                                 <br />
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.subject}
                                     </label>
                                     <div className="col-sm-7">
@@ -144,7 +144,7 @@ const UploadIncomingDetail = ({ words, context, hideRecordModal, recordDetails, 
                                 <br />
 
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.location}
                                     </label>
                                     <div className="col-sm-7">

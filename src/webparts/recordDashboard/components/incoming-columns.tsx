@@ -7,7 +7,8 @@ import ViewIncomingRecord from "./viewIncomingRecord";
 export const incomingColumns = [
   {
     Header: (({ words }) => {
-      return <div>{words.id}</div>
+      return <div>{words.id}
+      </div>
     }),
     columnId: 1,
     accessor: 'Id',
@@ -18,6 +19,14 @@ export const incomingColumns = [
     }),
     columnId: 2,
     accessor: 'Title',
+    Cell: (props) => {
+      const data = props.row.original
+      return <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {data.Title}
+        <a href={data.downloadUrl} className="btn btn-success btn-margin"><i className="fa fa-download"
+        ></i></a>
+      </div>
+    }
   },
   {
     Header: (({ words, hideColumns }) => {
@@ -79,9 +88,10 @@ export const incomingColumns = [
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>
             {editModal && <EditIncomingRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} setIncommingRecords={props.setRecords} files={props.files} index={props.row.index} updateRecordInfo={props.updateRecordInfo} setNum={props.setNum} num={props.num} />}
           </Modal>
-          <ModalEditRecord
+          <Modal
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
+            additionalStyles={{}}
           >
             {viewRecord && <ViewIncomingRecord words={props.words} hideViewRecordModal={(event) => {
               event.preventDefault()
@@ -90,13 +100,14 @@ export const incomingColumns = [
               event.preventDefault()
               setRemarkModal(true)
             }} />}
-          </ModalEditRecord>
-          <ModalEditRecord
+          </Modal>
+          <Modal
             show={remarkModal}
             handleClose={() => setRemarkModal(false)}
+            additionalStyles={{}}
           >
             {remarkModal && <Remark words={props.words} id={data.Id} context={props.context} hideViewRemarkModal={() => setRemarkModal(false)} />}
-          </ModalEditRecord>
+          </Modal>
         </>
       )
     }

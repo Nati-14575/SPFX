@@ -52,7 +52,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                             <form onSubmit={(event) => onRemarkSubmit(event)}>
                                 <br />
                                 <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.detail}
                                     </label>
                                     <div className="col-sm-7">

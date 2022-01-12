@@ -125,6 +125,7 @@ export default class RecordDashboard extends React.Component<
           ,
           Subject: item.Subject,
           FileIDId: item.FileIDId,
+          downloadUrl: item.EncodedAbsUrl
         });
         this.setState({ showLoader: false });
       })
@@ -148,7 +149,8 @@ export default class RecordDashboard extends React.Component<
             "en-us"
           ) : null,
           DeliveryPersonnelName: item.DeliveryPersonnelName,
-          Subject: item.Subject
+          Subject: item.Subject,
+          downloadUrl: item.EncodedAbsUrl
         })
       })
       var newData = data;
