@@ -8,7 +8,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [remarkDetail, setRemarkDetail] = React.useState(null)
     const [remarks, setRemarks] = React.useState(null)
     const [showLoader, setLoader] = React.useState(false);
-    console.log("Remarks")
 
     const onRemarkSubmit = (event) => {
         setLoader(true);

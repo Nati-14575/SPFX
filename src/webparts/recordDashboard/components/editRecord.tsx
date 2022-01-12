@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
-
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
@@ -19,7 +18,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
         const data = {
             RecipientOrganizationName: recipientOrg,
             ReferenceNumber: ReferenceNumber,
-            DateofDispatch: new Date(DateofDispatch),
+            DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
             DeliveryPersonnelName: DeliveryPerson,
             Subject: Subject,
         };

@@ -31,6 +31,8 @@ export const English = {
   fillRecordInfo: "Fill Record Information",
   selectLocation: "select location",
   file: "File",
+  uploadSuccess: "Uploaded Successfully",
+  updateSuccess: "Updated Successfully",
 };
 
 export const AMHARIC = {
@@ -66,4 +68,6 @@ export const AMHARIC = {
   fillRecordInfo: "የመዝገብ መረጃን ሙላ",
   selectLocation: "ቦታ ይምረጡ",
   file: "ፋይል",
+  uploadSuccess: "ተሳክቷል",
+  updateSuccess: "ተሳክቷል",
 };

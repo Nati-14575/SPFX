@@ -15,7 +15,6 @@ export function GetRecords(context: WebPartContext, recordType: string): Promise
             return response.json();
         })
         .then((json) => {
-            console.log(json.value)
             return json.value;
         }) as Promise<any>;
 }
@@ -29,7 +28,6 @@ export function GetFiles(context: WebPartContext): Promise<any> {
             return response.json();
         })
         .then((json) => {
-            console.log(json.value)
             return json.value;
         }) as Promise<any>;
 }
@@ -73,7 +71,6 @@ export function postFile(context, file): Promise<any> {
 }
 
 export function updateItem(context, id: number, fileName, RecordType, inputs): Promise<any> {
-    console.log(inputs)
     let updateUrl =
         context.pageContext.web.absoluteUrl +
         "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
@@ -104,8 +101,6 @@ export function updateItem(context, id: number, fileName, RecordType, inputs): P
             Subject: inputs.Subject,
         };
     }
-
-    console.log(recordInfo)
     const headers: any = {
         "X-HTTP-Method": "MERGE",
         "IF-MATCH": "*",
@@ -142,7 +137,6 @@ export function getLoggedUser(context): Promise<any> {
             return response.json();
         })
         .then((json) => {
-            console.log(json)
             return json.DisplayName;
         });
 }
@@ -165,9 +159,7 @@ export function getRecordUsingName(fileName: string, context: WebPartContext): P
 
 export function editAndGetRecord(context: WebPartContext, id: number, inputs): Promise<any> {
     return editRecord(context, id, inputs).then((response) => {
-        console.log(inputs)
         return getOneRecord(context, id).then((json) => {
-            console.log("get one record here")
             return json
         }) as Promise<any>
     })

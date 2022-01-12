@@ -226,13 +226,12 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             inputs = {
                 SendingOrganizationName: sendingOrg,
                 ReferenceNumber: ReferenceNumber,
-                IncomingRecordDate: new Date(IncomingRecordDate),
+                IncomingRecordDate: IncomingRecordDate ? new Date(IncomingRecordDate) : null,
                 Subject: Subject,
                 FileIDId: FileIDId
             }
             handleSubmit(file, context, "Incomming", inputs)
                 .then((response) => {
-                    console.log(response)
                     setLoader(false)
                     setFile(null)
                     setSendingOrg(null)
@@ -243,7 +242,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                     setSubject(null)
                     hideModal(event)
                     setIncommingRecords(response)
-                    toast("Uploaded successfully")
+                    toast(words.uploadSuccess)
                 }
                 )
         }
@@ -251,7 +250,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             inputs = {
                 RecipientOrganizationName: recipientOrg,
                 ReferenceNumber: ReferenceNumber,
-                DateofDispatch: new Date(DateofDispatch),
+                DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
                 DeliveryPersonnelName: DeliveryPerson,
                 Subject: Subject,
             }
@@ -266,7 +265,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                     setDeliveryPerson(null)
                     setOutgoingRecords(response)
                     setLoader(false)
-                    toast("Uploaded successfully")
+                    toast(words.uploadSuccess)
                 })
         }
 
@@ -306,7 +305,6 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                 {caller === "Incomming" ? (<div>{element1}</div>) : (<div>{element2}</div>)}
                                 <hr />
                                 <div className="form-group">
-                                    {/* <div className="container"> */}
                                     <div className="row">
                                         <div className="col-md-12 text-center">
                                             <button
@@ -324,7 +322,6 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                             </button>
                                         </div>
                                     </div>
-                                    {/* </div> */}
                                 </div>
                             </form>
                         </div>
@@ -332,7 +329,6 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                 </div> : <Loader />
 
             }
-            {/* <Loader /> */}
         </>
 
     )

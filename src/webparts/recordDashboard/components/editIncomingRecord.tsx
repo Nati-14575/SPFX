@@ -4,12 +4,29 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo, files, setNum, num }) => {
-    console.log(recordDetails.FileIDId)
-    console.log(files)
+    function pad(numItem) {
+        return (numItem < 10) ? '0' + numItem.toString() : numItem.toString();
+    }
+    let recordDate
+    let arrRecordDate
+    let finalDate
+    let output
+
+    if (recordDetails.IncomingRecordDate) {
+        recordDate = recordDetails.IncomingRecordDate ? recordDetails.IncomingRecordDate : ""
+        arrRecordDate = recordDate.split("/");
+        arrRecordDate.map((element, index) => {
+            arrRecordDate[index] = pad(element)
+        })
+        output = arrRecordDate.join("/");
+        finalDate = output.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
+
+    }
+
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
+    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate ? finalDate : "")
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId ? recordDetails.FileIDId : null)
     const [showLoader, setLoader] = React.useState(false);
@@ -19,19 +36,18 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     }
 
     const onSubmit = (event) => {
-        console.log("reached here")
         setLoader(true);
         event.preventDefault()
         const data = {
             SendingOrganizationName: sendingOrg,
             ReferenceNumber: ReferenceNumber,
-            IncomingRecordDate: new Date(IncomingRecordDate),
+            IncomingRecordDate: IncomingRecordDate ? IncomingRecordDate : null,
             Subject: Subject,
             FileIDId: parseInt(FileIDId)
         };
         editAndGetRecord(context, recordDetails.Id, data).then((record) => {
             setLoader(false);
-            toast("Updated Successful")
+            toast(words.updateSuccess)
             updateRecordInfo(record, index)
             setFileName(null)
             setReferenceNumber(null)
@@ -121,8 +137,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                         <input
                                             type="date"
                                             className="form-control"
-                                            id="exampleInputPassword1"
                                             value={IncomingRecordDate}
+                                            // value={"2022-01-21"}
                                             onChange={(event) =>
                                                 setIncomingRecordDate(event.target.value)
                                             }
