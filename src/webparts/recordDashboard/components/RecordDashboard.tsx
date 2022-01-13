@@ -37,7 +37,7 @@ export default class RecordDashboard extends React.Component<
   public constructor(props: IRecordDashboardProps) {
     super(props);
     this.state = {
-      words: English,
+      words: null,
       incommingRecords: null,
       outgoingRecords: null,
       show: false,
@@ -60,16 +60,14 @@ export default class RecordDashboard extends React.Component<
   }
 
   componentDidMount(): void {
-    // this.setState({tabIndex: 1});
     this.getLocalStorage();
+    this.getWords()
   }
 
   getLocalStorage() {
-
     if (localStorage.getItem('selectedTab') != null) {
       var selectedTab = localStorage.getItem('selectedTab');
       this.setState({ tabIndex: parseInt(selectedTab) });
-
     }
     else {
       this.setLocalStorage(this.state.tabIndex);
@@ -81,6 +79,21 @@ export default class RecordDashboard extends React.Component<
     this.setState({ tabIndex: index });
   }
 
+  setWords(selectedWords) {
+    { selectedWords ? localStorage.setItem('words', JSON.stringify(selectedWords)) : localStorage.setItem('words', JSON.stringify(English)) }
+    this.setState({
+      words: selectedWords
+    })
+  }
+
+  getWords() {
+    const storedWords = localStorage.getItem('words') ? localStorage.getItem('words') : JSON.stringify(English)
+    if (storedWords) {
+      this.setState({
+        words: JSON.parse(storedWords)
+      })
+    }
+  }
   setFiles = () => {
     GetFiles(this.props.context).then((response) => {
       const data: any = [];
@@ -255,40 +268,22 @@ export default class RecordDashboard extends React.Component<
     });
   };
 
-  // for showing and hiding upload file modal
-  showUploadModal = (e) => {
-    // this.setState({
-    //   showUploadModal: true
-    // });
-  };
-
-  hideUploadModal = (e) => {
-    e.preventDefault();
-    this.setState({
-      showUploadModal: false
-    });
-  };
-
-
   // for changing lang to english
   setLangEnglish = () => {
-    this.setState({
-      words: English,
-    });
+    this.setWords(English)
   };
 
   // for changing lang to amharic
   setLangAmharic = () => {
-    this.setState({
-      words: AMHARIC,
-    });
+    this.setWords(AMHARIC)
   };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
     return (
       <>
         {
-          this.state.showLoader == false ?
+          this.state.words &&
+            this.state.showLoader == false ?
             <>
               <div className="container text-center">
                 <button className="btn btn-primary btn-margin" type="button" onClick={this.setLangEnglish}>
@@ -317,9 +312,8 @@ export default class RecordDashboard extends React.Component<
 
                 <Modal handleClose={() => this.setState({ show: false })} show={this.state.show} additionalStyles={{}}  >
                   <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
-
                     this.setState({ show: false })
-                  }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} showDetailRecord={() => this.setState({ showUploadModal: true })} setRecordDetail={this.setRecordDetail} />
+                  }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />
                 </Modal>
               </Tabs>
               <ToastContainer />

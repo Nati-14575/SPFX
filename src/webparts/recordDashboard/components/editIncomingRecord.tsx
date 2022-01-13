@@ -20,7 +20,6 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
         })
         output = arrRecordDate.join("/");
         finalDate = output.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
-
     }
 
     const [fileName, setFileName] = React.useState(recordDetails.Title)

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { handleSubmit, GetFiles } from "./actions"
 import Loader from "./Loader";
 
-const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords, showDetailRecord, setRecordDetail }) => {
+const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords }) => {
     const [file, setFile] = React.useState(null)
     const [sendingOrg, setSendingOrg] = React.useState(null)
     const [ReferenceNumber, setReferenceNumber] = React.useState(null)
