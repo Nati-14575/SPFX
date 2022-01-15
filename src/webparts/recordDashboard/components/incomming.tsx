@@ -17,7 +17,7 @@ const Incomming = ({ words, context, showModal, columns, data, setRecords, updat
             </div>
             <br />
             <br />
-            <div className="row table-overflow">
+            <div className="row">
                 <div className="col-12">
                     <Table data={data} context={context} columns={columns} setRecords={setRecords} key={data} words={words} updateRecordInfo={updateRecordInfo} files={files} />
                 </div>

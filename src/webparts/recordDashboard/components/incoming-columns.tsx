@@ -6,14 +6,6 @@ import EditIncomingRecord from "./editIncomingRecord";
 import ViewIncomingRecord from "./viewIncomingRecord";
 export const incomingColumns = [
   {
-    Header: (({ words }) => {
-      return <div>{words.id}
-      </div>
-    }),
-    columnId: 1,
-    accessor: 'Id',
-  },
-  {
     Header: (({ words, hideColumns }) => {
       return <div >{words.recordName}</div>
     }),
@@ -42,19 +34,25 @@ export const incomingColumns = [
     columnId: 4,
     accessor: 'ReferenceNumber',
   },
-
+  {
+    Header: (({ words }) => {
+      return words.receievingPersonnel
+    }),
+    columnId: 5,
+    accessor: 'DeliveryPersonnelName',
+  },
   {
     Header: (({ words }) => {
       return words.IncomingRecordDate
     }),
-    columnId: 5,
+    columnId: 6,
     accessor: 'IncomingRecordDate',
   },
   {
     Header: (({ words }) => {
       return words.subject
     }),
-    columnId: 6,
+    columnId: 7,
     accessor: 'Subject',
   },
   {
@@ -62,7 +60,7 @@ export const incomingColumns = [
       return null;
     },
     accessor: "modal",
-    columnId: 7,
+    columnId: 8,
     Cell: (props) => {
       const [editModal, setEditModal] = React.useState(false)
       const [viewRecord, setViewRecord] = React.useState(false)
@@ -71,18 +69,16 @@ export const incomingColumns = [
       return (
         <>
           <div>
-            <td>
-              <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
-              ></i></button>
-              <button
-                type="button"
-                className="btn btn-success btn-margin"
-                onClick={() => setEditModal(true)}
-              >
-                <i className="fa fa-edit"></i>
-              </button>
-              <button type="button" className="btn btn-primary mr-2 btn-margin" onClick={() => setRemarkModal(true)}><i className="fa fa-plus"></i></button>
-            </td>
+            <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
+            ></i></button>
+            <button
+              type="button"
+              className="btn btn-success btn-margin"
+              onClick={() => setEditModal(true)}
+            >
+              <i className="fa fa-edit"></i>
+            </button>
+            <button type="button" className="btn btn-primary  btn-margin" onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
           </div>
 
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>

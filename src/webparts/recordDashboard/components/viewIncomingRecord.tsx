@@ -1,96 +1,82 @@
 import * as React from "react";
 const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recordDetails }) => {
-    const [fileName, setFileName] = React.useState(recordDetails.Title)
-    const [senderOrg, setSenderOrg] = React.useState(recordDetails.SendingOrganizationName)
-    const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
-    const [DeliveryPerson, setDeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)
-    const [Subject, setSubject] = React.useState(recordDetails.Subject)
+    const [fileName] = React.useState(recordDetails.Title)
+    const [senderOrg] = React.useState(recordDetails.SendingOrganizationName)
+    const [ReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
+    const [IncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate)
+    const [DeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)
+    const [Subject] = React.useState(recordDetails.Subject)
 
     return (
-        <div className="container-fluid p-5">
+        <div className="container-fluid pt-5 pl-4 pr-4">
             <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white !important" }}>
-                <h4>
-                    <b>{words.viewRecord}</b>
+                <h4 style={{ "color": "white" }}>
+                    {words.viewRecord}
                 </h4>
             </div>
-            {/* <hr /> */}
             <br />
             <div className="row justify-content-center text-center h-100">
                 <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b> {words.fileName} :</b>
+                            {words.fileName} :
                         </label>
-                        <div className="col-sm-5 text-left float-left">
+                        <div className="col-sm-6 text-left float-left">
 
                             <p>{fileName}</p>
                         </div>
-
-
                     </div>
-                    <br />
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b>{words.senderOrg} :</b>
+                            {words.senderOrg} :
                         </label>
-                        <div className="col-sm-5 text-left">
+                        <div className="col-sm-6 d-flex align-items-center text-left">
 
                             <p>{senderOrg}</p>
                         </div>
                     </div>
-                    <br />
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b> {words.referenceNumber} :</b>
+                            {words.referenceNumber} :
                         </label>
-                        <div className="col-sm-5 text-left">
+                        <div className="col-sm-6 text-left">
 
                             <p>{ReferenceNumber}</p>
                         </div>
                     </div>
-                    <br />
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b>{words.IncomingRecordDate} :</b>
+                            {words.IncomingRecordDate} :
                         </label>
-                        <div className="col-sm-5 text-left">
+                        <div className="col-sm-6 text-left">
 
                             <p>{IncomingRecordDate}</p>
                         </div>
                     </div>
-                    <br />
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b> {words.deliveryPersonnel} :</b>
+                            {words.receievingPersonnel} :
                         </label>
-                        <div className="col-sm-5 text-left">
+                        <div className="col-sm-6 text-left">
 
                             <p>{DeliveryPerson}</p>
                         </div>
                     </div>
-                    <br />
                     <div className="form-group row p-2" style={{ "boxShadow": "0 4px 2px -2px grey" }}>
                         <label className="col-sm-5 col-form-label text-left">
-                            <b>{words.subject} :</b>
+                            {words.subject} :
                         </label>
-                        <div className="col-sm-5 text-left">
+                        <div className="col-sm-6 text-left">
                             <p>{Subject}</p>
                         </div>
                     </div>
-                    <br />
-                    <div className="form-group">
+                    <div className="form-group p-4">
                         <div className="row">
-                            <div className="col-md-12">
+                            <div className="col-md-12 text-center d-flex justify-content-between">
+
                                 <button
-                                    className="btn btn-secondary btn-sm text-center"
-                                    onClick={(event) => hideViewRecordModal(event)}
-                                >
-                                    {words.cancel}
-                                </button>
-                                <button
-                                    className=" btn bg-info btn-sm ml-4" style={{ "color": "white" }}
+                                    className=" btn bg-primary btn-sm " style={{ "color": "white" }}
                                     type="button"
                                     onClick={(event) => {
                                         hideViewRecordModal(event)
@@ -98,6 +84,12 @@ const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recor
                                     }}
                                 >
                                     {words.remark}
+                                </button>
+                                <button
+                                    className="btn btn-danger btn-sm text-center "
+                                    onClick={(event) => hideViewRecordModal(event)}
+                                >
+                                    {words.cancel}
                                 </button>
                             </div>
                         </div>

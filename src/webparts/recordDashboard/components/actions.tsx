@@ -50,24 +50,63 @@ export function handleSubmit(file: any, context: WebPartContext, RecordType: str
                 })
         }) as Promise<any>
     })
-};
+}
+
+export function handleSubmitWithOufFile(context: WebPartContext, RecordType: string, inputs) {
+    return createFile(context, inputs).then((response: SPHttpClientResponse) => {
+
+        return getRecordUsingName(inputs.inputedFileName, context).then((result) => {
+
+            const id = result[0].Id
+            return updateItem(context, id, inputs.inputedFileName, RecordType, inputs)
+                .then((id) => {
+
+                    return getOneRecord(context, id).then((json) => {
+
+                        return json;
+                    }) as Promise<any>;
+                })
+        }) as Promise<any>
+    })
+}
+export function createFile(context, inputs): Promise<any> {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/GetFolderByServerRelativeUrl('" + context.pageContext.web.serverRelativeUrl + "/OutgoingLibrary')/files/add(url='" + inputs.inputedFileName + "',overwrite=true)/"
+
+    const data = {
+        ...inputs
+    }
+
+    const recordOption: ISPHttpClientOptions = {
+        body: JSON.stringify(data),
+    };
+
+    console.log(recordOption)
+    return context.spHttpClient.post(url, SPHttpClient.configurations.v1, recordOption).then((response: SPHttpClientResponse) => {
+        return response
+    })
+}
 
 export function postFile(context, file): Promise<any> {
-    const url: string =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getByTitle('OutgoingLibrary')/RootFolder/files/add(url='" +
-        file.name +
-        "',overwrite=true)";
-    var options: ISPHttpClientOptions = {
-        headers: {
-            Accept: "application/json",
-        },
-        body: file,
-    };
-    return context.spHttpClient
-        .post(url, SPHttpClient.configurations.v1, options).then((response: SPHttpClientResponse) => {
-            return response
-        })
+    if (file) {
+        const url: string =
+            context.pageContext.web.absoluteUrl +
+            "/_api/web/lists/getByTitle('OutgoingLibrary')/RootFolder/files/add(url='" +
+            file.name +
+            "',overwrite=true)";
+        var options: ISPHttpClientOptions = {
+            headers: {
+                "X-HTTP-Method": "MERGE",
+                "IF-MATCH": "*",
+            },
+            body: file,
+        };
+        return context.spHttpClient
+            .post(url, SPHttpClient.configurations.v1, options).then((response: SPHttpClientResponse) => {
+                console.log(response.json())
+                return response
+            })
+    }
+
 }
 
 export function updateItem(context, id: number, fileName, RecordType, inputs): Promise<any> {
@@ -86,6 +125,7 @@ export function updateItem(context, id: number, fileName, RecordType, inputs): P
             SendingOrganizationName: inputs.SendingOrganizationName,
             ReferenceNumber: inputs.ReferenceNumber,
             IncomingRecordDate: inputs.IncomingRecordDate,
+            DeliveryPersonnelName: inputs.DeliveryPersonnelName,
             Subject: inputs.Subject,
             FileIDId: inputs.FileIDId
         };
@@ -97,10 +137,10 @@ export function updateItem(context, id: number, fileName, RecordType, inputs): P
             RecipientOrganizationName: inputs.RecipientOrganizationName,
             ReferenceNumber: inputs.ReferenceNumber,
             DateofDispatch: inputs.DateofDispatch,
-            DeliveryPersonnelName: inputs.DeliveryPersonnelName,
             Subject: inputs.Subject,
         };
     }
+
     const headers: any = {
         "X-HTTP-Method": "MERGE",
         "IF-MATCH": "*",
@@ -137,7 +177,8 @@ export function getLoggedUser(context): Promise<any> {
             return response.json();
         })
         .then((json) => {
-            return json.DisplayName;
+            console.log(json)
+            return json;
         });
 }
 
@@ -157,13 +198,22 @@ export function getRecordUsingName(fileName: string, context: WebPartContext): P
         }) as Promise<any>;
 }
 
-export function editAndGetRecord(context: WebPartContext, id: number, inputs): Promise<any> {
-    return editRecord(context, id, inputs).then((response) => {
-        return getOneRecord(context, id).then((json) => {
-            return json
-        }) as Promise<any>
-    })
-
+export function editAndGetRecord(context: WebPartContext, id: number, file, inputs): Promise<any> {
+    if (file) {
+        return postFile(context, file).then((response) => {
+            return editRecord(context, id, inputs).then((response) => {
+                return getOneRecord(context, id).then((json) => {
+                    return json
+                }) as Promise<any>
+            })
+        })
+    } else {
+        return editRecord(context, id, inputs).then((response) => {
+            return getOneRecord(context, id).then((json) => {
+                return json
+            }) as Promise<any>
+        })
+    }
 }
 
 export function editRecord(context: WebPartContext, id: number, inputs: any) {
@@ -191,12 +241,13 @@ export function editRecord(context: WebPartContext, id: number, inputs: any) {
         .catch((err) => console.log(err))
 }
 
-export function submitRemark(context: WebPartContext, loggedUser: string, Comments: string, RecordId: number): Promise<any> {
+export function submitRemark(context: WebPartContext, loggedUser: string, userEmail, Comments: string, RecordId: number): Promise<any> {
     const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items";
 
     const data = {
         userName: loggedUser,
         Comments,
+        userEmail: userEmail,
         RecordId
     };
 

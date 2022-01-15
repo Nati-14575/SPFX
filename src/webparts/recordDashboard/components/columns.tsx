@@ -6,16 +6,6 @@ import Modal from "./modal";
 import ModalEditRecord from "./modal-edit-record";
 export const columns = [
   {
-    Header: (({ words, className, hideColumns }) => {
-      return <div >{words.id}</div>
-    }),
-    columnId: 1,
-    accessor: 'Id',
-    Cell: ((props) => {
-      return <div >{props.row.original.Id}</div>
-    })
-  },
-  {
     Header: (({ words, hideColumns }) => {
       return words.recordName
     }),
@@ -44,13 +34,7 @@ export const columns = [
     columnId: 5,
     accessor: 'DateofDispatch',
   },
-  {
-    Header: (({ words }) => {
-      return words.deliveryPersonnel
-    }),
-    columnId: 6,
-    accessor: 'DeliveryPersonnelName',
-  },
+
   {
     Header: (({ words }) => {
       return words.subject
@@ -72,28 +56,28 @@ export const columns = [
       return (
         <>
           <div>
-            <td>
-              <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)} ><i className="fa fa-eye"
-              ></i></button>
-              <button
-                type="button"
-                className="btn btn-success btn-margin"
-                onClick={() => setEditModal(true)}
-              >
-                <i className="fa fa-edit"></i>
-              </button>
-              <button type="button" className="btn btn-primary mr-2 btn-margin" onClick={() => setRemarkModal(true)}><i className="fa fa-plus"></i></button>
-            </td>
+
+            <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)} ><i className="fa fa-eye"
+            ></i></button>
+            <button
+              type="button"
+              className="btn btn-success btn-margin"
+              onClick={() => setEditModal(true)}
+            >
+              <i className="fa fa-edit"></i>
+            </button>
+            <button type="button" className="btn btn-primary btn-margin" onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
+
           </div>
 
           <Modal handleClose={() => setEditModal(false)} show={editModal} additionalStyles={{}}>
-            <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} key={props.data} setOutgoingRecords={props.updateRecordInfo} />
+            {editModal && <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} key={props.data} setOutgoingRecords={props.updateRecordInfo} />}
           </Modal>
           <ModalEditRecord
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
-            <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />
+            {viewRecord && <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />}
           </ModalEditRecord>
           <ModalEditRecord
             show={remarkModal}

@@ -4,33 +4,51 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
-    function pad(numItem) {
-        return (numItem < 10) ? '0' + numItem.toString() : numItem.toString();
-    }
-    let recordDate
-    let arrRecordDate
-    let finalDate
-    let output
-
-    if (recordDetails.DateofDispatch) {
-        console.log(recordDetails.DateofDispatch)
-        recordDate = recordDetails.DateofDispatch ? recordDetails.DateofDispatch : ""
-        arrRecordDate = recordDate.split("/");
-        arrRecordDate.map((element, index) => {
-            arrRecordDate[index] = pad(element)
-        })
-        output = arrRecordDate.join("/");
-        finalDate = output.replace(/(\d\d)\/(\d\d)\/(\d{4})/, "$3-$1-$2");
-        console.log(finalDate)
-    }
+    const [file, setFile] = React.useState(null)
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? finalDate : "")
-    const [DeliveryPerson, setDeliveryPerson] = React.useState(recordDetails.DeliveryPersonnelName)
+    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? recordDetails.DateofDispatch : new Date().toISOString().slice(0, 10))
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [showLoader, setLoader] = React.useState(false);
+    const [inputError, setError] = React.useState(null)
+    const [fileError, setFileError] = React.useState(null)
+    const [refNumberError, setRefNumberError] = React.useState(null)
+    const [subjectError, setSubjectError] = React.useState(null)
+    const [recipientOrgError, setRecipientOrgError] = React.useState(null)
+    const [dispatchDateError, setDispatchDateError] = React.useState(null)
 
+    let submited
+
+    function validateOutgoingInputs() {
+        if (!ReferenceNumber) {
+            setRefNumberError(words.refNumberError)
+            submited = false
+        }
+        if (!Subject) {
+            setSubjectError(words.subjectError)
+            submited = false
+        }
+        if (!recipientOrg) {
+            setRecipientOrgError(words.reciepientOrgNameError)
+            submited = false
+        }
+        if (!DateofDispatch) {
+            setDispatchDateError(words.dispatchDateError)
+            submited = false
+        }
+        if (ReferenceNumber && Subject && recipientOrg && DateofDispatch) {
+            setRefNumberError(null)
+            setSubjectError(null)
+            setRecipientOrgError(null)
+            setDispatchDateError(null)
+            submited = true
+        }
+    }
+    function handleSubmit(event) {
+        event.preventDefault()
+        { submited && onSubmit(event) }
+    }
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
@@ -38,17 +56,15 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
             RecipientOrganizationName: recipientOrg,
             ReferenceNumber: ReferenceNumber,
             DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
-            DeliveryPersonnelName: DeliveryPerson,
             Subject: Subject,
         };
-        editAndGetRecord(context, recordDetails.Id, data).then((response) => {
+        editAndGetRecord(context, recordDetails.Id, file, data).then((response) => {
             setLoader(false);
-            toast("Updated Successfully");
-            setFileName(null)
+            toast(words.updateSuccess)
+            setFile(null)
             setReferenceNumber(null)
             setRecipientOrg(null)
             setDateofDispatch(null)
-            setDeliveryPerson(null)
             setSubject(null)
             hideRecordModal()
             setOutgoingRecords(response);
@@ -56,13 +72,30 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
         }, (err) => {
             setLoader(false);
             toast.error("Something went wrong");
-
         })
+    }
+    const fileChangeHandler = (event) => {
+        event.preventDefault()
+        if (event.target.files[0].name !== recordDetails.Title) {
+            setFileError("Please insert the correct file")
+            submited = false
+            return
+        }
+        else {
+            setFile(event.target.files[0])
+            setFileName(event.target.files[0].name)
+            setFileError(null)
+            submited = true
+        }
+    }
+    const handleIconClick = () => {
+        const input = document.getElementById("fileInput")
+        input.click()
     }
     return (
         <>
             {
-                showLoader == false ? <div className="container-fluid p-5">
+                showLoader == false ? <div className="container-fluid pt-5 pl-4 pr-4">
                     <div className="row justify-content-center text-center p-3 bg-info">
                         <h4 style={{ "color": "white" }}>
                             <b>{words.editRecord}</b>
@@ -71,24 +104,37 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                     <hr />
                     <div className="row justify-content-center text-center h-100">
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <form onSubmit={(event) => onSubmit(event)}>
-                                <div className="form-group row pb-3">
+                            <form onSubmit={(event) => {
+                                validateOutgoingInputs()
+                                handleSubmit(event)
+
+                            }}
+                            >
+                                <div className={inputError ? "container bg-danger text-light p-2" : "container bg-dark text-light"} >{inputError}</div>
+                                <div className="form-group row p-2">
                                     <label className="col-sm-4 col-form-label text-left">
-                                        {words.fileName}
+                                        {words.file}
                                     </label>
-                                    <div className="col-sm-7">
+                                    <div className="col-sm-8 d-flex">
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="fileInput"
+                                            hidden
+                                            onChange={(e) => fileChangeHandler(e)}
+                                        />
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="exampleInputEmail1"
-                                            aria-describedby="emailHelp"
                                             value={fileName}
                                         />
+                                        <button type="button" className="btn btn-warning ml-2" onClick={handleIconClick} style={{ cursor: "pointer" }}><i className="fa fa-file"></i></button>
                                     </div>
                                 </div>
-                                <div className="form-group row pb-3">
+                                <div className={fileError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{fileError}</div>
+                                <div className="form-group row p-2">
                                     <label className="col-sm-4 col-form-label text-left">
-                                        {words.recipientOrg}
+                                        {words.recipientOrg} <span style={{ color: "red" }} className="py-auto">*</span>
                                     </label>
                                     <div className="col-sm-7">
                                         <input
@@ -101,9 +147,10 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <div className="form-group row pb-3">
+                                <div className={recipientOrgError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{recipientOrgError}</div>
+                                <div className="form-group row p-2">
                                     <label className="col-sm-4 col-form-label text-left">
-                                        {words.referenceNumber}
+                                        {words.referenceNumber} <span style={{ color: "red" }} className="py-auto">*</span>
                                     </label>
                                     <div className="col-sm-7">
                                         <input
@@ -117,9 +164,10 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <div className="form-group row pb-3">
+                                <div className={refNumberError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{refNumberError}</div>
+                                <div className="form-group row p-2">
                                     <label className="col-sm-4 col-form-label text-left">
-                                        {words.dateOfDispatch}
+                                        {words.dateOfDispatch} <span style={{ color: "red" }} className="py-auto">*</span>
                                     </label>
                                     <div className="col-sm-7">
                                         <input
@@ -133,25 +181,10 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
-                                <div className="form-group row pb-3">
+                                <div className={dispatchDateError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{dispatchDateError}</div>
+                                <div className="form-group row pb-3 p-2">
                                     <label className="col-sm-4 col-form-label text-left">
-                                        {words.deliveryPersonnel}
-                                    </label>
-                                    <div className="col-sm-7">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputPassword1"
-                                            value={DeliveryPerson}
-                                            onChange={(event) =>
-                                                setDeliveryPerson(event.target.value)
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-group row pb-3">
-                                    <label className="col-sm-4 col-form-label text-left">
-                                        {words.subject}
+                                        {words.subject} <span style={{ color: "red" }} className="py-auto">*</span>
                                     </label>
                                     <div className="col-sm-7">
                                         <input
@@ -163,22 +196,30 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                         />
                                     </div>
                                 </div>
+                                <div className={subjectError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{subjectError}</div>
                                 <hr />
-                                <div className="form-group">
+                                <div className="form-group p-3">
                                     <div className="row">
-                                        <div className="col-md-12 text-center">
+                                        <div className="col-md-12 text-center d-flex justify-content-between">
+
                                             <button
-                                                className="btn btn-secondary btn-sm "
-                                                onClick={hideRecordModal}
-                                                type="button"
-                                            >
-                                                {words.cancel}
-                                            </button>
-                                            <button
-                                                className=" btn bg-info btn-sm text-center ml-4" style={{ "color": "white" }}
+                                                className=" btn bg-primary btn-sm text-center " style={{ "color": "white" }}
                                                 type="submit"
                                             >
                                                 {words.submit}
+                                            </button>
+                                            <button
+                                                className="btn btn-danger btn-sm "
+                                                onClick={() => {
+                                                    hideRecordModal
+                                                    setRefNumberError(null)
+                                                    setSubjectError(null)
+                                                    setRecipientOrgError(null)
+                                                    setDispatchDateError(null)
+                                                }}
+                                                type="button"
+                                            >
+                                                {words.cancel}
                                             </button>
                                         </div>
                                     </div>

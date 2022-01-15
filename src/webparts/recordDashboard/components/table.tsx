@@ -29,7 +29,7 @@ const Table = ({ data, columns, context, words, setRecords, updateRecordInfo, fi
     return (
         <>
             <GlobalFilter searchText={words.search} filter={globalFilter} setFilter={setGlobalFilter} />
-            <table {...getTableProps()} className="table table-bordered table-overflow" key={data}>
+            <table {...getTableProps()} className="table table-bordered " key={data}>
                 <thead className="bg-info text-light" >
                     {headerGroups.map(headerGroup => (
                         <tr scope="col" {...headerGroup.getHeaderGroupProps()}>

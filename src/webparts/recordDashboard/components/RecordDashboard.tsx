@@ -14,7 +14,6 @@ import Outgoing from "./outgoing";
 import { GetFiles, GetRecords } from "./actions";
 import Modal from "./modal";
 import UploadFile from "./uploadFile";
-import UploadIncomingDetail from "./UploadIncomingDetail";
 import Loader from "./Loader";
 export interface TableItems {
   incommingRecords: any;
@@ -37,7 +36,7 @@ export default class RecordDashboard extends React.Component<
   public constructor(props: IRecordDashboardProps) {
     super(props);
     this.state = {
-      words: null,
+      words: English,
       incommingRecords: null,
       outgoingRecords: null,
       show: false,
@@ -46,7 +45,7 @@ export default class RecordDashboard extends React.Component<
       files: null,
       showUploadModal: false,
       recordDetail: null,
-      showLoader: false
+      showLoader: false,
     };
     let cssURL =
       "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
@@ -61,7 +60,7 @@ export default class RecordDashboard extends React.Component<
 
   componentDidMount(): void {
     this.getLocalStorage();
-    this.getWords()
+    this.getLanguage()
   }
 
   getLocalStorage() {
@@ -79,18 +78,23 @@ export default class RecordDashboard extends React.Component<
     this.setState({ tabIndex: index });
   }
 
-  setWords(selectedWords) {
-    { selectedWords ? localStorage.setItem('words', JSON.stringify(selectedWords)) : localStorage.setItem('words', JSON.stringify(English)) }
-    this.setState({
-      words: selectedWords
-    })
+  setLanguage(lang) {
+    localStorage.setItem('lang', lang)
   }
 
-  getWords() {
-    const storedWords = localStorage.getItem('words') ? localStorage.getItem('words') : JSON.stringify(English)
-    if (storedWords) {
+  getLanguage() {
+    const selectedLanguage = localStorage.getItem('lang') ? localStorage.getItem('lang') : "en"
+
+    { !localStorage.getItem('lang') && this.setLanguage("en") }
+
+    if (selectedLanguage === "en") {
       this.setState({
-        words: JSON.parse(storedWords)
+        words: English
+      })
+    }
+    else if (selectedLanguage === "am") {
+      this.setState({
+        words: AMHARIC
       })
     }
   }
@@ -132,10 +136,9 @@ export default class RecordDashboard extends React.Component<
           Title: item.Title,
           SendingOrganizationName: item.SendingOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          IncomingRecordDate: item.IncomingRecordDate ? new Date(item.IncomingRecordDate).toLocaleDateString(
-            "en-us"
-          ) : null
+          IncomingRecordDate: item.IncomingRecordDate ? new Date(item.IncomingRecordDate).toISOString().slice(0, 10) : null
           ,
+          DeliveryPersonnelName: item.DeliveryPersonnelName,
           Subject: item.Subject,
           FileIDId: item.FileIDId,
           downloadUrl: item.EncodedAbsUrl
@@ -158,9 +161,7 @@ export default class RecordDashboard extends React.Component<
           Title: item.Title,
           RecipientOrganizationName: item.RecipientOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          DateofDispatch: item.DateofDispatch ? new Date(item.DateofDispatch).toLocaleDateString(
-            "en-us"
-          ) : null,
+          DateofDispatch: item.DateofDispatch ? new Date(item.DateofDispatch).toISOString().slice(0, 10) : null,
           DeliveryPersonnelName: item.DeliveryPersonnelName,
           Subject: item.Subject,
           downloadUrl: item.EncodedAbsUrl
@@ -185,6 +186,7 @@ export default class RecordDashboard extends React.Component<
         "en-us"
       ) : null,
       Subject: record.Subject,
+      DeliveryPersonnelName: record.DeliveryPersonnelName,
       FileIDId: record.FileIDId,
     };
 
@@ -270,12 +272,14 @@ export default class RecordDashboard extends React.Component<
 
   // for changing lang to english
   setLangEnglish = () => {
-    this.setWords(English)
+    this.setLanguage("en")
+    this.getLanguage()
   };
 
   // for changing lang to amharic
   setLangAmharic = () => {
-    this.setWords(AMHARIC)
+    this.setLanguage("am")
+    this.getLanguage()
   };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
@@ -311,9 +315,9 @@ export default class RecordDashboard extends React.Component<
                 </TabPanel>
 
                 <Modal handleClose={() => this.setState({ show: false })} show={this.state.show} additionalStyles={{}}  >
-                  <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
+                  {this.state.show && <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
                     this.setState({ show: false })
-                  }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />
+                  }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />}
                 </Modal>
               </Tabs>
               <ToastContainer />
