@@ -3,7 +3,7 @@ import { IRecordDashboardProps } from "./IRecordDashboardProps";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./main.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { English, AMHARIC } from "./words"
 import "react-tabs/style/react-tabs.css";
@@ -11,10 +11,11 @@ import { columns } from "./columns";
 import { incomingColumns } from "./incoming-columns";
 import Incomming from "./incomming";
 import Outgoing from "./outgoing";
-import { GetFiles, GetRecords } from "./actions";
+import { getAllItems, getFilteredItems } from "./actions";
 import Modal from "./modal";
 import UploadFile from "./uploadFile";
 import Loader from "./Loader";
+
 export interface TableItems {
   incommingRecords: any;
   outgoingRecords: any;
@@ -48,7 +49,7 @@ export default class RecordDashboard extends React.Component<
       showLoader: false,
     };
     let cssURL =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css";
+      "https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css";
     SPComponentLoader.loadCss(cssURL);
     SPComponentLoader.loadCss(
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
@@ -61,6 +62,21 @@ export default class RecordDashboard extends React.Component<
   componentDidMount(): void {
     this.getLocalStorage();
     this.getLanguage()
+    const originalSetItem = localStorage.setItem;
+
+    localStorage.setItem = function (key, value) {
+      const event = new Event('itemInserted');
+
+      document.dispatchEvent(event);
+      originalSetItem.apply(this, arguments);
+    };
+
+    const localStorageSetHandler = (() => {
+      this.getLanguage()
+    })
+
+    document.addEventListener("itemInserted", localStorageSetHandler, true);
+
   }
 
   getLocalStorage() {
@@ -82,11 +98,9 @@ export default class RecordDashboard extends React.Component<
     localStorage.setItem('lang', lang)
   }
 
-  getLanguage() {
+  getLanguage = () => {
     const selectedLanguage = localStorage.getItem('lang') ? localStorage.getItem('lang') : "en"
-
     { !localStorage.getItem('lang') && this.setLanguage("en") }
-
     if (selectedLanguage === "en") {
       this.setState({
         words: English
@@ -99,7 +113,7 @@ export default class RecordDashboard extends React.Component<
     }
   }
   setFiles = () => {
-    GetFiles(this.props.context).then((response) => {
+    getAllItems(this.props.context, "File").then((response) => {
       const data: any = [];
       data.push({
         Id: 0,
@@ -128,12 +142,12 @@ export default class RecordDashboard extends React.Component<
 
   setIncommingRecords = () => {
     this.setState({ showLoader: true });
-    GetRecords(this.props.context, "Incomming").then((response) => {
+    getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Incoming'").then((response) => {
       const data: any = [];
       response.map((item) => {
         data.push({
           Id: item.Id,
-          Title: item.Title,
+          Title: item.FileLeafRef,
           SendingOrganizationName: item.SendingOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
           IncomingRecordDate: item.IncomingRecordDate ? new Date(item.IncomingRecordDate).toISOString().slice(0, 10) : null
@@ -153,12 +167,12 @@ export default class RecordDashboard extends React.Component<
   }
 
   setOutgoingRecords = () => {
-    GetRecords(this.props.context, "Outgoing").then((response) => {
+    getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Outgoing'").then((response) => {
       const data: any = [];
       response.map((item) => {
         data.push({
           Id: item.Id,
-          Title: item.Title,
+          Title: item.FileLeafRef,
           RecipientOrganizationName: item.RecipientOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
           DateofDispatch: item.DateofDispatch ? new Date(item.DateofDispatch).toISOString().slice(0, 10) : null,
@@ -188,6 +202,7 @@ export default class RecordDashboard extends React.Component<
       Subject: record.Subject,
       DeliveryPersonnelName: record.DeliveryPersonnelName,
       FileIDId: record.FileIDId,
+      downloadUrl: record.EncodedAbsUrl
     };
 
     data.splice(0, 0, incommingRecord);
@@ -219,18 +234,18 @@ export default class RecordDashboard extends React.Component<
   }
 
   updateIncomingRecordInfo = (record, index) => {
-    let data = this.state.incommingRecords
-    data[index] = {
-      Id: record.Id,
-      Title: record.Title,
-      SendingOrganizationName: record.SendingOrganizationName,
-      ReferenceNumber: record.ReferenceNumber,
-      IncomingRecordDate: record.IncomingRecordDate,
-      Subject: record.Subject
-    }
-    this.setState({
-      incommingRecords: data
-    })
+    // let data = this.state.incommingRecords
+    // data[index] = {
+    //   Id: record.Id,
+    //   Title: record.Title,
+    //   SendingOrganizationName: record.SendingOrganizationName,
+    //   ReferenceNumber: record.ReferenceNumber,
+    //   IncomingRecordDate: record.IncomingRecordDate,
+    //   Subject: record.Subject
+    // }
+    // this.setState({
+    //   incommingRecords: data
+    // })
   }
 
   updateOutgoingRecordInfo = (record, index) => {
@@ -270,52 +285,44 @@ export default class RecordDashboard extends React.Component<
     });
   };
 
-  // for changing lang to english
-  setLangEnglish = () => {
-    this.setLanguage("en")
-    this.getLanguage()
-  };
-
-  // for changing lang to amharic
-  setLangAmharic = () => {
-    this.setLanguage("am")
-    this.getLanguage()
-  };
 
   public render(): React.ReactElement<IRecordDashboardProps> {
+    let Words;
+    if (localStorage.getItem('lang') === "en") {
+      Words = English
+    }
+    else {
+      Words = AMHARIC
+    }
     return (
       <>
         {
-          this.state.words &&
+          Words &&
             this.state.showLoader == false ?
             <>
-              <div className="container text-center">
-                <button className="btn btn-primary btn-margin" type="button" onClick={this.setLangEnglish}>
-                  EN
-                </button>
-                <button className="btn btn-success btn-margin" type="button" onClick={this.setLangAmharic}>
-                  AM
-                </button>
-              </div>
               {/* for rendering incoming and outgoing tabs */}
+              {/* <div className="d-flex">
+                <button className="btn btn-primary" type="button" onClick={(e) => this.setLanguage("en")}>EN</button>
+                <button className="btn btn-primary" type="button" onClick={(e) => this.setLanguage("am")} >AM</button>
+              </div> */}
               <Tabs selectedIndex={this.state.tabIndex} onSelect={index => { this.setLocalStorage(index) }}>
                 <TabList>
-                  <Tab>{this.state.words.incomming}</Tab>
-                  <Tab>{this.state.words.outgoing}</Tab>
+                  <Tab>{Words.incomming}</Tab>
+                  <Tab>{Words.outgoing}</Tab>
 
                 </TabList>
 
                 <TabPanel >
                   {/* Incoming tab content */}
-                  {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
+                  {this.state.incommingRecords && <Incomming context={this.props.context} words={Words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
                 </TabPanel>
                 <TabPanel >
                   {/* Outgoing tab content */}
-                  {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
+                  {this.state.outgoingRecords && <Outgoing context={this.props.context} words={Words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
                 </TabPanel>
 
                 <Modal handleClose={() => this.setState({ show: false })} show={this.state.show} additionalStyles={{}}  >
-                  {this.state.show && <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
+                  {this.state.show && <UploadFile caller={this.state.caller} words={Words} hideModal={(event) => {
                     this.setState({ show: false })
                   }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />}
                 </Modal>

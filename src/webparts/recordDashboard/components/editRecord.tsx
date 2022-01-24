@@ -1,5 +1,5 @@
 import * as React from "react";
-import { editAndGetRecord } from "./actions"
+import { moveFile, postFile, updateItem } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
@@ -11,7 +11,6 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
     const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? recordDetails.DateofDispatch : new Date().toISOString().slice(0, 10))
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [showLoader, setLoader] = React.useState(false);
-    const [inputError, setError] = React.useState(null)
     const [fileError, setFileError] = React.useState(null)
     const [refNumberError, setRefNumberError] = React.useState(null)
     const [subjectError, setSubjectError] = React.useState(null)
@@ -52,41 +51,59 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
-        const data = {
-            RecipientOrganizationName: recipientOrg,
-            ReferenceNumber: ReferenceNumber,
-            DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
-            Subject: Subject,
-        };
-        editAndGetRecord(context, recordDetails.Id, file, data).then((response) => {
-            setLoader(false);
-            toast(words.updateSuccess)
-            setFile(null)
-            setReferenceNumber(null)
-            setRecipientOrg(null)
-            setDateofDispatch(null)
-            setSubject(null)
-            hideRecordModal()
-            setOutgoingRecords(response);
-            window.location.reload();
-        }, (err) => {
-            setLoader(false);
-            toast.error("Something went wrong");
-        })
+        if (file) {
+            const data = {
+                RecipientOrganizationName: recipientOrg,
+                ReferenceNumber: ReferenceNumber,
+                DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
+                Subject: Subject,
+                originalFilename: recordDetails.Title,
+                newFilename: fileName
+            };
+            moveFile(context, "OutgoingLibrary", recordDetails.FileLeafRef, file.name).then(() => {
+                postFile(context, "OutgoingLibrary", file).then(() => {
+                    updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
+                        setLoader(false);
+                        toast(words.updateSuccess)
+                        setFile(null)
+                        setReferenceNumber(null)
+                        setRecipientOrg(null)
+                        setDateofDispatch(null)
+                        setSubject(null)
+                        hideRecordModal()
+                        setOutgoingRecords(result);
+                        window.location.reload();
+                    })
+                })
+            })
+        } else {
+            const data = {
+                RecipientOrganizationName: recipientOrg,
+                ReferenceNumber: ReferenceNumber,
+                DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
+                Subject: Subject,
+            }
+            updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
+                setLoader(false);
+                toast(words.updateSuccess)
+                setFile(null)
+                setReferenceNumber(null)
+                setRecipientOrg(null)
+                setDateofDispatch(null)
+                setSubject(null)
+                hideRecordModal()
+                setOutgoingRecords(result);
+                window.location.reload();
+            })
+        }
     }
     const fileChangeHandler = (event) => {
-        event.preventDefault()
-        if (event.target.files[0].name !== recordDetails.Title) {
-            setFileError("Please insert the correct file")
-            submited = false
-            return
-        }
-        else {
-            setFile(event.target.files[0])
-            setFileName(event.target.files[0].name)
-            setFileError(null)
-            submited = true
-        }
+
+        setFile(event.target.files[0])
+        setFileName(event.target.files[0].name)
+        setFileError(null)
+        submited = true
+
     }
     const handleIconClick = () => {
         const input = document.getElementById("fileInput")
@@ -110,7 +127,6 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
 
                             }}
                             >
-                                <div className={inputError ? "container bg-danger text-light p-2" : "container bg-dark text-light"} >{inputError}</div>
                                 <div className="form-group row p-2">
                                     <label className="col-sm-4 col-form-label text-left">
                                         {words.file}
@@ -211,7 +227,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                             <button
                                                 className="btn btn-danger btn-sm "
                                                 onClick={() => {
-                                                    hideRecordModal
+                                                    hideRecordModal()
                                                     setRefNumberError(null)
                                                     setSubjectError(null)
                                                     setRecipientOrgError(null)

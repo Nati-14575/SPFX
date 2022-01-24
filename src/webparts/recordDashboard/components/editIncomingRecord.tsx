@@ -1,5 +1,5 @@
 import * as React from "react";
-import { editAndGetRecord } from "./actions"
+import { moveFile, postFile, updateItem } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
@@ -13,7 +13,6 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId ? recordDetails.FileIDId : null)
     const [showLoader, setLoader] = React.useState(false);
-    const [inputError, setError] = React.useState(null)
     const [fileError, setFileError] = React.useState(null)
     const [organizationNameError, setOrganizationNameError] = React.useState(null)
     const [refNumberError, setRefNumberError] = React.useState(null)
@@ -60,47 +59,67 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     const onSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
-        const data = {
-            SendingOrganizationName: sendingOrg,
-            ReferenceNumber: ReferenceNumber,
-            IncomingRecordDate: IncomingRecordDate ? IncomingRecordDate : null,
-            Subject: Subject,
-            FileIDId: parseInt(FileIDId),
-        };
-        editAndGetRecord(context, recordDetails.Id, file, data).then((record) => {
-            setLoader(false);
-            toast(words.updateSuccess)
-            updateRecordInfo(record, index)
-            setFile(null)
-            setReferenceNumber(null)
-            setSendingOrg(null)
-            setIncomingRecordDate(null)
-            setSubject(null)
-            setNum(num + 1)
-            hideRecordModal()
-            window.location.reload()
 
-        },
-            (err) => {
-                setLoader(false);
-                toast.error("Something went wrong");
 
+        if (file) {
+            const data = {
+                SendingOrganizationName: sendingOrg,
+                ReferenceNumber: ReferenceNumber,
+                IncomingRecordDate: IncomingRecordDate ? IncomingRecordDate : null,
+                Subject: Subject,
+                FileIDId: parseInt(FileIDId),
+            };
+            moveFile(context, "OutgoingLibrary", recordDetails.Title, file.name).then(() => {
+                postFile(context, "OutgoingLibrary", file).then(() => {
+                    updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((response) => {
+                        setLoader(false);
+                        toast(words.updateSuccess)
+                        updateRecordInfo(response, index)
+                        setFile(null)
+                        setReferenceNumber(null)
+                        setSendingOrg(null)
+                        setIncomingRecordDate(null)
+                        setSubject(null)
+                        setNum(num + 1)
+                        hideRecordModal()
+                        // window.location.reload()
+                    })
+                })
             })
+        }
+        else {
+            const data = {
+                SendingOrganizationName: sendingOrg,
+                ReferenceNumber: ReferenceNumber,
+                IncomingRecordDate: IncomingRecordDate ? IncomingRecordDate : null,
+                Subject: Subject,
+                FileIDId: parseInt(FileIDId),
+            }
+            updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
+                console.log(result)
+                setLoader(false);
+                toast(words.updateSuccess)
+                updateRecordInfo(result, index)
+                setFile(null)
+                setReferenceNumber(null)
+                setSendingOrg(null)
+                setIncomingRecordDate(null)
+                setSubject(null)
+                setNum(num + 1)
+                hideRecordModal()
+                window.location.reload()
+            })
+        }
+
+
     }
 
     const fileChangeHandler = (event) => {
         event.preventDefault()
-        if (event.target.files[0].name !== recordDetails.Title) {
-            setFileError("Please insert the correct file")
-            submited = false
-            return
-        }
-        else {
-            setFile(event.target.files[0])
-            setFileName(event.target.files[0].name)
-            setFileError(null)
-            submited = true
-        }
+        setFile(event.target.files[0])
+        setFileName(event.target.files[0].name)
+        setFileError(null)
+        submited = true
     }
     const handleIconClick = () => {
         const input = document.getElementById("fileInput")
@@ -124,9 +143,8 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
 
                             }}
                             >
-                                <div className={inputError ? "container bg-danger text-light pl-3 py-1" : "container bg-dark text-light"} >{inputError}</div>
                                 <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.file}
                                     </label>
                                     <div className="col-sm-8 d-flex">
@@ -142,16 +160,15 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                             className="form-control"
                                             value={fileName}
                                         />
-                                        <button type="button" className="btn btn-warning  ml-2" onClick={handleIconClick} style={{ cursor: "pointer" }}><i className="fa fa-file"></i></button>
+                                        <button type="button" className="btn btn-warning ml-2" onClick={handleIconClick} style={{ cursor: "pointer" }}><i className="fa fa-file"></i></button>
                                     </div>
-
                                 </div>
                                 <div className={fileError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{fileError}</div>
                                 <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.senderOrg} <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-7">
                                         <input
                                             type="text"
                                             className="form-control"
@@ -162,10 +179,10 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 </div>
                                 <div className={organizationNameError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{organizationNameError}</div>
                                 <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.referenceNumber} <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-7">
                                         <input
                                             type="text"
                                             className="form-control"
@@ -179,10 +196,10 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 </div>
                                 <div className={refNumberError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{refNumberError}</div>
                                 <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.IncomingRecordDate} <span style={{ color: "red" }} className="py-auto">*</span>
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-7">
                                         <input
                                             type="date"
                                             className="form-control"
@@ -195,10 +212,10 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 </div>
                                 <div className={recordDateError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{recordDateError}</div>
                                 <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.subject} <span style={{ color: "red" }}>*</span>
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-7">
                                         <input
                                             type="text"
                                             className="form-control"
@@ -210,10 +227,10 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                 </div>
                                 <div className={subjectError ? "container  text-danger p-2 text-left" : "container text-danger"} >{subjectError}</div>
                                 <div className="form-group row pb-3 p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
+                                    <label className="col-sm-4 col-form-label text-left">
                                         {words.location}
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className="col-sm-7">
                                         <select className="form-control" onChange={handleFileChange} value={FileIDId} >
                                             {files && files.map((file) => <option value={file.Id}>{file.FileName}</option>)}
                                         </select>
@@ -233,7 +250,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                             <button
                                                 className="btn btn-danger btn-sm "
                                                 onClick={() => {
-                                                    hideRecordModal
+                                                    hideRecordModal()
                                                     setRefNumberError(null)
                                                     setSubjectError(null)
                                                     setOrganizationNameError(null)

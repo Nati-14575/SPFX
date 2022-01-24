@@ -1,7 +1,6 @@
 import * as React from "react";
 import Remark from "./remark";
 import Modal from "./modal";
-import ModalEditRecord from "./modal-edit-record";
 import EditIncomingRecord from "./editIncomingRecord";
 import ViewIncomingRecord from "./viewIncomingRecord";
 export const incomingColumns = [
@@ -15,8 +14,8 @@ export const incomingColumns = [
       const data = props.row.original
       return <div style={{ display: "flex", justifyContent: "space-between" }}>
         {data.Title}
-        <a href={data.downloadUrl} className="btn btn-success btn-margin"><i className="fa fa-download"
-        ></i></a>
+        {/* <a href={data.downloadUrl} className="btn btn-success"><i className="fa fa-download"
+        ></i></a> */}
       </div>
     }
   },
@@ -34,20 +33,20 @@ export const incomingColumns = [
     columnId: 4,
     accessor: 'ReferenceNumber',
   },
-  {
-    Header: (({ words }) => {
-      return words.receievingPersonnel
-    }),
-    columnId: 5,
-    accessor: 'DeliveryPersonnelName',
-  },
-  {
-    Header: (({ words }) => {
-      return words.IncomingRecordDate
-    }),
-    columnId: 6,
-    accessor: 'IncomingRecordDate',
-  },
+  // {
+  //   Header: (({ words }) => {
+  //     return words.receievingPersonnel
+  //   }),
+  //   columnId: 5,
+  //   accessor: 'DeliveryPersonnelName',
+  // },
+  // {
+  //   Header: (({ words }) => {
+  //     return words.IncomingRecordDate
+  //   }),
+  //   columnId: 6,
+  //   accessor: 'IncomingRecordDate',
+  // },
   {
     Header: (({ words }) => {
       return words.subject
@@ -69,16 +68,16 @@ export const incomingColumns = [
       return (
         <>
           <div>
-            <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
+            <button type="button" className="btn btn-primary mx-2" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
             ></i></button>
             <button
               type="button"
-              className="btn btn-success btn-margin"
+              className="btn btn-success mx-2"
               onClick={() => setEditModal(true)}
             >
               <i className="fa fa-edit"></i>
             </button>
-            <button type="button" className="btn btn-primary  btn-margin" onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
+            <button type="button" className="btn btn-primary mx-2 " onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
           </div>
 
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>

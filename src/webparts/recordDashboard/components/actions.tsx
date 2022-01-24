@@ -1,278 +1,144 @@
 import {
     SPHttpClient,
-    SPHttpClientResponse,
     ISPHttpClientOptions,
 } from "@microsoft/sp-http";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-
-export function GetRecords(context: WebPartContext, recordType: string): Promise<any> {
-    const url: string =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getbytitle('OutgoingLibrary')/items?$select=*,EncodedAbsUrl&$filter=RecordType eq '" + recordType + "'&$orderby=Created desc";
-    return context.spHttpClient
-        .get(url, SPHttpClient.configurations.v1)
-        .then((response: SPHttpClientResponse) => {
-            return response.json();
-        })
-        .then((json) => {
-            return json.value;
-        }) as Promise<any>;
-}
-
-export function GetFiles(context: WebPartContext): Promise<any> {
-    const url: string =
-        "https://tgari2018.sharepoint.com/sites/demo/physicalLocation/_api/web/lists/getbytitle('File')/items";
-    return context.spHttpClient
-        .get(url, SPHttpClient.configurations.v1)
-        .then((response: SPHttpClientResponse) => {
-            return response.json();
-        })
-        .then((json) => {
-            return json.value;
-        }) as Promise<any>;
-}
-
-
-export function handleSubmit(file: any, context: WebPartContext, RecordType: string, inputs): Promise<any> {
-
-    return postFile(context, file).then((response: SPHttpClientResponse) => {
-
-        return getRecordUsingName(file.name, context).then((result) => {
-
-            const id = result[0].Id
-            return updateItem(context, id, file.name, RecordType, inputs)
-                .then((id) => {
-
-                    return getOneRecord(context, id).then((json) => {
-
-                        return json;
-                    }) as Promise<any>;
-                })
-        }) as Promise<any>
-    })
-}
-
-export function handleSubmitWithOufFile(context: WebPartContext, RecordType: string, inputs) {
-    return createFile(context, inputs).then((response: SPHttpClientResponse) => {
-
-        return getRecordUsingName(inputs.inputedFileName, context).then((result) => {
-
-            const id = result[0].Id
-            return updateItem(context, id, inputs.inputedFileName, RecordType, inputs)
-                .then((id) => {
-
-                    return getOneRecord(context, id).then((json) => {
-
-                        return json;
-                    }) as Promise<any>;
-                })
-        }) as Promise<any>
-    })
-}
-export function createFile(context, inputs): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/GetFolderByServerRelativeUrl('" + context.pageContext.web.serverRelativeUrl + "/OutgoingLibrary')/files/add(url='" + inputs.inputedFileName + "',overwrite=true)/"
-
-    const data = {
-        ...inputs
+const getHeader = {
+    headers: {
+        'accept': 'application/json;'
     }
+}
+const postHeader = {
+    headers: {
+        // "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+        'content-type': 'application/json;odata.metadata=full',
+        'accept': 'application/json;odata.metadata=full'
+    }
+}
+const deleteHeader = {
+    headers: {
+        'content-type': 'application/json;odata.metadata=full',
+        "IF-MATCH": "*",
+        "X-HTTP-Method": "DELETE"
+    }
+}
+const updateHeader = {
+    headers: {
+        // "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+        'content-type': 'application/json;',
+        "odata": "no-metadata",
+        'accept': 'application/json;',
+        "IF-MATCH": "*",
+        "X-HTTP-Method": "MERGE"
+    }
+}
 
-    const recordOption: ISPHttpClientOptions = {
+export function getAllItems(context: WebPartContext, listName: string) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items"
+    return get(context, url).then((result) => {
+        return result
+    })
+}
+
+export function getItemById(context: WebPartContext, listName: string, id) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items(" + id + ")"
+    return get(context, url).then((result) => {
+        console.log(result)
+        return result
+    }).catch((err) => console.log(err))
+}
+
+export function getFilteredItems(context: WebPartContext, listName: string, query) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items" + query;
+    return get(context, url).then((result) => {
+        return result
+    })
+}
+
+export function get(context: WebPartContext, url: string) {
+    return context.spHttpClient.get(url, SPHttpClient.configurations.v1, { headers: getHeader.headers }).then((response) => {
+        return response.json().then((json) => {
+            console.log(json.value)
+            return json.value
+        }).catch(err => console.log(err))
+    })
+}
+
+export function postItem(context: WebPartContext, listName: string, data: any) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items"
+    const options: ISPHttpClientOptions = {
+        headers: postHeader.headers,
+        body: JSON.stringify(data)
+    }
+    return post(context, url, options).then((result) => {
+        return result
+    }).catch(err => console.log(err))
+}
+
+export function updateItem(context: WebPartContext, listName: string, data: any, id) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items(" + id + ")"
+    const options: ISPHttpClientOptions = {
+        headers: updateHeader.headers,
+        body: JSON.stringify(data)
+    }
+    return post(context, url, options).then((result) => {
+        return getItemById(context, listName, id).then((result) => {
+            return result
+        })
+    })
+}
+
+export function postFile(context, listName, file): Promise<any> {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/RootFolder/files/add(url='" + file.name + "',overwrite=true)?$expand=ListItemAllFields";
+    var options: ISPHttpClientOptions = {
+        headers: postHeader.headers,
+        body: file,
+    };
+    return post(context, url, options).then((result) => {
+        return result.json()
+    })
+}
+
+export function createFile(context, listName, data, fileName): Promise<any> {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/GetFolderByServerRelativeUrl('" + context.pageContext.web.serverRelativeUrl + "/" + listName + "')/files/add(url='" + fileName + "',overwrite=true)/"
+    var options: ISPHttpClientOptions = {
+        headers: postHeader.headers,
         body: JSON.stringify(data),
     };
+    return post(context, url, options).then((result) => {
+        return result
+    })
+}
 
-    console.log(recordOption)
-    return context.spHttpClient.post(url, SPHttpClient.configurations.v1, recordOption).then((response: SPHttpClientResponse) => {
+export function moveFile(context: WebPartContext, listName, originalFileName, newFileName): Promise<any> {
+    console.log(originalFileName, newFileName)
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/getfilebyserverrelativeurl('" + context.pageContext.web.serverRelativeUrl + "/" + listName + "/" + originalFileName + "')/moveto(newurl = '" + context.pageContext.web.serverRelativeUrl + "/" + listName + "/" + newFileName + "', flags = 1)";
+    const options: ISPHttpClientOptions = {
+        headers: updateHeader.headers
+    }
+    return post(context, url, options).then((result) => {
+        return result.json()
+    }).catch((err) => console.log(err))
+}
+
+export function deleteItem(context: WebPartContext, listName: string, id) {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items(" + id + ")"
+
+    const options: ISPHttpClientOptions = {
+        headers: deleteHeader.headers
+    }
+    return context.spHttpClient.post(url, SPHttpClient.configurations.v1, { headers: deleteHeader.headers }).then((response) => {
+        return response.json()
+    })
+}
+
+export async function post(context: WebPartContext, url: string, options): Promise<any> {
+
+    return await context.spHttpClient.post(url, SPHttpClient.configurations.v1, options).then((response) => {
         return response
     })
 }
 
-export function postFile(context, file): Promise<any> {
-    if (file) {
-        const url: string =
-            context.pageContext.web.absoluteUrl +
-            "/_api/web/lists/getByTitle('OutgoingLibrary')/RootFolder/files/add(url='" +
-            file.name +
-            "',overwrite=true)";
-        var options: ISPHttpClientOptions = {
-            headers: {
-                "X-HTTP-Method": "MERGE",
-                "IF-MATCH": "*",
-            },
-            body: file,
-        };
-        return context.spHttpClient
-            .post(url, SPHttpClient.configurations.v1, options).then((response: SPHttpClientResponse) => {
-                console.log(response.json())
-                return response
-            })
-    }
-
-}
-
-export function updateItem(context, id: number, fileName, RecordType, inputs): Promise<any> {
-    let updateUrl =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
-        id +
-        ")";
-    var recordInfo: any
-
-    if (RecordType === "Incomming") {
-
-        recordInfo = {
-            Title: fileName,
-            RecordType,
-            SendingOrganizationName: inputs.SendingOrganizationName,
-            ReferenceNumber: inputs.ReferenceNumber,
-            IncomingRecordDate: inputs.IncomingRecordDate,
-            DeliveryPersonnelName: inputs.DeliveryPersonnelName,
-            Subject: inputs.Subject,
-            FileIDId: inputs.FileIDId
-        };
-    }
-    else {
-        recordInfo = {
-            Title: fileName,
-            RecordType,
-            RecipientOrganizationName: inputs.RecipientOrganizationName,
-            ReferenceNumber: inputs.ReferenceNumber,
-            DateofDispatch: inputs.DateofDispatch,
-            Subject: inputs.Subject,
-        };
-    }
-
-    const headers: any = {
-        "X-HTTP-Method": "MERGE",
-        "IF-MATCH": "*",
-    };
-    const recordOption: ISPHttpClientOptions = {
-        headers: headers,
-        body: JSON.stringify(recordInfo),
-    };
-    return context.spHttpClient
-        .post(updateUrl, SPHttpClient.configurations.v1, recordOption).then(() => { return id })
-}
-
-export function getOneRecord(context, id): Promise<any> {
-    let siteUrl =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
-        id +
-        ")";
-    return context.spHttpClient.get(siteUrl, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
-        return response.json();
-    }).then((json) => {
-
-        return json;
-    })
-}
-
-export function getLoggedUser(context): Promise<any> {
-    let url =
-        context.pageContext.web.absoluteUrl +
-        "/_api/SP.UserProfiles.PeopleManager/GetMyProperties";
-    return context.spHttpClient
-        .get(url, SPHttpClient.configurations.v1)
-        .then((response: SPHttpClientResponse) => {
-            return response.json();
-        })
-        .then((json) => {
-            console.log(json)
-            return json;
-        });
-}
-
-export function getRecordUsingName(fileName: string, context: WebPartContext): Promise<any> {
-    let url =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getByTitle('OutgoingLibrary')/items?$filter=FileLeafRef eq '" +
-        fileName +
-        "'";
-    return context.spHttpClient
-        .get(url, SPHttpClient.configurations.v1)
-        .then((response: SPHttpClientResponse) => {
-            return response.json();
-        })
-        .then((json) => {
-            return json.value;
-        }) as Promise<any>;
-}
-
-export function editAndGetRecord(context: WebPartContext, id: number, file, inputs): Promise<any> {
-    if (file) {
-        return postFile(context, file).then((response) => {
-            return editRecord(context, id, inputs).then((response) => {
-                return getOneRecord(context, id).then((json) => {
-                    return json
-                }) as Promise<any>
-            })
-        })
-    } else {
-        return editRecord(context, id, inputs).then((response) => {
-            return getOneRecord(context, id).then((json) => {
-                return json
-            }) as Promise<any>
-        })
-    }
-}
-
-export function editRecord(context: WebPartContext, id: number, inputs: any) {
-
-    const url: string =
-        context.pageContext.web.absoluteUrl +
-        "/_api/web/lists/getByTitle('OutgoingLibrary')/items(" +
-        id +
-        ")";
-    const headers: any = {
-        "X-HTTP-Method": "MERGE",
-        "IF-MATCH": "*",
-    };
-
-    const recordOption: ISPHttpClientOptions = {
-        headers: headers,
-        body: JSON.stringify(inputs),
-    };
-
-    return context.spHttpClient
-        .post(url, SPHttpClient.configurations.v1, recordOption)
-        .then((response: SPHttpClientResponse) => {
-            return response
-        })
-        .catch((err) => console.log(err))
-}
-
-export function submitRemark(context: WebPartContext, loggedUser: string, userEmail, Comments: string, RecordId: number): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items";
-
-    const data = {
-        userName: loggedUser,
-        Comments,
-        userEmail: userEmail,
-        RecordId
-    };
-
-    const remarkOptions: ISPHttpClientOptions = {
-        body: JSON.stringify(data),
-    };
-
-    return context.spHttpClient.post(url, SPHttpClient.configurations.v1, remarkOptions).then((response: SPHttpClientResponse) => {
-        return response
-    })
-}
-
-export function getRemark(context: WebPartContext, id: number): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('RecordRemarks')/items?$select=Comments,userName&$filter=RecordId eq " + id;
-
-    return context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
-
-        return response.json();
-    })
-}
-
-export function getFileLocations(context: WebPartContext): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('Files')/items?$select=FileName";
-
-    return context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
-        return response.json();
-    })
+export function loggedUserInfo(context) {
+    return context.pageContext.user
 }

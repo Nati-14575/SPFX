@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getRemark, submitRemark, getLoggedUser } from "./actions"
+import { getFilteredItems, loggedUserInfo, postItem } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 
@@ -10,15 +10,23 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [remarks, setRemarks] = React.useState(null)
     const [showLoader, setLoader] = React.useState(false);
     const url = context.pageContext.web.absoluteUrl
-
+    const userInfo = loggedUserInfo(context)
     const onRemarkSubmit = (event) => {
         setLoader(true);
         event.preventDefault()
-        submitRemark(context, loggedUser, userEmail, remarkDetail, id).then((response) => {
+        const data = {
+            userName: loggedUser,
+            Comments: remarkDetail,
+            userEmail: userEmail,
+            RecordId: id
+        };
+
+        postItem(context, "RecordRemarks", data).then((response) => {
+            console.log(response)
             setRemarkDetail(null)
             setLoader(false);
             toast(words.remarkAddSuccess);
-            getRemark(context, id).then((json) => {
+            getFilteredItems(context, "RecordRemarks", `?$select=*,Comments,userName&$filter=RecordId eq ${id}`).then((json) => {
                 setRemarks(json.value)
             })
             hideViewRemarkModal()
@@ -31,20 +39,20 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         )
     }
     React.useEffect(() => {
-        getRemark(context, id).then((json) => {
-            setRemarks(json.value)
+        getFilteredItems(context, "RecordRemarks", `?$select=*,Comments,userName&$filter=RecordId eq ${id}`).then((result) => {
+            setRemarks(result)
         })
-        getLoggedUser(context).then((json) => {
-            setLoggedUser(json.DisplayName)
-            setUserEmail(json.Email)
-        })
+        setLoggedUser(userInfo.displayName)
+        setUserEmail(userInfo.email)
     }, [])
     return (
         <>
 
             {
-                showLoader == false ? <div className="container-fluid pt-5 pl-4 pr-4">
-                    <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
+                showLoader == false ?
+                    <>
+                        {/* <div className="container-fluid pt-5 pl-4 pr-4"> */}
+                        {/* <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
                         <h4 style={{ "color": "white" }}>
                             {words.addRemark}
                         </h4>
@@ -87,49 +95,48 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                             </div>
                         </div>
                         <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
-                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2">
+                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2"> */}
 
-                            {remarks && remarks.map(remark => (
-                                <>
-                                    <div className=" card  offset-md-1 col-md-8 col-sm-12 col-lg-8 offset-lg-2">
-                                        <div className="card-body text-center">
-                                            <div className="row">
-                                                <div className="col-md-3 col-sm-12">
-                                                    <img src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${userEmail}`} alt="user" width="50" className="rounded-circle" />
-                                                    <br />
-                                                    <p>{remark?.userName}</p>
-                                                </div>
-                                                <div className="col-md-8 col-sm-12" style={{ "backgroundColor": "lightgrey" }}>
 
-                                                    <p className="float-left">{remark?.Comments}</p>
+                        <>
+                            <div className="container-fluid">
+                                <div className="container mt-4 mb-3">
+                                    <div className="py-3 text-center bg-primary text-light rounded-top my-3">
+                                        {words.listRemarks}
+                                    </div>
+                                    <div className="d-flex justify-content-center row">
+                                        <div className="col-md-12">
+                                            <div className="d-flex flex-column comment-section">
+                                                {remarks && remarks.length > 0 ? remarks.map(remark => (
+                                                    <>
+                                                        <div className="bg-white p-2">
+                                                            <div className="d-flex flex-row user-info"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${userEmail}`} width="40" />
+                                                                <div className="d-flex flex-column justify-content-start ml-2"><span className="d-block font-weight-bold name">{remark?.userName}</span><span className="date text-black-50"></span></div>
+                                                            </div>
+                                                            <div className="mt-2">
+                                                                <p className="comment-text">{remark?.Comments}</p>
+                                                            </div>
+                                                        </div>
+                                                    </>
+
+                                                )) : <>
+                                                    <div className="container text-dark p-3 text-center h2 mb-2">No remarks available</div>
+                                                </>}
+                                                <div className="bg-light p-2">
+                                                    <div className="d-flex flex-row align-items-start"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${userEmail}`} width="40" /><textarea className="form-control ml-1 shadow-none textarea" value={remarkDetail} onChange={(e) => setRemarkDetail(e.target.value)} ></textarea></div>
+                                                    <div className="mt-2 text-right"><button className="btn btn-primary btn-sm shadow-none" type="button" onClick={(event) => onRemarkSubmit(event)}> {words.submit}</button><button className="btn btn-outline-primary btn-sm ml-1 shadow-none" onClick={hideViewRemarkModal} type="button">{words.cancel}</button></div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
-
-                                </>
-
-                            ))}
-
-                        </div>
-
-                    </div>
-
-                    <div className="form-group py-2">
-                        <div className="row mt-2">
-                            <div className="col-md-2 ml-auto mr-5">
-                                <button
-                                    className="btn btn-danger btn-sm float-left"
-                                    onClick={hideViewRemarkModal}
-                                    type="button"
-                                >
-                                    {words.cancel}
-                                </button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div> : <Loader />
+                        </>
+                        {/* </div> */}
+                        {/* // </div> */}
+                        {/* // </div> */}
+                    </>
+                    : <Loader />
             }
 
         </>

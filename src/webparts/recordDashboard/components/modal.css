@@ -12,8 +12,8 @@
 .modal-main {
   position: fixed !important;
   background: white !important;
-  width: 35% !important;
-  height: auto !important;
+  min-width: 60% !important;
+  min-height: 40% !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;

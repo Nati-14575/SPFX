@@ -10,11 +10,6 @@ import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import * as strings from "RecordDashboardWebPartStrings";
 import RecordDashboard from "./components/RecordDashboard";
 import { IRecordDashboardProps } from "./components/IRecordDashboardProps";
-import {
-  SPHttpClient,
-  SPHttpClientResponse,
-  ISPHttpClientOptions,
-} from "@microsoft/sp-http";
 export interface IRecordDashboardWebPartProps {
   description: string;
 }
@@ -22,6 +17,15 @@ export interface IRecordDashboardWebPartProps {
 export interface StateInterface {}
 
 export default class RecordDashboardWebPart extends BaseClientSideWebPart<IRecordDashboardWebPartProps> {
+  componentDidMount(): void {
+    window.addEventListener("storage", (e) => {
+      if (e.key === "lang") {
+        alert(`${e.key} , is changed `);
+        console.log(localStorage.getItem("lang"));
+        console.log("reached event listener");
+      }
+    });
+  }
   public render(): void {
     const element: React.ReactElement<IRecordDashboardProps> =
       React.createElement(RecordDashboard, {
@@ -31,10 +35,6 @@ export default class RecordDashboardWebPart extends BaseClientSideWebPart<IRecor
       });
 
     ReactDom.render(element, this.domElement);
-  }
-
-  protected onDispose(): void {
-    ReactDom.unmountComponentAtNode(this.domElement);
   }
 
   protected get dataVersion(): Version {

@@ -46,6 +46,7 @@ export const English = {
   incomingDateError: "Incoming Record date is required",
   reciepientOrgNameError: "Recipient Organization is required",
   dispatchDateError: "Date of dispatch is required",
+  fileError: "File is required",
 };
 
 export const AMHARIC = {
@@ -95,4 +96,5 @@ export const AMHARIC = {
   incomingDateError: "መዝገብ የገባበት የቀን አልተሞላም",
   reciepientOrgNameError: "የተቀባይ ድርጅት ስም አልተሞላም",
   dispatchDateError: "መዝገብ የተላከበት ቀን አልተሞላም",
+  fileError: "ፋይል አልተሞላም",
 };

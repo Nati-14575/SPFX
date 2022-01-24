@@ -1,11 +1,10 @@
 import * as React from "react";
 import { toast } from "react-toastify";
-import { handleSubmit, GetFiles, getLoggedUser, handleSubmitWithOufFile } from "./actions"
+import { createFile, getAllItems, loggedUserInfo, postFile, updateItem } from "./actions"
 import Loader from "./Loader";
 
 const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords }) => {
     const [file, setFile] = React.useState(null)
-    const [inputedFileName, setInputedFileName] = React.useState(null)
     const [sendingOrg, setSendingOrg] = React.useState(null)
     const [ReferenceNumber, setReferenceNumber] = React.useState(null)
     const [IncomingRecordDate, setIncomingRecordDate] = React.useState(new Date().toISOString().slice(0, 10))
@@ -16,7 +15,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     const [DateofDispatch, setDateofDispatch] = React.useState(new Date().toISOString().slice(0, 10))
     const [receivingPersonnel, setReceivingPersonnel] = React.useState(null)
     const [showLoader, setLoader] = React.useState(false)
-    const [haveFile, setHaveFile] = React.useState(false)
+    const [haveFile, setHaveFile] = React.useState(true)
     const [fileError, setFileError] = React.useState(null)
     const [organizationNameError, setOrganizationNameError] = React.useState(null)
     const [refNumberError, setRefNumberError] = React.useState(null)
@@ -24,12 +23,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     const [subjectError, setSubjectError] = React.useState(null)
     const [recipientOrgError, setRecipientOrgError] = React.useState(null)
     const [dispatchDateError, setDispatchDateError] = React.useState(null)
-
-    React.useEffect(() => {
-        getLoggedUser(context).then((json) => {
-            setReceivingPersonnel(json.DisplayName)
-        })
-    }, [])
+    const userInfo = loggedUserInfo(context)
 
     let handleFileChange = (e) => {
         setFileId(e.target.value);
@@ -199,7 +193,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         </>
     )
     function Files() {
-        GetFiles(context).then((response) => {
+        getAllItems(context, "File").then((response) => {
             const data: any = [];
             data.push({
                 Id: 0,
@@ -218,13 +212,13 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         })
     }
     React.useEffect(() => {
+        setReceivingPersonnel(userInfo.displayName)
         Files()
     }, [words])
 
     let submited
 
     function validateIncomingInputs() {
-        console.log("Validate Incoming Input here")
         if (!ReferenceNumber) {
             submited = false
             setRefNumberError(words.refNumberError)
@@ -241,7 +235,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             submited = false
             setRecordDateError(words.incomingDateError)
         }
-        if (setRefNumberError && Subject && sendingOrg && IncomingRecordDate) {
+        if (haveFile && !file) {
+            submited = false
+            setFileError(words.fileError)
+        }
+        if (ReferenceNumber && Subject && sendingOrg && IncomingRecordDate) {
             setRefNumberError(null)
             setSubjectError(null)
             setOrganizationNameError(null)
@@ -268,6 +266,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
             setDispatchDateError(words.dispatchDateError)
             submited = false
         }
+        if (haveFile && !file) {
+            console.log("here")
+            submited = false
+            setFileError(words.fileError)
+        }
         if (ReferenceNumber && Subject && recipientOrg && DateofDispatch) {
             setRefNumberError(null)
             setSubjectError(null)
@@ -285,22 +288,22 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     function handleFileSubmit(event) {
         setLoader(true);
         event.preventDefault();
-        let inputs: any;
+        let data: any;
 
         if (haveFile) {
-
-            if (caller === "Incomming") {
-                inputs = {
+            if (caller === "Incoming") {
+                data = {
                     SendingOrganizationName: sendingOrg,
                     ReferenceNumber: ReferenceNumber,
                     IncomingRecordDate: IncomingRecordDate ? new Date(IncomingRecordDate) : null,
                     DeliveryPersonnelName: receivingPersonnel,
                     Subject: Subject,
                     FileIDId: FileIDId,
-                    inputedFileName: inputedFileName
+                    RecordType: "Incoming"
                 }
-                handleSubmit(file, context, "Incomming", inputs)
-                    .then((response) => {
+
+                postFile(context, "OutgoingLibrary", file).then((result) => {
+                    updateItem(context, "OutgoingLibrary", data, result.ListItemAllFields.Id).then((result) => {
                         setLoader(false)
                         setFile(null)
                         setSendingOrg(null)
@@ -310,21 +313,21 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setFileId(0)
                         setSubject(null)
                         hideModal(event)
-                        setIncommingRecords(response)
+                        setIncommingRecords(result)
                         toast(words.uploadSuccess)
-                    }
-                    )
+                    })
+                })
             }
             else {
-                inputs = {
+                data = {
                     RecipientOrganizationName: recipientOrg,
                     ReferenceNumber: ReferenceNumber,
                     DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
                     Subject: Subject,
-                    inputedFileName: inputedFileName
+                    RecordType: "Outgoing"
                 }
-                handleSubmit(file, context, "Outgoing", inputs)
-                    .then((response) => {
+                postFile(context, "OutgoingLibrary", file).then((result) => {
+                    updateItem(context, "OutgoingLibrary", data, result.ListItemAllFields.Id).then((result) => {
                         setFile(null)
                         hideModal()
                         setRecipientOrg(null)
@@ -332,64 +335,67 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setSubject(null)
                         setReferenceNumber(null)
                         setReceivingPersonnel(null)
-                        setOutgoingRecords(response)
+                        setOutgoingRecords(result)
                         setLoader(false)
                         toast(words.uploadSuccess)
                     })
+                })
             }
         }
         else {
-            if (caller === "Incomming") {
-                inputs = {
+            if (caller === "Incoming") {
+                const fileName = ReferenceNumber + ".txt"
+                data = {
                     SendingOrganizationName: sendingOrg,
                     ReferenceNumber: ReferenceNumber,
                     IncomingRecordDate: IncomingRecordDate ? new Date(IncomingRecordDate) : null,
                     DeliveryPersonnelName: receivingPersonnel,
                     Subject: Subject,
                     FileIDId: FileIDId,
-                    inputedFileName: inputedFileName
+                    RecordType: "Incoming"
                 }
-                handleSubmitWithOufFile(context, "Incomming", inputs)
-                    .then((response) => {
-                        setLoader(false)
-                        setFile(null)
-                        setSendingOrg(null)
-                        setIncomingRecordDate(null)
-                        setReceivingPersonnel(null)
-                        setReferenceNumber(null)
-                        setFileId(0)
-                        setSubject(null)
-                        hideModal(event)
-                        setIncommingRecords(response)
-                        toast(words.uploadSuccess)
-                    }
-                    )
+
+                createFile(context, "OutgoingLibrary", data, fileName).then((result) => {
+                    setLoader(false)
+                    setFile(null)
+                    setSendingOrg(null)
+                    setIncomingRecordDate(null)
+                    setReceivingPersonnel(null)
+                    setReferenceNumber(null)
+                    setFileId(0)
+                    setSubject(null)
+                    hideModal(event)
+                    setIncommingRecords(result)
+                    toast(words.uploadSuccess)
+                })
             }
             else {
-                inputs = {
+                const fileName = ReferenceNumber + ".txt"
+                data = {
                     RecipientOrganizationName: recipientOrg,
                     ReferenceNumber: ReferenceNumber,
                     DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
                     Subject: Subject,
-                    inputedFileName: inputedFileName
                 }
-                handleSubmitWithOufFile(context, "Outgoing", inputs)
-                    .then((response) => {
-                        setFile(null)
-                        hideModal()
-                        setRecipientOrg(null)
-                        setDateofDispatch(null)
-                        setSubject(null)
-                        setReferenceNumber(null)
-                        setReceivingPersonnel(null)
-                        setOutgoingRecords(response)
-                        setLoader(false)
-                        toast(words.uploadSuccess)
-                    })
+                createFile(context, "OutgoingLibrary", data, fileName).then((result) => {
+                    setLoader(false)
+                    setFile(null)
+                    setSendingOrg(null)
+                    setIncomingRecordDate(null)
+                    setReceivingPersonnel(null)
+                    setReferenceNumber(null)
+                    setFileId(0)
+                    setSubject(null)
+                    hideModal(event)
+                    setIncommingRecords(result)
+                    toast(words.uploadSuccess)
+                })
             }
         }
-
-
+    }
+    const handleIconClick = () => {
+        const input = document.getElementById("fileInput")
+        input.click()
     }
     return (
         <>
@@ -398,7 +404,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                 <div className="container-fluid pt-5 pl-4 pr-4">
                     <div className="row justify-content-center text-center pt-4 bg-info" style={{ "color": "white" }}>
                         <h4 style={{ "marginBottom": "15px", "color": "white" }} >
-                            {caller === "Incomming" ? (<b>{words.uploadIncomingRecord}</b>) : (<b>{words.uploadRecord}</b>)}
+                            {caller === "Incoming" ? (<b>{words.uploadIncomingRecord}</b>) : (<b>{words.uploadRecord}</b>)}
                         </h4>
                     </div>
                     <hr />
@@ -406,47 +412,36 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <form
                                 onSubmit={(event) => {
-                                    { caller === "Incomming" ? validateIncomingInputs() : validateOutgoingInputs() }
+                                    { caller === "Incoming" ? validateIncomingInputs() : validateOutgoingInputs() }
                                     onSubmit(event)
                                 }
                                 }
                             >
-                                {caller === "Incomming" ? (<div>{element1}</div>) : (<div>{element2}</div>)}
+                                {caller === "Incoming" ? (<div>{element1}</div>) : (<div>{element2}</div>)}
                                 <div className="form-group row p-2">
                                     <label className="col-sm-5 col-form-label text-left">
                                         {words.haveAccessToFile}
                                     </label>
                                     <div className="col-sm-6">
-                                        <input type="checkbox" className="form-control" onChange={() => setHaveFile(!haveFile)} value="yes" />
-                                    </div>
-                                </div>
-                                <div className="form-group row p-2">
-                                    <label className="col-sm-5 col-form-label text-left">
-                                        {words.inputfileName}
-                                    </label>
-                                    <div className="col-sm-6">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="fileInput"
-                                            onChange={(event) => setInputedFileName(event.target.value)}
-                                            disabled={haveFile}
-                                        />
+                                        <input type="checkbox" className="form-control " onChange={() => setHaveFile(!haveFile)} value="yes" checked={haveFile} />
                                     </div>
                                 </div>
                                 <div className="form-group row p-2">
                                     <label className="col-sm-5 col-form-label text-left">
                                         {words.file}
                                     </label>
-                                    <div className="col-sm-6">
+                                    <div className=" col-sm-7 d-flex">
                                         <input
                                             type="file"
                                             className="form-control"
                                             id="fileInput"
                                             onChange={(event) => setFile(event.target.files[0])}
-                                            disabled={!haveFile}
+                                            hidden
                                         />
+                                        <input type="text" className="form-control" disabled={!haveFile} value={file ? file.name : ""} />
+                                        <button type="button" disabled={!haveFile} className="btn btn-warning ml-2" onClick={handleIconClick} style={{ cursor: "pointer" }}><i className="fa fa-file"></i></button>
                                     </div>
+                                    <div className={fileError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{fileError}</div>
                                 </div>
                                 <hr />
                                 <div className="form-group p-3">
