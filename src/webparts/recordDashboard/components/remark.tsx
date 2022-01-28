@@ -22,7 +22,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         };
 
         postItem(context, "RecordRemarks", data).then((response) => {
-            console.log(response)
             setRemarkDetail(null)
             setLoader(false);
             toast(words.remarkAddSuccess);
@@ -110,7 +109,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                                                 {remarks && remarks.length > 0 ? remarks.map(remark => (
                                                     <>
                                                         <div className="bg-white p-2">
-                                                            <div className="d-flex flex-row user-info"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${userEmail}`} width="40" />
+                                                            <div className="d-flex flex-row user-info"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${remark.userEmail}`} width="40" />
                                                                 <div className="d-flex flex-column justify-content-start ml-2"><span className="d-block font-weight-bold name">{remark?.userName}</span><span className="date text-black-50"></span></div>
                                                             </div>
                                                             <div className="mt-2">

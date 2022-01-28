@@ -8,7 +8,7 @@ const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recor
     const [Subject] = React.useState(recordDetails.Subject)
 
     return (
-        <div className="container-fluid pt-5 pl-4 pr-4">
+        <div className="container-fluid pt-3 pl-4 pr-4">
             <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white !important" }}>
                 <h4 style={{ "color": "white" }}>
                     {words.viewRecord}
@@ -71,7 +71,7 @@ const ViewIncomingRecord = ({ words, hideViewRecordModal, showRemarkModal, recor
                             <p>{Subject}</p>
                         </div>
                     </div>
-                    <div className="form-group p-4">
+                    <div className="form-group pt-3 pb-2">
                         <div className="row">
                             <div className="col-md-12 text-center d-flex justify-content-between">
 

@@ -313,7 +313,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setFileId(0)
                         setSubject(null)
                         hideModal(event)
-                        setIncommingRecords(result)
+                        setIncommingRecords(result[0])
                         toast(words.uploadSuccess)
                     })
                 })
@@ -335,7 +335,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setSubject(null)
                         setReferenceNumber(null)
                         setReceivingPersonnel(null)
-                        setOutgoingRecords(result)
+                        setOutgoingRecords(result[0])
                         setLoader(false)
                         toast(words.uploadSuccess)
                     })
@@ -355,18 +355,20 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                     RecordType: "Incoming"
                 }
 
-                createFile(context, "OutgoingLibrary", data, fileName).then((result) => {
-                    setLoader(false)
-                    setFile(null)
-                    setSendingOrg(null)
-                    setIncomingRecordDate(null)
-                    setReceivingPersonnel(null)
-                    setReferenceNumber(null)
-                    setFileId(0)
-                    setSubject(null)
-                    hideModal(event)
-                    setIncommingRecords(result)
-                    toast(words.uploadSuccess)
+                createFile(context, "OutgoingLibrary", fileName).then((result) => {
+                    updateItem(context, "OutgoingLibrary", data, result.ListItemAllFields.Id).then((response) => {
+                        setLoader(false)
+                        setFile(null)
+                        setSendingOrg(null)
+                        setIncomingRecordDate(null)
+                        setReceivingPersonnel(null)
+                        setReferenceNumber(null)
+                        setFileId(0)
+                        setSubject(null)
+                        hideModal(event)
+                        setIncommingRecords(response[0])
+                        toast(words.uploadSuccess)
+                    })
                 })
             }
             else {
@@ -376,19 +378,21 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                     ReferenceNumber: ReferenceNumber,
                     DateofDispatch: DateofDispatch ? new Date(DateofDispatch) : null,
                     Subject: Subject,
+                    RecordType: "Outgoing"
                 }
-                createFile(context, "OutgoingLibrary", data, fileName).then((result) => {
-                    setLoader(false)
-                    setFile(null)
-                    setSendingOrg(null)
-                    setIncomingRecordDate(null)
-                    setReceivingPersonnel(null)
-                    setReferenceNumber(null)
-                    setFileId(0)
-                    setSubject(null)
-                    hideModal(event)
-                    setIncommingRecords(result)
-                    toast(words.uploadSuccess)
+                createFile(context, "OutgoingLibrary", fileName).then((result) => {
+                    updateItem(context, "OutgoingLibrary", data, result.ListItemAllFields.Id).then((response) => {
+                        setFile(null)
+                        hideModal()
+                        setRecipientOrg(null)
+                        setDateofDispatch(null)
+                        setSubject(null)
+                        setReferenceNumber(null)
+                        setReceivingPersonnel(null)
+                        setOutgoingRecords(response[0])
+                        setLoader(false)
+                        toast(words.uploadSuccess)
+                    })
                 })
             }
         }
@@ -401,7 +405,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
         <>
             {showLoader == false ?
 
-                <div className="container-fluid pt-5 pl-4 pr-4">
+                <div className="container-fluid pt-3 pl-4 pr-4">
                     <div className="row justify-content-center text-center pt-4 bg-info" style={{ "color": "white" }}>
                         <h4 style={{ "marginBottom": "15px", "color": "white" }} >
                             {caller === "Incoming" ? (<b>{words.uploadIncomingRecord}</b>) : (<b>{words.uploadRecord}</b>)}
@@ -426,7 +430,7 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                         <input type="checkbox" className="form-control " onChange={() => setHaveFile(!haveFile)} value="yes" checked={haveFile} />
                                     </div>
                                 </div>
-                                <div className="form-group row p-2">
+                                {haveFile && (<div className="form-group row p-2">
                                     <label className="col-sm-5 col-form-label text-left">
                                         {words.file}
                                     </label>
@@ -442,9 +446,9 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                                         <button type="button" disabled={!haveFile} className="btn btn-warning ml-2" onClick={handleIconClick} style={{ cursor: "pointer" }}><i className="fa fa-file"></i></button>
                                     </div>
                                     <div className={fileError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{fileError}</div>
-                                </div>
+                                </div>)}
                                 <hr />
-                                <div className="form-group p-3">
+                                <div className="form-group pt-3 pb-2">
                                     <div className="row">
                                         <div className="col-md-12 text-center d-flex justify-content-between">
 

@@ -25,9 +25,8 @@ const deleteHeader = {
 const updateHeader = {
     headers: {
         // "X-RequestDigest": $("#__REQUESTDIGEST").val(),
-        'content-type': 'application/json;',
-        "odata": "no-metadata",
-        'accept': 'application/json;',
+        'content-type': 'application/json;odata.metadata=full',
+        'accept': 'application/json;odata.metadata=full',
         "IF-MATCH": "*",
         "X-HTTP-Method": "MERGE"
     }
@@ -41,9 +40,8 @@ export function getAllItems(context: WebPartContext, listName: string) {
 }
 
 export function getItemById(context: WebPartContext, listName: string, id) {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items(" + id + ")"
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('" + listName + "')/items?$select=*,EncodedAbsUrl,FileLeafRef&$filter=Id eq " + id
     return get(context, url).then((result) => {
-        console.log(result)
         return result
     }).catch((err) => console.log(err))
 }
@@ -81,7 +79,7 @@ export function updateItem(context: WebPartContext, listName: string, data: any,
         headers: updateHeader.headers,
         body: JSON.stringify(data)
     }
-    return post(context, url, options).then((result) => {
+    return context.spHttpClient.post(url, SPHttpClient.configurations.v1, options).then((result) => {
         return getItemById(context, listName, id).then((result) => {
             return result
         })
@@ -95,15 +93,14 @@ export function postFile(context, listName, file): Promise<any> {
         body: file,
     };
     return post(context, url, options).then((result) => {
-        return result.json()
+        return result
     })
 }
 
-export function createFile(context, listName, data, fileName): Promise<any> {
-    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/GetFolderByServerRelativeUrl('" + context.pageContext.web.serverRelativeUrl + "/" + listName + "')/files/add(url='" + fileName + "',overwrite=true)/"
+export function createFile(context, listName, fileName): Promise<any> {
+    const url: string = context.pageContext.web.absoluteUrl + "/_api/web/GetFolderByServerRelativeUrl('" + context.pageContext.web.serverRelativeUrl + "/" + listName + "')/files/add(url='" + fileName + "',overwrite=true)?$expand=ListItemAllFields"
     var options: ISPHttpClientOptions = {
         headers: postHeader.headers,
-        body: JSON.stringify(data),
     };
     return post(context, url, options).then((result) => {
         return result
@@ -135,7 +132,9 @@ export function deleteItem(context: WebPartContext, listName: string, id) {
 export async function post(context: WebPartContext, url: string, options): Promise<any> {
 
     return await context.spHttpClient.post(url, SPHttpClient.configurations.v1, options).then((response) => {
-        return response
+        return response.json().then((json) => {
+            return json
+        })
     })
 }
 

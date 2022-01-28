@@ -17,15 +17,6 @@ export interface IRecordDashboardWebPartProps {
 export interface StateInterface {}
 
 export default class RecordDashboardWebPart extends BaseClientSideWebPart<IRecordDashboardWebPartProps> {
-  componentDidMount(): void {
-    window.addEventListener("storage", (e) => {
-      if (e.key === "lang") {
-        alert(`${e.key} , is changed `);
-        console.log(localStorage.getItem("lang"));
-        console.log("reached event listener");
-      }
-    });
-  }
   public render(): void {
     const element: React.ReactElement<IRecordDashboardProps> =
       React.createElement(RecordDashboard, {

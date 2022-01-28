@@ -68,16 +68,16 @@ export const incomingColumns = [
       return (
         <>
           <div>
-            <button type="button" className="btn btn-primary mx-2" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
+            <button type="button" className="btn btn-primary btn-margin" onClick={() => setViewRecord(true)}><i className="fa fa-eye"
             ></i></button>
             <button
               type="button"
-              className="btn btn-success mx-2"
+              className="btn btn-success btn-margin"
               onClick={() => setEditModal(true)}
             >
               <i className="fa fa-edit"></i>
             </button>
-            <button type="button" className="btn btn-primary mx-2 " onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
+            <button type="button" className="btn btn-primary btn-margin " onClick={() => setRemarkModal(true)}><label>{props.words.addRemark}</label></button>
           </div>
 
           <Modal show={editModal} handleClose={() => setEditModal(false)} additionalStyles={{}}>

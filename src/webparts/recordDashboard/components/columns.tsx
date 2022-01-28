@@ -73,12 +73,13 @@ export const columns = [
           <Modal handleClose={() => setEditModal(false)} show={editModal} additionalStyles={{}}>
             {editModal && <EditRecord words={props.words} context={props.context} hideRecordModal={() => setEditModal(false)} recordDetails={data} key={props.data} setOutgoingRecords={props.updateRecordInfo} />}
           </Modal>
-          <ModalEditRecord
+          <Modal
+            additionalStyles={{}}
             show={viewRecord}
             handleClose={() => setViewRecord(false)}
           >
             {viewRecord && <ViewRecord words={props.words} hideViewRecordModal={() => setViewRecord(false)} recordDetails={data} showRemarkModal={() => setRemarkModal(true)} />}
-          </ModalEditRecord>
+          </Modal>
           <ModalEditRecord
             show={remarkModal}
             handleClose={() => setRemarkModal(false)}

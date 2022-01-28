@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo, files, setNum, num }) => {
-
+    console.log(recordDetails.Title)
     const [file, setFile] = React.useState(null)
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
@@ -69,12 +69,13 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                 Subject: Subject,
                 FileIDId: parseInt(FileIDId),
             };
+            console.log("reached move file")
             moveFile(context, "OutgoingLibrary", recordDetails.Title, file.name).then(() => {
                 postFile(context, "OutgoingLibrary", file).then(() => {
                     updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((response) => {
                         setLoader(false);
                         toast(words.updateSuccess)
-                        updateRecordInfo(response, index)
+                        updateRecordInfo(response[0])
                         setFile(null)
                         setReferenceNumber(null)
                         setSendingOrg(null)
@@ -82,7 +83,6 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                         setSubject(null)
                         setNum(num + 1)
                         hideRecordModal()
-                        // window.location.reload()
                     })
                 })
             })
@@ -96,10 +96,10 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                 FileIDId: parseInt(FileIDId),
             }
             updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
-                console.log(result)
+                console.log(result[0])
                 setLoader(false);
                 toast(words.updateSuccess)
-                updateRecordInfo(result, index)
+                updateRecordInfo(result[0], index)
                 setFile(null)
                 setReferenceNumber(null)
                 setSendingOrg(null)
@@ -128,7 +128,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
     return (
         <>
             {
-                showLoader == false ? <div className="container-fluid pt-5 pl-4 pr-4">
+                showLoader == false ? <div className="container-fluid pt-3 pl-4 pr-4">
                     <div className="row justify-content-center text-center p-1 bg-info">
                         <h4 style={{ "color": "white" }}>
                             <b>{words.editIncomingRecord}</b>
@@ -237,7 +237,7 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                                     </div>
                                 </div>
                                 <hr />
-                                <div className="form-group pl-3 py-1">
+                                <div className="form-group pt-3 pb-2">
                                     <div className="row">
                                         <div className="col-md-12 text-center d-flex justify-content-between">
 

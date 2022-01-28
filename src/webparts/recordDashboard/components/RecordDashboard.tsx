@@ -62,20 +62,12 @@ export default class RecordDashboard extends React.Component<
   componentDidMount(): void {
     this.getLocalStorage();
     this.getLanguage()
-    const originalSetItem = localStorage.setItem;
 
-    localStorage.setItem = function (key, value) {
-      const event = new Event('itemInserted');
-
-      document.dispatchEvent(event);
-      originalSetItem.apply(this, arguments);
-    };
-
-    const localStorageSetHandler = (() => {
+    const localStorageSetHandler = () => {
       this.getLanguage()
-    })
+    }
 
-    document.addEventListener("itemInserted", localStorageSetHandler, true);
+    window.addEventListener("itemInserted", localStorageSetHandler, true);
 
   }
 
@@ -139,10 +131,15 @@ export default class RecordDashboard extends React.Component<
       recordDetail: recordDetail
     });
   }
-
+  getFormattedResult(num) {
+    if (num <= 9) {
+      return `0${num}`
+    }
+    return num;
+  }
   setIncommingRecords = () => {
     this.setState({ showLoader: true });
-    getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Incoming'").then((response) => {
+    getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Incoming'&$orderBy=Id desc").then((response) => {
       const data: any = [];
       response.map((item) => {
         data.push({
@@ -193,7 +190,7 @@ export default class RecordDashboard extends React.Component<
 
     var incommingRecord = {
       Id: record.Id,
-      Title: record.Title,
+      Title: record.FileLeafRef,
       SendingOrganizationName: record.SendingOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
       IncomingRecordDate: record.IncomingRecordDate ? new Date(record.IncomingRecordDate).toLocaleDateString(
@@ -214,10 +211,11 @@ export default class RecordDashboard extends React.Component<
   }
 
   addChangeToOutgoingRecord = (record) => {
+    console.log(record)
     let data = this.state.outgoingRecords
     let newRecord = {
       Id: record.Id,
-      Title: record.Title,
+      Title: record.FileLeafRef,
       RecipientOrganizationName: record.RecipientOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
       DateofDispatch: record.DateofDispatch ? new Date(record.DateofDispatch).toLocaleDateString(
@@ -233,37 +231,65 @@ export default class RecordDashboard extends React.Component<
     })
   }
 
-  updateIncomingRecordInfo = (record, index) => {
-    // let data = this.state.incommingRecords
-    // data[index] = {
-    //   Id: record.Id,
-    //   Title: record.Title,
-    //   SendingOrganizationName: record.SendingOrganizationName,
-    //   ReferenceNumber: record.ReferenceNumber,
-    //   IncomingRecordDate: record.IncomingRecordDate,
-    //   Subject: record.Subject
-    // }
-    // this.setState({
-    //   incommingRecords: data
-    // })
+  updateIncomingRecordInfo = (record) => {
+    console.log(record)
+    this.setState({ showLoader: true })
+    const incomingRecordDate = new Date(record.IncomingRecordDate) || null
+    let data = this.state.incommingRecords
+    let itemIndex = data.findIndex((item) => item.Id == record.Id)
+    if (itemIndex != -1) {
+      var editedRecord = {
+        Id: record.Id,
+        Title: record.FileLeafRef,
+        SendingOrganizationName: record.SendingOrganizationName,
+        ReferenceNumber: record.ReferenceNumber,
+        IncomingRecordDate: incomingRecordDate ? this.getFormattedResult(incomingRecordDate.getMonth() + 1) + "/" + this.getFormattedResult(incomingRecordDate.getDate()) + "/" + this.getFormattedResult(incomingRecordDate.getFullYear()) : null,
+        Subject: record.Subject,
+        DeliveryPersonnelName: record.DeliveryPersonnelName,
+        FileIDId: record.FileIDId,
+        downloadUrl: record.EncodedAbsUrl
+      }
+      data[itemIndex] = editedRecord
+      data.push(editedRecord)
+      let updatedRecords = data
+      this.setState({
+        incommingRecords: updatedRecords
+      })
+      data.pop()
+      updatedRecords = data
+      this.setState({
+        incommingRecords: updatedRecords,
+        showLoader: false
+      })
+    }
   }
 
   updateOutgoingRecordInfo = (record, index) => {
+    this.setState({ showLoader: true })
     let data = this.state.outgoingRecords
+    const dateOfDispatch = new Date(record.DateofDispatch)
     index = data.findIndex(obj => obj.Id == record.Id);
     if (index != -1) {
-      var newRecord = {
+      var editedRecord = {
         Id: record.Id,
-        Title: record.Title,
+        Title: record.FileLeafRef,
         RecipientOrganizationName: record.RecipientOrganizationName,
         ReferenceNumber: record.ReferenceNumber,
-        DateofDispatch: record.DateofDispatch,
+        DateofDispatch: dateOfDispatch ? this.getFormattedResult(dateOfDispatch.getMonth() + 1) + "/" + this.getFormattedResult(dateOfDispatch.getDate()) + "/" + this.getFormattedResult(dateOfDispatch.getFullYear()) : null,
         DeliveryPersonnelName: record.DeliveryPersonnelName,
         Subject: record.Subject
       }
-      data.push(newRecord);;
+      data[index] = editedRecord
+      data.push(editedRecord);
+      let updatedRecords = data
       this.setState({
-        outgoingRecords: data
+        outgoingRecords: updatedRecords
+      })
+      data.pop()
+      updatedRecords = data
+      this.setState({
+        outgoingRecords: updatedRecords,
+        showLoader: false
       })
 
     }
@@ -287,17 +313,10 @@ export default class RecordDashboard extends React.Component<
 
 
   public render(): React.ReactElement<IRecordDashboardProps> {
-    let Words;
-    if (localStorage.getItem('lang') === "en") {
-      Words = English
-    }
-    else {
-      Words = AMHARIC
-    }
     return (
       <>
         {
-          Words &&
+          this.state.words &&
             this.state.showLoader == false ?
             <>
               {/* for rendering incoming and outgoing tabs */}
@@ -307,22 +326,22 @@ export default class RecordDashboard extends React.Component<
               </div> */}
               <Tabs selectedIndex={this.state.tabIndex} onSelect={index => { this.setLocalStorage(index) }}>
                 <TabList>
-                  <Tab>{Words.incomming}</Tab>
-                  <Tab>{Words.outgoing}</Tab>
+                  <Tab>{this.state.words.incomming}</Tab>
+                  <Tab>{this.state.words.outgoing}</Tab>
 
                 </TabList>
 
                 <TabPanel >
                   {/* Incoming tab content */}
-                  {this.state.incommingRecords && <Incomming context={this.props.context} words={Words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
+                  {this.state.incommingRecords && <Incomming context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.incommingRecords} key={this.state.incommingRecords} setRecords={this.addChangeToIncommingRecords} updateRecordInfo={this.updateIncomingRecordInfo} files={this.state.files} columns={incomingColumns} />}
                 </TabPanel>
                 <TabPanel >
                   {/* Outgoing tab content */}
-                  {this.state.outgoingRecords && <Outgoing context={this.props.context} words={Words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
+                  {this.state.outgoingRecords && <Outgoing context={this.props.context} words={this.state.words} showModal={this.showModal} data={this.state.outgoingRecords} key={this.state.outgoingRecords} setRecords={this.addChangeToOutgoingRecord} files={this.state.files} columns={columns} updateRecordInfo={this.updateOutgoingRecordInfo} />}
                 </TabPanel>
 
                 <Modal handleClose={() => this.setState({ show: false })} show={this.state.show} additionalStyles={{}}  >
-                  {this.state.show && <UploadFile caller={this.state.caller} words={Words} hideModal={(event) => {
+                  {this.state.show && <UploadFile caller={this.state.caller} words={this.state.words} hideModal={(event) => {
                     this.setState({ show: false })
                   }} context={this.props.context} setIncommingRecords={this.addChangeToIncommingRecords} setOutgoingRecords={this.addChangeToOutgoingRecord} />}
                 </Modal>

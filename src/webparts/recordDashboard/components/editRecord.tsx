@@ -60,7 +60,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                 originalFilename: recordDetails.Title,
                 newFilename: fileName
             };
-            moveFile(context, "OutgoingLibrary", recordDetails.FileLeafRef, file.name).then(() => {
+            moveFile(context, "OutgoingLibrary", recordDetails.Title, file.name).then(() => {
                 postFile(context, "OutgoingLibrary", file).then(() => {
                     updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
                         setLoader(false);
@@ -71,8 +71,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                         setDateofDispatch(null)
                         setSubject(null)
                         hideRecordModal()
-                        setOutgoingRecords(result);
-                        window.location.reload();
+                        setOutgoingRecords(result[0]);
                     })
                 })
             })
@@ -112,7 +111,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
     return (
         <>
             {
-                showLoader == false ? <div className="container-fluid pt-5 pl-4 pr-4">
+                showLoader == false ? <div className="container-fluid pt-3 pl-4 pr-4">
                     <div className="row justify-content-center text-center p-3 bg-info">
                         <h4 style={{ "color": "white" }}>
                             <b>{words.editRecord}</b>
@@ -214,7 +213,7 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                                 </div>
                                 <div className={subjectError ? "container  text-danger pl-3 py-1 text-left" : "container text-danger"} >{subjectError}</div>
                                 <hr />
-                                <div className="form-group p-3">
+                                <div className="form-group pt-3 pb-2">
                                     <div className="row">
                                         <div className="col-md-12 text-center d-flex justify-content-between">
 
