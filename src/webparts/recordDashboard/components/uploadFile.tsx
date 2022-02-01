@@ -2,6 +2,8 @@ import * as React from "react";
 import { toast } from "react-toastify";
 import { createFile, getAllItems, loggedUserInfo, postFile, updateItem } from "./actions"
 import Loader from "./Loader";
+import Modal from "./modal";
+import SuccessToast from "./success-toast";
 
 const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, setOutgoingRecords }) => {
     const [file, setFile] = React.useState(null)
@@ -23,6 +25,9 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
     const [subjectError, setSubjectError] = React.useState(null)
     const [recipientOrgError, setRecipientOrgError] = React.useState(null)
     const [dispatchDateError, setDispatchDateError] = React.useState(null)
+    const [showToasterLoader, setToasterLoader] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState(null);
+
     const userInfo = loggedUserInfo(context)
 
     let handleFileChange = (e) => {
@@ -314,7 +319,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setSubject(null)
                         hideModal(event)
                         setIncommingRecords(result[0])
-                        toast(words.uploadSuccess)
+                        // toast(words.uploadSuccess)
+
+                        // show informative modal
+                        setToasterLoader(true);
+                        setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.uploadSuccess} messageHeader="Successful"></SuccessToast></>);
                     })
                 })
             }
@@ -337,7 +346,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setReceivingPersonnel(null)
                         setOutgoingRecords(result[0])
                         setLoader(false)
-                        toast(words.uploadSuccess)
+                        // toast(words.uploadSuccess)
+
+                        // show informative modal
+                        setToasterLoader(true);
+                        setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.uploadSuccess} messageHeader="Successful"></SuccessToast></>);
                     })
                 })
             }
@@ -367,7 +380,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setSubject(null)
                         hideModal(event)
                         setIncommingRecords(response[0])
-                        toast(words.uploadSuccess)
+                        // toast(words.uploadSuccess)
+
+                        // show informative modal
+                        setToasterLoader(true);
+                        setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.uploadSuccess} messageHeader="Successful"></SuccessToast></>);
                     })
                 })
             }
@@ -391,7 +408,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                         setReceivingPersonnel(null)
                         setOutgoingRecords(response[0])
                         setLoader(false)
-                        toast(words.uploadSuccess)
+                        // toast(words.uploadSuccess)
+
+                        // show informative modal
+                        setToasterLoader(true);
+                        setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.uploadSuccess} messageHeader="Successful"></SuccessToast></>);
                     })
                 })
             }
@@ -482,6 +503,11 @@ const UploadFile = ({ words, caller, context, hideModal, setIncommingRecords, se
                 </div> : <Loader />
 
             }
+
+             {/* infomative modal */}
+             <Modal show={showToasterLoader} handleClose={setToasterLoader} additionalStyles={null}>
+                {modalContent}
+            </Modal>
         </>
 
     )

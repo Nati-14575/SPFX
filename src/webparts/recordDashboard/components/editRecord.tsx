@@ -2,6 +2,8 @@ import * as React from "react";
 import { moveFile, postFile, updateItem } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import Modal from "./modal";
+import SuccessToast from "./success-toast";
 
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
     function changeDateFormat() {
@@ -20,6 +22,8 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
     const [subjectError, setSubjectError] = React.useState(null)
     const [recipientOrgError, setRecipientOrgError] = React.useState(null)
     const [dispatchDateError, setDispatchDateError] = React.useState(null)
+    const [showToasterLoader, setToasterLoader] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState(null);
 
     let submited
 
@@ -68,7 +72,12 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                 postFile(context, "OutgoingLibrary", file).then(() => {
                     updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
                         setLoader(false);
-                        toast(words.updateSuccess)
+                        // toast(words.updateSuccess)
+
+                        // show informative modal
+                        setToasterLoader(true);
+                        setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.updateSuccess} messageHeader="Successful"></SuccessToast></>);
+
                         setFile(null)
                         setReferenceNumber(null)
                         setRecipientOrg(null)
@@ -88,7 +97,12 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
             }
             updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((result) => {
                 setLoader(false);
-                toast(words.updateSuccess)
+                // toast(words.updateSuccess)
+
+                // show informative modal
+                setToasterLoader(true);
+                setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.updateSuccess} messageHeader="Successful"></SuccessToast></>);
+                
                 setFile(null)
                 setReferenceNumber(null)
                 setRecipientOrg(null)
@@ -248,6 +262,11 @@ const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoin
                     </div>
                 </div> : <Loader />
             }
+
+            {/* infomative modal */}
+            <Modal show={showToasterLoader} handleClose={setToasterLoader} additionalStyles={null}>
+                {modalContent}
+            </Modal>
         </>
     )
 }

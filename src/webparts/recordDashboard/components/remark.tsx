@@ -2,6 +2,8 @@ import * as React from "react";
 import { getFilteredItems, loggedUserInfo, postItem } from "./actions"
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import Modal from "./modal";
+import SuccessToast from "./success-toast";
 
 const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [loggedUser, setLoggedUser] = React.useState(null)
@@ -9,6 +11,10 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [remarkDetail, setRemarkDetail] = React.useState(null)
     const [remarks, setRemarks] = React.useState(null)
     const [showLoader, setLoader] = React.useState(false);
+    const [showToasterLoader, setToasterLoader] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState(null);
+
+    
     const url = context.pageContext.web.absoluteUrl
     const userInfo = loggedUserInfo(context)
     const onRemarkSubmit = (event) => {
@@ -24,7 +30,12 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         postItem(context, "RecordRemarks", data).then((response) => {
             setRemarkDetail(null)
             setLoader(false);
-            toast(words.remarkAddSuccess);
+            // toast(words.remarkAddSuccess);
+
+            // show informative modal
+            setToasterLoader(true);
+            setModalContent(<> <SuccessToast word={words} setToastLoader={setToasterLoader} message={words.remarkAddSucces} messageHeader="Successful"></SuccessToast></>);
+
             getFilteredItems(context, "RecordRemarks", `?$select=*,Comments,userName&$filter=RecordId eq ${id}`).then((json) => {
                 setRemarks(json.value)
             })
@@ -90,6 +101,11 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                     </>
                     : <Loader />
             }
+
+            {/* infomative modal */}
+            <Modal show={showToasterLoader} handleClose={setToasterLoader} additionalStyles={null}>
+                {modalContent}
+            </Modal>
 
         </>
     )
