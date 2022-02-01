@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 import Modal from "./modal";
 import SuccessToast from "./success-toast";
+import ErrorToast from "./error-toast";
 
 const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [loggedUser, setLoggedUser] = React.useState(null)
@@ -14,7 +15,7 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
     const [showToasterLoader, setToasterLoader] = React.useState(false);
     const [modalContent, setModalContent] = React.useState(null);
 
-    
+
     const url = context.pageContext.web.absoluteUrl
     const userInfo = loggedUserInfo(context)
     const onRemarkSubmit = (event) => {
@@ -43,7 +44,11 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
         },
             (err) => {
                 setLoader(false);
-                toast.error("Something went wrong");
+                // toast.error("Something went wrong");
+
+                // show informative modal
+                setToasterLoader(true);
+                setModalContent(<> <ErrorToast word={words} setToastLoader={setToasterLoader} message="Something went wrong!" messageHeader="Error"></ErrorToast></>);
 
             }
         )
