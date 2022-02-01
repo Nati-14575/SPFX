@@ -142,13 +142,13 @@ export default class RecordDashboard extends React.Component<
     getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Incoming'&$orderBy=Id desc").then((response) => {
       const data: any = [];
       response.map((item) => {
+        const incomingRecordDate = new Date(item.IncomingRecordDate) || null
         data.push({
           Id: item.Id,
           Title: item.FileLeafRef,
           SendingOrganizationName: item.SendingOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          IncomingRecordDate: item.IncomingRecordDate ? new Date(item.IncomingRecordDate).toISOString().slice(0, 10) : null
-          ,
+          IncomingRecordDate: incomingRecordDate ? this.getFormattedResult(incomingRecordDate.getMonth() + 1) + "/" + this.getFormattedResult(incomingRecordDate.getDate()) + "/" + this.getFormattedResult(incomingRecordDate.getFullYear()) : null,
           DeliveryPersonnelName: item.DeliveryPersonnelName,
           Subject: item.Subject,
           FileIDId: item.FileIDId,
@@ -167,12 +167,13 @@ export default class RecordDashboard extends React.Component<
     getFilteredItems(this.props.context, "OutgoingLibrary", "?$select=*,EncodedAbsUrl,FileLeafRef&$filter=RecordType eq 'Outgoing'").then((response) => {
       const data: any = [];
       response.map((item) => {
+        const dateOfDispatch = new Date(item.DateofDispatch)
         data.push({
           Id: item.Id,
           Title: item.FileLeafRef,
           RecipientOrganizationName: item.RecipientOrganizationName,
           ReferenceNumber: item.ReferenceNumber,
-          DateofDispatch: item.DateofDispatch ? new Date(item.DateofDispatch).toISOString().slice(0, 10) : null,
+          DateofDispatch: dateOfDispatch ? this.getFormattedResult(dateOfDispatch.getMonth() + 1) + "/" + this.getFormattedResult(dateOfDispatch.getDate()) + "/" + this.getFormattedResult(dateOfDispatch.getFullYear()) : null,
           DeliveryPersonnelName: item.DeliveryPersonnelName,
           Subject: item.Subject,
           downloadUrl: item.EncodedAbsUrl
@@ -187,15 +188,16 @@ export default class RecordDashboard extends React.Component<
 
   addChangeToIncommingRecords = (record) => {
     let data = this.state.incommingRecords;
+    const incomingRecordDate = new Date(record.IncomingRecordDate) || null
+    console.log(incomingRecordDate.getMonth());
+    console.log(incomingRecordDate.getDate());
 
     var incommingRecord = {
       Id: record.Id,
       Title: record.FileLeafRef,
       SendingOrganizationName: record.SendingOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
-      IncomingRecordDate: record.IncomingRecordDate ? new Date(record.IncomingRecordDate).toLocaleDateString(
-        "en-us"
-      ) : null,
+      IncomingRecordDate: incomingRecordDate ? this.getFormattedResult(incomingRecordDate.getMonth() + 1) + "/" + this.getFormattedResult(incomingRecordDate.getDate()) + "/" + this.getFormattedResult(incomingRecordDate.getFullYear()) : null,
       Subject: record.Subject,
       DeliveryPersonnelName: record.DeliveryPersonnelName,
       FileIDId: record.FileIDId,
@@ -211,16 +213,14 @@ export default class RecordDashboard extends React.Component<
   }
 
   addChangeToOutgoingRecord = (record) => {
-    console.log(record)
     let data = this.state.outgoingRecords
+    const outgoingRecordDate = new Date(record.DateofDispatch) || null
     let newRecord = {
       Id: record.Id,
       Title: record.FileLeafRef,
       RecipientOrganizationName: record.RecipientOrganizationName,
       ReferenceNumber: record.ReferenceNumber,
-      DateofDispatch: record.DateofDispatch ? new Date(record.DateofDispatch).toLocaleDateString(
-        "en-us"
-      ) : null,
+      DateofDispatch: outgoingRecordDate ? this.getFormattedResult(outgoingRecordDate.getMonth() + 1) + "/" + this.getFormattedResult(outgoingRecordDate.getDate()) + "/" + this.getFormattedResult(outgoingRecordDate.getFullYear()) : null,
       DeliveryPersonnelName: record.DeliveryPersonnelName,
       Subject: record.Subject
     }
@@ -232,7 +232,6 @@ export default class RecordDashboard extends React.Component<
   }
 
   updateIncomingRecordInfo = (record) => {
-    console.log(record)
     this.setState({ showLoader: true })
     const incomingRecordDate = new Date(record.IncomingRecordDate) || null
     let data = this.state.incommingRecords

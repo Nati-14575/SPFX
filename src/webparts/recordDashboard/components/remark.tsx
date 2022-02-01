@@ -50,53 +50,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
             {
                 showLoader == false ?
                     <>
-                        {/* <div className="container-fluid pt-5 pl-4 pr-4"> */}
-                        {/* <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
-                        <h4 style={{ "color": "white" }}>
-                            {words.addRemark}
-                        </h4>
-                    </div>
-                    <hr />
-                    <div className="row justify-content-center text-center h-100">
-                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <form onSubmit={(event) => onRemarkSubmit(event)}>
-                                <div className="form-group row">
-                                    <label className="col-sm-4 col-form-label text-left">
-                                        {words.detail}
-                                    </label>
-                                    <div className="col-sm-7">
-                                        <textarea className="form-control" id="exampleFormControlTextarea1" rows={3} value={remarkDetail} onChange={(e) => setRemarkDetail(e.target.value)}></textarea>
-                                    </div>
-                                </div>
-                                <div className="form-group py-3 ">
-                                    <div className="row text-center">
-                                        <div className="col-md-4 ml-auto">
-                                            <button
-                                                className=" btn bg-primary btn-sm " style={{ "color": "white" }}
-                                                type="submit"
-                                            >
-                                                {words.submit}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                        <hr />
-                        <br />
-                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 content-height">
-                            <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
-                            <div className="row justify-content-center text-center p-3 bg-info" style={{ "color": "white" }}>
-                                <h4 style={{ "color": "white" }}>
-                                    {words.listRemarks}
-                                </h4>
-                            </div>
-                        </div>
-                        <hr style={{ borderStyle: "solid", borderColor: "grey" }} />
-                        <div className="col col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-2"> */}
-
-
                         <>
                             <div className="container-fluid">
                                 <div className="container mt-4 mb-3">

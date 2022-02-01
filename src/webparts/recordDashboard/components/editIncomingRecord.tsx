@@ -4,12 +4,15 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, setIncommingRecords, index, updateRecordInfo, files, setNum, num }) => {
-    console.log(recordDetails.Title)
+    function changeDateFormat() {
+        let date = recordDetails.IncomingRecordDate.split("/")
+        return (date[2] + "-" + date[0] + "-" + date[1])
+    }
     const [file, setFile] = React.useState(null)
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [sendingOrg, setSendingOrg] = React.useState(recordDetails.SendingOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate ? recordDetails.IncomingRecordDate : new Date().toISOString().slice(0, 10))
+    const [IncomingRecordDate, setIncomingRecordDate] = React.useState(recordDetails.IncomingRecordDate ? changeDateFormat : new Date().toISOString().slice(0, 10))
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [FileIDId, setFileId] = React.useState(recordDetails.FileIDId ? recordDetails.FileIDId : null)
     const [showLoader, setLoader] = React.useState(false);
@@ -69,7 +72,6 @@ const EditIncomingRecord = ({ words, context, hideRecordModal, recordDetails, se
                 Subject: Subject,
                 FileIDId: parseInt(FileIDId),
             };
-            console.log("reached move file")
             moveFile(context, "OutgoingLibrary", recordDetails.Title, file.name).then(() => {
                 postFile(context, "OutgoingLibrary", file).then(() => {
                     updateItem(context, "OutgoingLibrary", data, recordDetails.Id).then((response) => {

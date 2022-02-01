@@ -4,11 +4,15 @@ import { toast } from "react-toastify";
 import Loader from "./Loader";
 
 const EditRecord = ({ words, context, hideRecordModal, recordDetails, setOutgoingRecords }) => {
+    function changeDateFormat() {
+        let date = recordDetails.DateofDispatch.split("/")
+        return (date[2] + "-" + date[0] + "-" + date[1])
+    }
     const [file, setFile] = React.useState(null)
     const [fileName, setFileName] = React.useState(recordDetails.Title)
     const [recipientOrg, setRecipientOrg] = React.useState(recordDetails.RecipientOrganizationName)
     const [ReferenceNumber, setReferenceNumber] = React.useState(recordDetails.ReferenceNumber)
-    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? recordDetails.DateofDispatch : new Date().toISOString().slice(0, 10))
+    const [DateofDispatch, setDateofDispatch] = React.useState(recordDetails.DateofDispatch ? changeDateFormat : new Date().toISOString().slice(0, 10))
     const [Subject, setSubject] = React.useState(recordDetails.Subject)
     const [showLoader, setLoader] = React.useState(false);
     const [fileError, setFileError] = React.useState(null)
