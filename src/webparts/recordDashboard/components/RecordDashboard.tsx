@@ -189,8 +189,6 @@ export default class RecordDashboard extends React.Component<
   addChangeToIncommingRecords = (record) => {
     let data = this.state.incommingRecords;
     const incomingRecordDate = new Date(record.IncomingRecordDate) || null
-    console.log(incomingRecordDate.getMonth());
-    console.log(incomingRecordDate.getDate());
 
     var incommingRecord = {
       Id: record.Id,
