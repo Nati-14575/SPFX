@@ -59,20 +59,22 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                                     <div className="d-flex justify-content-center row">
                                         <div className="col-md-12">
                                             <div className="d-flex flex-column comment-section">
-                                                {remarks && remarks.length > 0 ? remarks.map(remark => (
-                                                    <>
-                                                        <div className="bg-white p-2">
-                                                            <div className="d-flex flex-row user-info"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${remark.userEmail}`} width="40" />
-                                                                <div className="d-flex flex-column justify-content-start ml-2"><span className="d-block font-weight-bold name">{remark?.userName}</span><span className="date text-black-50"></span></div>
+                                                {remarks && remarks.length > 0 ? remarks.map(remark => {
+                                                    return (
+                                                        <>
+                                                            <div className="bg-white p-2">
+                                                                <div className="d-flex flex-row user-info"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${remark.userEmail}`} width="40" />
+                                                                    <div className="d-flex flex-column justify-content-start ml-2"><span className="d-block font-weight-bold name">{remark?.userName}</span><span className="date text-black-50">{new Date(remark?.RemarkDate).toISOString().slice(0, 10)}</span></div>
+                                                                </div>
+                                                                <div className="mt-2">
+                                                                    <p className="comment-text">{remark?.Comments}</p>
+                                                                </div>
                                                             </div>
-                                                            <div className="mt-2">
-                                                                <p className="comment-text">{remark?.Comments}</p>
-                                                            </div>
-                                                        </div>
-                                                    </>
+                                                        </>
 
-                                                )) : <>
-                                                    <div className="container text-dark p-3 text-center h2 mb-2">No remarks available</div>
+                                                    )
+                                                }) : <>
+                                                    <div className="container text-dark p-3 text-center h2 mb-2">{words.noRemarks}</div>
                                                 </>}
                                                 <div className="bg-light p-2">
                                                     <div className="d-flex flex-row align-items-start"><img className="rounded-circle" src={`${url}/_layouts/15/userphoto.aspx?size=L&username=${userEmail}`} width="40" /><textarea className="form-control ml-1 shadow-none textarea" value={remarkDetail} onChange={(e) => setRemarkDetail(e.target.value)} ></textarea></div>
@@ -84,9 +86,6 @@ const Remark = ({ words, id, context, hideViewRemarkModal }) => {
                                 </div>
                             </div>
                         </>
-                        {/* </div> */}
-                        {/* // </div> */}
-                        {/* // </div> */}
                     </>
                     : <Loader />
             }

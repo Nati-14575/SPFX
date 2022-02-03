@@ -47,6 +47,7 @@ export const English = {
   reciepientOrgNameError: "Recipient Organization is required",
   dispatchDateError: "Date of dispatch is required",
   fileError: "File is required",
+  noRemarks: "No remarks available",
 };
 
 export const AMHARIC = {
@@ -97,4 +98,5 @@ export const AMHARIC = {
   reciepientOrgNameError: "የተቀባይ ድርጅት ስም አልተሞላም",
   dispatchDateError: "መዝገብ የተላከበት ቀን አልተሞላም",
   fileError: "ፋይል አልተሞላም",
+  noRemarks: "ምንም ይዘት የለም",
 };

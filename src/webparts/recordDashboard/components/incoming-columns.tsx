@@ -21,10 +21,13 @@ export const incomingColumns = [
   },
   {
     Header: (({ words, hideColumns }) => {
-      return <div >{words.senderOrg}</div>
+      return <div className="d-none d-md-block" >{words.senderOrg}</div>
     }),
     columnId: 3,
     accessor: 'SendingOrganizationName',
+    Cell: (props) => {
+      return <div className="d-none d-md-block">{props.row.original.SendingOrganizationName}</div>
+    }
   },
   {
     Header: (({ words }) => {
@@ -33,20 +36,20 @@ export const incomingColumns = [
     columnId: 4,
     accessor: 'ReferenceNumber',
   },
-  // {
-  //   Header: (({ words }) => {
-  //     return words.receievingPersonnel
-  //   }),
-  //   columnId: 5,
-  //   accessor: 'DeliveryPersonnelName',
-  // },
-  // {
-  //   Header: (({ words }) => {
-  //     return words.IncomingRecordDate
-  //   }),
-  //   columnId: 6,
-  //   accessor: 'IncomingRecordDate',
-  // },
+  {
+    Header: (({ words }) => {
+      return words.receievingPersonnel
+    }),
+    columnId: 5,
+    accessor: 'DeliveryPersonnelName',
+  },
+  {
+    Header: (({ words }) => {
+      return words.IncomingRecordDate
+    }),
+    columnId: 6,
+    accessor: 'IncomingRecordDate',
+  },
   {
     Header: (({ words }) => {
       return words.subject
